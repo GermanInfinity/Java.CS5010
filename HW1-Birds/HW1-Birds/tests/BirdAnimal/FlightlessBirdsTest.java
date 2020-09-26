@@ -38,7 +38,8 @@ public class FlightlessBirdsTest {
    */
   @Test
   public void testInputs() {
-    String expectedOutput = "Type: Emus, Characteristics: [Live on ground], Is Extinct: false, Wing numbers: 0, Food preference: [buds, larvae]";
+    String expectedOutput = "Type: Emus, Characteristics: [Live on ground], Is Extinct: "
+                          + "false, Wing numbers: 0, Food preference: [buds, larvae]";
 
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Live on ground");
@@ -68,7 +69,8 @@ public class FlightlessBirdsTest {
     Foodlist.add("buds");
 
     test = new FlightlessBirds("Kiwis", Characlist, false, 0, Foodlist);
-    String expectedOutput = "Type: Kiwis, Characteristics: [Live on ground], Is Extinct: false, Wing numbers: 0, Food preference: [fish, buds]";
+    String expectedOutput = "Type: Kiwis, Characteristics: [Live on ground], Is Extinct: "
+                             + "false, Wing numbers: 0, Food preference: [fish, buds]";
     assertEquals(expectedOutput, test.toString());
   }
 
@@ -89,7 +91,8 @@ public class FlightlessBirdsTest {
   public void testgetCharac() {
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Live on ground");
-    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", 
+                      CharaclistTest.equals(test.getCharac()));
   }
 
   /**
@@ -119,7 +122,8 @@ public class FlightlessBirdsTest {
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("buds");
     FoodlistTest.add("larvae");
-    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", 
+                          FoodlistTest.equals(test.getFoodPref()));
   }
 
   /**
@@ -134,10 +138,11 @@ public class FlightlessBirdsTest {
     CharaclistTest.add("Live on ground");
     CharaclistTest.add("Cannot fly");
 
-    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", 
+                          CharaclistTest.equals(test.getCharac()));
 
   }
-  
+
   /**
    * Assertion test: Test add character that is already in the list.
    * 
@@ -161,7 +166,8 @@ public class FlightlessBirdsTest {
     CharaclistTest.add("Cannot fly");
 
     test.setCharac(CharaclistTest);
-    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", 
+                        CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -183,7 +189,8 @@ public class FlightlessBirdsTest {
 
     ArrayList<String> CharaclistTest2 = new ArrayList<String>();
     CharaclistTest2.add("Cannot fly");
-    assertTrue("Both character lists are not equal", CharaclistTest2.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", 
+                       CharaclistTest2.equals(test.getCharac()));
   }
 
   /**
@@ -192,7 +199,7 @@ public class FlightlessBirdsTest {
   @Test
   public void testsetType() {
     test.setType("Moas");
-    assertEquals("Moas", test.getType());
+    assertEquals("Moas", test.TypeOfBird);
   }
 
   /**
@@ -234,7 +241,8 @@ public class FlightlessBirdsTest {
     FoodlistTest.add("fruit");
     FoodlistTest.add("other birds");
 
-    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", 
+                          FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -258,7 +266,8 @@ public class FlightlessBirdsTest {
     FoodlistTest.add("buds");
 
     test.setFoodPref(FoodlistTest);
-    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", 
+                            FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -283,11 +292,11 @@ public class FlightlessBirdsTest {
     FoodlistTest.add("fish");
     FoodlistTest.add("larvae");
 
-    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", 
+                             FoodlistTest.equals(test.getFoodPref()));
 
   }
-  
-  
+
   /**
    * Assertion test: Test the setType function catches a wrong type.
    */
@@ -296,16 +305,16 @@ public class FlightlessBirdsTest {
     test.setType("Hawk");
   }
 
-  
   /**
-   * Assertion test: Test add character function catches a wrong character added.
+   * Assertion test: Test add character function catches a wrong character
+   * added.
    * 
    */
   @Test(expected = IllegalArgumentException.class)
   public void testaddWrongCharac() {
     test.addCharac("Cannot dance");
   }
-  
+
   /**
    * Assertion test on invalid bird type constructed.
    * 
@@ -529,7 +538,6 @@ public class FlightlessBirdsTest {
     test.removeCharac("Live on ground");
   }
 
-  
   /**
    * Edge case and assertion test on removing a characteristic.
    * 
@@ -538,8 +546,7 @@ public class FlightlessBirdsTest {
   public void testRemoveIllegalCharac() {
     test.removeCharac("Dancing in the moonlight");
   }
-  
-  
+
   /**
    * Edge case and assertion test on removing the last characteristic.
    * 
@@ -548,8 +555,7 @@ public class FlightlessBirdsTest {
   public void testRemoveLastCharac() {
     test.removeCharac("Live on ground");
   }
-  
-  
+
   /**
    * Edge case and assertion test on removing the wrong characteristic.
    * 
@@ -558,8 +564,7 @@ public class FlightlessBirdsTest {
   public void testRemoveWrongCharac() {
     test.removeCharac("Cannot fly");
   }
-  
-  
+
   /**
    * Edge case and assertion test on invalid number of food removed(lower
    * bound).
@@ -638,7 +643,6 @@ public class FlightlessBirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
     Foodlist.add("larvae");
-  
 
     test = new FlightlessBirds("Emus", Characlist, false, 2, Foodlist);
     ArrayList<String> FoodlistTest = new ArrayList<String>();
@@ -646,8 +650,7 @@ public class FlightlessBirdsTest {
 
     test.setFoodPref(FoodlistTest);
   }
-  
-  
+
   /**
    * Edge case and assertion testing -- adding a wrong food preference.
    */
@@ -657,14 +660,32 @@ public class FlightlessBirdsTest {
     test.addFoodPref("Donuts");
 
   }
-  
+
   /**
    * Edge case and assertion testing -- adding a present food preference.
    */
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testaddSimilarFoodPref() {
-
     test.addFoodPref("buds");
+  }
+
+  /**
+   * Edge case and assertion testing -- setting wrong wing number(lower bound).
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetMinWrongWingsNum() {
+
+    test.setWingsNum(-40);
+
+  }
+
+  /**
+   * Edge case and assertion testing -- setting wrong wing number(upper bound).
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetMaxWrongWingsNum() {
+
+    test.setWingsNum(40);
 
   }
 
@@ -678,11 +699,31 @@ public class FlightlessBirdsTest {
     Foodlist.add("fish");
     Foodlist.add("buds");
     Foodlist.add("Hamburgers");
-    
+
     test.setFoodPref(Foodlist);
 
   }
-  
+
+  /**
+   * Edge case and assertion testing -- remove food preference of unlisted food.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testremoveWrongFoodPref() {
+
+    test.removeFoodPref("Onions");
+
+  }
+
+  /**
+   * Edge case and assertion testing -- remove unchosen food preference.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testremoveUnchosenFoodPref() {
+
+    test.removeFoodPref("fruit");
+
+  }
+
   /**
    * Assertion test: Test the object is constructed with more food preferences.
    */
@@ -700,9 +741,10 @@ public class FlightlessBirdsTest {
 
     test = new FlightlessBirds("Emus", Characlist, false, 0, Foodlist);
   }
-  
+
   /**
-   * Assertion test: Test the object is constructed with a wrong food preference.
+   * Assertion test: Test the object is constructed with a wrong food
+   * preference.
    */
   @Test(expected = IllegalArgumentException.class)
   public void testWrongFoodPrefConstructor() {

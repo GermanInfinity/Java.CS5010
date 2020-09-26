@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class BirdsOfPrey extends Birds {
+public class Pigeons extends Birds {
 
-  private String[] BirdsOfPrey_Bird_Types = {"Hawks", "Eagles", "Osprey"};
-  private String[] Bird_CharacList = {"Sharp beaks", "Hooked beaks"};
+  private String[] PigeonTypes = {"Emus", "Kiwis", "Moas"};
+  private String[] Bird_CharacList = {"Live on ground", "Cannot fly"};
   
   
   /**
-   * Constructs a BirdsOfPrey bird object that has the type of bird, 
+   * Constructs a Pigeons bird object that has the type of bird, 
    * characteristics, if it is existing, number of wings, and food preference. 
    * 
-   * @param birdType the type of BirdsOfPrey bird
-   * @param characList the list of BirdsOfPrey bird characteristics
-   * @param extinct if the particular BirdsOfPrey bird is extinct
-   * @param numWings the number of wings the BirdsOfPrey bird has 
-   * @param prefFood the food preference of the BirdsOfPrey bird 
+   * @param birdType the type of Pigeons bird
+   * @param characList the list of Pigeons bird characteristics
+   * @param extinct if the particular Pigeons bird is extinct
+   * @param numWings the number of wings the Pigeons bird has 
+   * @param prefFood the food preference of the Pigeons bird 
    * 
    */
-  public BirdsOfPrey(String birdType, ArrayList<String> characList, Boolean extinct, 
+  public Pigeons(String birdType, ArrayList<String> characList, Boolean extinct, 
                          int numWings, ArrayList<String> prefFood) 
   {
     
@@ -49,7 +49,7 @@ public class BirdsOfPrey extends Birds {
   
   
   /**
-   * Set's the type of a BirdsOfPrey bird. 
+   * Set's the type of a Pigeons bird. 
    * Accepts a string argument and returns nothing. 
    * 
    */
@@ -57,16 +57,16 @@ public class BirdsOfPrey extends Birds {
   protected void setType(String birdType) 
   {
     
-    if (Arrays.asList(BirdsOfPrey_Bird_Types).contains(birdType) == false) {
+    if (Arrays.asList(PigeonTypes).contains(birdType) == false) {
       throw new IllegalArgumentException(
-          birdType + " is not a BirdsOfPrey Bird.");
+          birdType + " is not a Pigeons Bird.");
     }
     this.TypeOfBird = birdType; 
   }
   
   
   /**
-   * Set's the characteristic of a BirdsOfPrey bird. 
+   * Set's the characteristic of a Pigeons bird. 
    * Accepts an array of strings and returns nothing. 
    * 
    */
@@ -78,7 +78,7 @@ public class BirdsOfPrey extends Birds {
     {
       if (Arrays.asList(Bird_CharacList).contains(charac.get(i)) == false) {
         throw new IllegalArgumentException(
-            charac.get(i) + " is not a BirdsOfPrey Bird characteristic.");
+            charac.get(i) + " is not a Pigeons Bird characteristic.");
       }
     }
     
@@ -86,7 +86,7 @@ public class BirdsOfPrey extends Birds {
   }
   
   /**
-   * Adds the characteristic of a BirdsOfPrey bird. 
+   * Adds the characteristic of a Pigeons bird. 
    * Accepts a strings and returns nothing. 
    * 
    */
@@ -96,7 +96,7 @@ public class BirdsOfPrey extends Birds {
 
     if (Arrays.asList(Bird_CharacList).contains(charac) == false){
       throw new IllegalArgumentException(
-          charac + " is not a BirdsOfPrey Bird characteristic.");
+          charac + " is not a Pigeons Bird characteristic.");
     } 
     
     Boolean add = true; 
@@ -110,7 +110,7 @@ public class BirdsOfPrey extends Birds {
   }
   
   /**
-   * Remove a characteristic of a BirdsOfPrey bird. 
+   * Remove a characteristic of a Pigeons bird. 
    * Accepts a strings and returns nothing. 
    * 
    */
@@ -120,7 +120,7 @@ public class BirdsOfPrey extends Birds {
     
     if (Arrays.asList(Bird_CharacList).contains(charac) == false) {
       throw new IllegalArgumentException(
-          charac + " is not a BirdsOfPrey Bird characteristic.");
+          charac + " is not a Pigeons Bird characteristic.");
     }
 
     
@@ -135,7 +135,7 @@ public class BirdsOfPrey extends Birds {
     else
     {
       throw new IllegalArgumentException(
-          charac + " is not the BirdsOfPrey Bird objects characteristic.");
+          charac + " is not the Pigeons Bird objects characteristic.");
     }
     
     
@@ -155,9 +155,9 @@ public class BirdsOfPrey extends Birds {
     /**
      * Bird Type assertion. 
      */
-    if (!Arrays.asList(BirdsOfPrey_Bird_Types).contains(birdType)) {
+    if (!Arrays.asList(PigeonTypes).contains(birdType)) {
       throw new IllegalArgumentException(
-          birdType + " is not a BirdsOfPrey Bird.");
+          birdType + " is not a Pigeons Bird.");
     }
     
     /** 
@@ -167,7 +167,7 @@ public class BirdsOfPrey extends Birds {
     {
       if (!Arrays.asList(Bird_CharacList).contains(characList.get(i))) {
         throw new IllegalArgumentException(
-            characList.get(i) + " is not a BirdsOfPrey Bird characteristic.");
+            characList.get(i) + " is not a Pigeons Bird characteristic.");
       }
     }
     

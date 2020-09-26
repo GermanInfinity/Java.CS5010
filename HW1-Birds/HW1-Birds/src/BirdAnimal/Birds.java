@@ -119,7 +119,7 @@ public abstract class Birds {
    
     if (Arrays.asList(FoodPrefList).contains(PrefFood) == false) {
       throw new IllegalArgumentException(
-          PrefFood + " is not a Bird characteristic.");
+          PrefFood + " is not a Bird food.");
     }
     
     
