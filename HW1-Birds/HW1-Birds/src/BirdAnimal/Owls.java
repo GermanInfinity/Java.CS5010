@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public class Owls extends Birds {
 
-  private String[] OwlTypes = {"Emus", "Kiwis", "Moas"};
-  private String[] Bird_CharacList = {"Live on ground", "Cannot fly"};
+  private String[] OwlTypes = {"Owls", "True owl"};
+  private String[] Bird_CharacList = {"Facial disk", "Bill"};
   
   
   /**
