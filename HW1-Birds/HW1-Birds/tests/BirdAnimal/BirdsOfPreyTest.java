@@ -39,7 +39,7 @@ public class BirdsOfPreyTest {
   @Test
   public void testInputs() {
     String expectedOutput = "Type: Hawks, Characteristics: [Sharp beaks], Is Extinct: "
-                              + "false, Wing numbers: 0, Food preference: [buds, larvae]";
+        + "false, Wing numbers: 0, Food preference: [buds, larvae]";
 
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Sharp beaks");
@@ -70,7 +70,7 @@ public class BirdsOfPreyTest {
 
     test = new BirdsOfPrey("Eagles", Characlist, false, 0, Foodlist);
     String expectedOutput = "Type: Eagles, Characteristics: [Sharp beaks], Is Extinct: "
-                             + "false, Wing numbers: 0, Food preference: [fish, buds]";
+        + "false, Wing numbers: 0, Food preference: [fish, buds]";
     assertEquals(expectedOutput, test.toString());
   }
 
@@ -91,8 +91,7 @@ public class BirdsOfPreyTest {
   public void testgetCharac() {
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Sharp beaks");
-    assertTrue("Both character lists are not equal", 
-                           CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
   }
 
   /**
@@ -122,8 +121,7 @@ public class BirdsOfPreyTest {
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("buds");
     FoodlistTest.add("larvae");
-    assertTrue("Both food lists are not equal", 
-                           FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
   }
 
   /**
@@ -138,8 +136,7 @@ public class BirdsOfPreyTest {
     CharaclistTest.add("Sharp beaks");
     CharaclistTest.add("Hooked beaks");
 
-    assertTrue("Both character lists are not equal", 
-                            CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -166,8 +163,7 @@ public class BirdsOfPreyTest {
     CharaclistTest.add("Hooked beaks");
 
     test.setCharac(CharaclistTest);
-    assertTrue("Both character lists are not equal", 
-                           CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -189,8 +185,7 @@ public class BirdsOfPreyTest {
 
     ArrayList<String> CharaclistTest2 = new ArrayList<String>();
     CharaclistTest2.add("Hooked beaks");
-    assertTrue("Both character lists are not equal", 
-                          CharaclistTest2.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest2.equals(test.getCharac()));
   }
 
   /**
@@ -312,7 +307,6 @@ public class BirdsOfPreyTest {
     test.addCharac("Cannot dance");
   }
 
-  
   /**
    * Assertion test on invalid bird type constructed.
    * 
@@ -344,6 +338,18 @@ public class BirdsOfPreyTest {
     Foodlist.add("fish");
 
     test = new BirdsOfPrey("Hawks", Characlist, false, 0, Foodlist);
+
+  }
+
+  /**
+   * Test set empty character list of an object.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetEmptyCharac() {
+
+    ArrayList<String> CharaclistTest = new ArrayList<String>();
+    test.setCharac(CharaclistTest);
 
   }
 

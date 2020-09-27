@@ -25,7 +25,7 @@ public class Conservatory {
    * parameters and returns a Conservatory object.
    */
   public Conservatory() {
-   
+
     this.inHouseAviaries = new ArrayList<Aviary>();
     this.inHouseAviaries.add(new Aviary(false, "1"));
     this.inHouseAviaries.add(new Aviary(false, "2"));
@@ -94,15 +94,13 @@ public class Conservatory {
     return result;
   }
 
-  
   /**
-   * toString This function lists all birds in the conservatory in alphabetical ordder and 
-   * their location. It returns the resulting list as a string, and is the toStreing method
-   * of the class.
+   * toString This function lists all birds in the conservatory in alphabetical
+   * ordder and their location. It returns the resulting list as a string, and
+   * is the toStreing method of the class.
    */
   @Override
-  public String toString() 
-  { 
+  public String toString() {
     ArrayList<String> totalBirds = new ArrayList<String>();
 
     /**
@@ -120,21 +118,21 @@ public class Conservatory {
         totalBirds.add(birdinAviary);
       }
     }
-    
+
     Collections.sort(totalBirds, String.CASE_INSENSITIVE_ORDER);
-    
+
     /**
-     * After sorting, we determine location of each bird. 
+     * After sorting, we determine location of each bird.
      */
     String result = "";
-    for (int i = 0; i < totalBirds.size(); i++)
-    {
+    for (int i = 0; i < totalBirds.size(); i++) {
       result += FindBird(totalBirds.get(i)) + "\n";
-      
+
     }
     return result;
-    
+
   }
+
   /**
    * RescueBird function stores a bird object in a desired aviary in the
    * conservatory.
@@ -145,10 +143,14 @@ public class Conservatory {
     Boolean simpleAdd;
     Boolean complexAdd;
 
+    if (this.inHouseAviaries.get(19).Size() == 5) {
+      throw new IllegalStateException("The Aviary is full.");
+    }
+
     if (bird.getisExtinct() == false) {
       for (int i = 0; i < inHouseAviaries.size(); i++) {
         Aviary currentAviary = inHouseAviaries.get(i);
-        
+
         simpleAdd = currentAviary.AddBird(bird);
         complexAdd = currentAviary.AddSpecialBird(bird);
 
@@ -203,55 +205,14 @@ public class Conservatory {
 
     Conservatory test = new Conservatory();
 
-    ArrayList<String> CharaclistTest = new ArrayList<String>();
-    CharaclistTest.add("Cannot fly");
-
-    ArrayList<String> CharaclistTest2 = new ArrayList<String>();
-    CharaclistTest2.add("Facial disk");
-
-    ArrayList<String> CharaclistTest3 = new ArrayList<String>();
-    CharaclistTest3.add("Small heads");
-
-    ArrayList<String> FoodlistTest = new ArrayList<String>();
-    FoodlistTest.add("fruit");
-    FoodlistTest.add("fish");
-
-    FlightlessBirds fll = new FlightlessBirds("Emus", CharaclistTest, false, 0, FoodlistTest);
-    Owls ow = new Owls("True owl", CharaclistTest2, false, 2, FoodlistTest);
-    Pigeons pgn = new Pigeons("Doves", CharaclistTest3, false, 1, FoodlistTest);
-
-    
-
-
-    test.RescueBird(pgn);
-    test.RescueBird(pgn);
-    test.RescueBird(fll);
-    test.RescueBird(ow);
-    test.RescueBird(pgn);
-    test.RescueBird(fll);
-    test.RescueBird(fll);
-    test.RescueBird(fll);
-    test.RescueBird(fll);
-    test.RescueBird(fll);
-    test.RescueBird(fll);
-    test.RescueBird(pgn);
-    test.RescueBird(pgn);
-    test.RescueBird(fll);
-    test.RescueBird(ow);
-    test.RescueBird(pgn);
-    test.RescueBird(ow);
-    test.RescueBird(pgn);
-    
-
     System.out.println(test.FoodQuant());
 
     Aviary testAviary = test.getAviary(3);
-    
+
     testAviary.printAviary();
     System.out.println(test.FindBird("True owl"));
-    
-    System.out.println(test.toString());
 
+    System.out.println(test.toString());
 
   }
 

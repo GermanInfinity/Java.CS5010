@@ -28,7 +28,10 @@ public class ShorebirdsTest {
     Foodlist.add("buds");
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
   }
 
   /**
@@ -39,7 +42,8 @@ public class ShorebirdsTest {
   @Test
   public void testInputs() {
     String expectedOutput = "Type: Great auk, Characteristics: [Live near wetlands], Is Extinct: "
-                          + "false, Wing numbers: 0, Food preference: [buds, larvae]";
+        + "false, Wing numbers: 0, Food preference: [buds, larvae], "
+        + "Closest body of water: [Saltwater]";
 
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Live near wetlands");
@@ -48,12 +52,25 @@ public class ShorebirdsTest {
     FoodlistTest.add("buds");
     FoodlistTest.add("larvae");
 
+    ArrayList<String> waterlist = new ArrayList<String>();
+    waterlist.add("Saltwater");
+
     assertEquals("Great auk", test.TypeOfBird);
     assertTrue("Both character lists are not equal", CharaclistTest.equals(test.BirdCharac));
     assertFalse("Is extinct parameters are not similar.", test.isExtinct);
     assertEquals(0, test.WingsNum, 0);
     assertTrue("Both food lists are not equal", FoodlistTest.equals(test.FoodPref));
+    assertTrue("Both body of water lists are not equal", waterlist.equals(test.closeBodyOfWater));
     assertEquals(expectedOutput, test.toString());
+  }
+
+  /**
+   * Dummy constructor test.
+   */
+  @Test
+  public void testDummyConstructor() {
+    Shorebirds testDummy = new Shorebirds(2);
+    // Following line gets rid of unused variable warning.
   }
 
   /**
@@ -68,9 +85,13 @@ public class ShorebirdsTest {
     Foodlist.add("fish");
     Foodlist.add("buds");
 
-    test = new Shorebirds("Kiwis", Characlist, false, 0, Foodlist);
-    String expectedOutput = "Type: Kiwis, Characteristics: [Live near wetlands], Is Extinct: "
-                             + "false, Wing numbers: 0, Food preference: [fish, buds]";
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
+    String expectedOutput = "Type: Great auk, Characteristics: [Live near wetlands], Is Extinct: "
+        + "false, Wing numbers: 0, Food preference: [fish, buds]"
+        + ", Closest body of water: [Saltwater]";
     assertEquals(expectedOutput, test.toString());
   }
 
@@ -91,8 +112,7 @@ public class ShorebirdsTest {
   public void testgetCharac() {
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Live near wetlands");
-    assertTrue("Both character lists are not equal", 
-                      CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
   }
 
   /**
@@ -122,8 +142,88 @@ public class ShorebirdsTest {
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("buds");
     FoodlistTest.add("larvae");
-    assertTrue("Both food lists are not equal", 
-                          FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
+  }
+
+  /**
+   * Test the getBodyOfWater function works as expected.
+   * 
+   */
+  @Test
+  public void testgetBodyOfWaterf() {
+    ArrayList<String> waterlistTest = new ArrayList<String>();
+    waterlistTest.add("Saltwater");
+
+    assertTrue("Both body of water lists are not equal",
+        waterlistTest.equals(test.getBodyOfWater()));
+  }
+
+  /**
+   * Test add a body of water to a body of water list.
+   * 
+   */
+  @Test
+  public void testaddbodyOfWater() {
+    test.addBodyOfWater("Wetlands");
+
+    ArrayList<String> waterlistTest = new ArrayList<String>();
+    waterlistTest.add("Saltwater");
+    waterlistTest.add("Wetlands");
+
+    assertTrue("Both water lists are not equal", waterlistTest.equals(test.getBodyOfWater()));
+  }
+
+  /**
+   * Sanity test: Test add body of water that is already in the list.
+   * 
+   */
+  @Test
+  public void testaddSameWater() {
+    ArrayList<String> waterlist = test.getBodyOfWater();
+    test.addBodyOfWater("Ocean");
+    assertTrue("Body of water was added twice!", waterlist.equals(test.getBodyOfWater()));
+  }
+
+  /**
+   * Test set body of water list of an object.
+   * 
+   */
+  @Test
+  public void testsetbodyOfWater() {
+    ArrayList<String> waterlist = new ArrayList<String>();
+    waterlist.add("Freshwater");
+    test.setBodyOfWater(waterlist);
+
+    ArrayList<String> waterlistTest = new ArrayList<String>();
+    waterlistTest.add("Freshwater");
+
+    assertTrue("Both character lists are not equal", waterlistTest.equals(test.getBodyOfWater()));
+
+  }
+
+  /**
+   * Test remove body of water from body of water list of an object.
+   */
+  @Test
+  public void testremoveBodyOfWater() {
+    ArrayList<String> Characlist = new ArrayList<String>();
+    Characlist.add("Live near wetlands");
+
+    ArrayList<String> Foodlist = new ArrayList<String>();
+    Foodlist.add("buds");
+    Foodlist.add("larvae");
+
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Wetlands");
+    bodyOfWaterlist.add("Freshwater");
+
+    test = new Shorebirds("Horned puffin", Characlist, false, 0, Foodlist, bodyOfWaterlist);
+    test.removeBodyOfWater("Freshwater");
+
+    ArrayList<String> waterlistTest2 = new ArrayList<String>();
+    waterlistTest2.add("Wetlands");
+    assertTrue("Both water lists lists are not equal",
+        waterlistTest2.equals(test.getBodyOfWater()));
   }
 
   /**
@@ -138,8 +238,7 @@ public class ShorebirdsTest {
     CharaclistTest.add("Live near wetlands");
     CharaclistTest.add("Live near the ocean");
 
-    assertTrue("Both character lists are not equal", 
-                          CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -166,8 +265,7 @@ public class ShorebirdsTest {
     CharaclistTest.add("Live near the ocean");
 
     test.setCharac(CharaclistTest);
-    assertTrue("Both character lists are not equal", 
-                        CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -184,13 +282,15 @@ public class ShorebirdsTest {
     Foodlist.add("buds");
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
     test.removeCharac("Live near wetlands");
 
     ArrayList<String> CharaclistTest2 = new ArrayList<String>();
     CharaclistTest2.add("Live near the ocean");
-    assertTrue("Both character lists are not equal", 
-                       CharaclistTest2.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest2.equals(test.getCharac()));
   }
 
   /**
@@ -198,8 +298,8 @@ public class ShorebirdsTest {
    */
   @Test
   public void testsetType() {
-    test.setType("Moas");
-    assertEquals("Moas", test.TypeOfBird);
+    test.setType("Horned puffin");
+    assertEquals("Horned puffin", test.TypeOfBird);
   }
 
   /**
@@ -221,6 +321,16 @@ public class ShorebirdsTest {
   }
 
   /**
+   * Test add similar body of water to a body of water list.
+   * 
+   */
+  @Test
+  public void testaddSimilarbodyOfWater() {
+    test.addBodyOfWater("Saltwater");
+
+  }
+
+  /**
    * Test add a food to food preference list.
    */
   @Test
@@ -232,7 +342,10 @@ public class ShorebirdsTest {
     Foodlist.add("buds");
     Foodlist.add("fruit");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
 
     test.addFoodPref("other birds");
 
@@ -241,8 +354,7 @@ public class ShorebirdsTest {
     FoodlistTest.add("fruit");
     FoodlistTest.add("other birds");
 
-    assertTrue("Both food lists are not equal", 
-                          FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -259,15 +371,17 @@ public class ShorebirdsTest {
     Foodlist.add("fish");
     Foodlist.add("buds");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fish");
     FoodlistTest.add("buds");
 
     test.setFoodPref(FoodlistTest);
-    assertTrue("Both character lists are not equal", 
-                            FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -285,15 +399,17 @@ public class ShorebirdsTest {
     Foodlist.add("fish");
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
     test.removeFoodPref("buds");
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fish");
     FoodlistTest.add("larvae");
 
-    assertTrue("Both character lists are not equal", 
-                             FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -302,7 +418,7 @@ public class ShorebirdsTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testsetWrongType() {
-    test.setType("African Jacana");
+    test.setType("African Jacana 2");
   }
 
   /**
@@ -328,7 +444,59 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("African Jacana", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("African Jacana", Characlist, false, 0, Foodlist, bodyOfWaterlist);
+
+  }
+
+  /**
+   * Assertion test: remove illegal body of water from body of water list of an
+   * object.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testremoveIllegalBodyOfWater() {
+    test.removeBodyOfWater("Waterhouse");
+  }
+
+  /**
+   * Assertion test: Test remove illegal body of water from body of water list
+   * of an object.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testremoveLastBodyOfWater() {
+    test.removeBodyOfWater("Saltwater");
+  }
+
+  /**
+   * Assertion test: Test remove body of water not in body of water list of an
+   * object.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testremoveWrongBodyOfWater() {
+    test.removeBodyOfWater("Freshwater");
+  }
+
+  /**
+   * Test add illegal body of water to a body of water list.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testaddIllegalbodyOfWater() {
+    test.addBodyOfWater("Waterhouse");
+
+  }
+
+  /**
+   * Test set illegal body of water list of an object.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetIllegalBodyOfWater() {
+    ArrayList<String> waterlist = new ArrayList<String>();
+    waterlist.add("Waterhouse");
+    test.setBodyOfWater(waterlist);
 
   }
 
@@ -345,7 +513,34 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
+
+  }
+
+  /**
+   * Test set empty character list of an object.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetEmptyCharac() {
+
+    ArrayList<String> CharaclistTest = new ArrayList<String>();
+    test.setCharac(CharaclistTest);
+
+  }
+
+  /**
+   * Test set empty body of water list of an object.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetEmptyBodyOfWaterList() {
+
+    ArrayList<String> waterList = new ArrayList<String>();
+    test.setBodyOfWater(waterList);
 
   }
 
@@ -362,7 +557,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
     test.addCharac("Lives in a cave");
 
   }
@@ -394,7 +592,10 @@ public class ShorebirdsTest {
     Foodlist.add("fish");
     Foodlist.add("berries");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("oat meal");
@@ -417,7 +618,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
     test.addFoodPref("Potatoes");
 
   }
@@ -435,7 +639,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, -89, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, -89, Foodlist, bodyOfWaterlist);
   }
 
   /**
@@ -451,7 +658,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 3, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 3, Foodlist, bodyOfWaterlist);
   }
 
   /**
@@ -471,7 +681,10 @@ public class ShorebirdsTest {
     Foodlist.add("buds");
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 3, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 3, Foodlist, bodyOfWaterlist);
   }
 
   /**
@@ -487,7 +700,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 3, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 3, Foodlist, bodyOfWaterlist);
   }
 
   /**
@@ -502,7 +718,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
     test.setWingsNum(-1);
   }
 
@@ -518,7 +737,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
     test.setWingsNum(10);
   }
 
@@ -534,7 +756,10 @@ public class ShorebirdsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
     test.removeCharac("Live near wetlands");
   }
 
@@ -579,7 +804,10 @@ public class ShorebirdsTest {
     Foodlist.add("fish");
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
     test.removeFoodPref("fish");
   }
 
@@ -598,7 +826,10 @@ public class ShorebirdsTest {
     Foodlist.add("berries");
     Foodlist.add("fruit");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
     test.addFoodPref("other birds");
   }
 
@@ -618,7 +849,10 @@ public class ShorebirdsTest {
     Foodlist.add("berries");
     Foodlist.add("fruit");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fish");
@@ -644,7 +878,10 @@ public class ShorebirdsTest {
     Foodlist.add("fish");
     Foodlist.add("larvae");
 
-    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 2, Foodlist, bodyOfWaterlist);
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("berries");
 
@@ -725,6 +962,25 @@ public class ShorebirdsTest {
   }
 
   /**
+   * Assertion test: Test the object is constructed with a wrong shorebird type
+   * preference.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testWrongBirdConstructor() {
+    ArrayList<String> Characlist = new ArrayList<String>();
+    Characlist.add("Live near wetlands");
+
+    ArrayList<String> Foodlist = new ArrayList<String>();
+    Foodlist.add("buds");
+    Foodlist.add("Hotdogs");
+
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Freddy Kruger", Characlist, false, 0, Foodlist, bodyOfWaterlist);
+  }
+
+  /**
    * Assertion test: Test the object is constructed with more food preferences.
    */
   @Test(expected = IllegalArgumentException.class)
@@ -739,7 +995,10 @@ public class ShorebirdsTest {
     Foodlist.add("fruit");
     Foodlist.add("other birds");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
   }
 
   /**
@@ -757,6 +1016,9 @@ public class ShorebirdsTest {
     Foodlist.add("larvae");
     Foodlist.add("fruit");
 
-    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist);
+    ArrayList<String> bodyOfWaterlist = new ArrayList<String>();
+    bodyOfWaterlist.add("Saltwater");
+
+    test = new Shorebirds("Great auk", Characlist, false, 0, Foodlist, bodyOfWaterlist);
   }
 }

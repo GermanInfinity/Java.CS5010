@@ -39,7 +39,7 @@ public class OwlsTest {
   @Test
   public void testInputs() {
     String expectedOutput = "Type: Owls, Characteristics: [Facial disk], Is Extinct: "
-                          + "false, Wing numbers: 0, Food preference: [buds, larvae]";
+        + "false, Wing numbers: 0, Food preference: [buds, larvae]";
 
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Facial disk");
@@ -70,7 +70,7 @@ public class OwlsTest {
 
     test = new Owls("True owl", Characlist, false, 0, Foodlist);
     String expectedOutput = "Type: True owl, Characteristics: [Facial disk], Is Extinct: "
-                             + "false, Wing numbers: 0, Food preference: [fish, buds]";
+        + "false, Wing numbers: 0, Food preference: [fish, buds]";
     assertEquals(expectedOutput, test.toString());
   }
 
@@ -91,8 +91,7 @@ public class OwlsTest {
   public void testgetCharac() {
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Facial disk");
-    assertTrue("Both character lists are not equal", 
-                      CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
   }
 
   /**
@@ -122,8 +121,7 @@ public class OwlsTest {
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("buds");
     FoodlistTest.add("larvae");
-    assertTrue("Both food lists are not equal", 
-                          FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
   }
 
   /**
@@ -138,8 +136,7 @@ public class OwlsTest {
     CharaclistTest.add("Facial disk");
     CharaclistTest.add("Bill");
 
-    assertTrue("Both character lists are not equal", 
-                          CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -166,8 +163,7 @@ public class OwlsTest {
     CharaclistTest.add("Bill");
 
     test.setCharac(CharaclistTest);
-    assertTrue("Both character lists are not equal", 
-                        CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -189,8 +185,7 @@ public class OwlsTest {
 
     ArrayList<String> CharaclistTest2 = new ArrayList<String>();
     CharaclistTest2.add("Bill");
-    assertTrue("Both character lists are not equal", 
-                       CharaclistTest2.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest2.equals(test.getCharac()));
   }
 
   /**
@@ -241,8 +236,7 @@ public class OwlsTest {
     FoodlistTest.add("fruit");
     FoodlistTest.add("other birds");
 
-    assertTrue("Both food lists are not equal", 
-                          FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -266,8 +260,7 @@ public class OwlsTest {
     FoodlistTest.add("buds");
 
     test.setFoodPref(FoodlistTest);
-    assertTrue("Both character lists are not equal", 
-                            FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -292,8 +285,7 @@ public class OwlsTest {
     FoodlistTest.add("fish");
     FoodlistTest.add("larvae");
 
-    assertTrue("Both character lists are not equal", 
-                             FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -329,6 +321,18 @@ public class OwlsTest {
     Foodlist.add("fish");
 
     test = new Owls("Hawk", Characlist, false, 0, Foodlist);
+
+  }
+
+  /**
+   * Test set empty character list of an object.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetEmptyCharac() {
+
+    ArrayList<String> CharaclistTest = new ArrayList<String>();
+    test.setCharac(CharaclistTest);
 
   }
 

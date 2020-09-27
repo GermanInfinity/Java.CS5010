@@ -28,7 +28,7 @@ public class ParrotsTest {
     Foodlist.add("buds");
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
   }
 
   /**
@@ -39,7 +39,8 @@ public class ParrotsTest {
   @Test
   public void testInputs() {
     String expectedOutput = "Type: Rose-ringed parakeet, Characteristics: [Short beak], Is Extinct: "
-                          + "false, Wing numbers: 0, Food preference: [buds, larvae]";
+        + "false, Wing numbers: 0, Food preference: [buds, larvae],"
+        + " Number of vocabulary words: 3, Favorite word: Hamburger";
 
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Short beak");
@@ -53,6 +54,8 @@ public class ParrotsTest {
     assertFalse("Is extinct parameters are not similar.", test.isExtinct);
     assertEquals(0, test.WingsNum, 0);
     assertTrue("Both food lists are not equal", FoodlistTest.equals(test.FoodPref));
+    assertEquals(3, test.numOfVocabWords, 0);
+    assertEquals("Hamburger", test.favWord);
     assertEquals(expectedOutput, test.toString());
   }
 
@@ -68,9 +71,10 @@ public class ParrotsTest {
     Foodlist.add("fish");
     Foodlist.add("buds");
 
-    test = new Parrots("Kiwis", Characlist, false, 0, Foodlist);
-    String expectedOutput = "Type: Kiwis, Characteristics: [Short beak], Is Extinct: "
-                             + "false, Wing numbers: 0, Food preference: [fish, buds]";
+    test = new Parrots("Gray parrot", Characlist, false, 0, Foodlist, 3, "Hamburger");
+    String expectedOutput = "Type: Gray parrot, Characteristics: [Short beak], Is Extinct: "
+        + "false, Wing numbers: 0, Food preference: [fish, buds],"
+        + " Number of vocabulary words: 3, Favorite word: Hamburger";
     assertEquals(expectedOutput, test.toString());
   }
 
@@ -91,8 +95,7 @@ public class ParrotsTest {
   public void testgetCharac() {
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Short beak");
-    assertTrue("Both character lists are not equal", 
-                      CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
   }
 
   /**
@@ -122,8 +125,41 @@ public class ParrotsTest {
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("buds");
     FoodlistTest.add("larvae");
-    assertTrue("Both food lists are not equal", 
-                          FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
+  }
+
+  /**
+   * Test the get num of favorite words function works as expected.
+   */
+  @Test
+  public void testgetnumOfVocabWords() {
+    assertEquals(3, test.getNumOfvocabWords(), 0);
+  }
+
+  /**
+   * Test the get fav word function works as expected.
+   */
+  @Test
+  public void testgetFavWord() {
+    assertEquals("Hamburger", test.getFavWord());
+  }
+
+  /**
+   * Test the set num of favorite words function works as expected.
+   */
+  @Test
+  public void testsetnumOfVocabWords() {
+    test.setNumOfvocabWords(5);
+    assertEquals(5, test.numOfVocabWords, 0);
+  }
+
+  /**
+   * Test the set fav word function works as expected.
+   */
+  @Test
+  public void testsetFavWord() {
+    test.setFavWord("Milk");
+    assertEquals("Milk", test.favWord);
   }
 
   /**
@@ -138,8 +174,7 @@ public class ParrotsTest {
     CharaclistTest.add("Short beak");
     CharaclistTest.add("Intelligence");
 
-    assertTrue("Both character lists are not equal", 
-                          CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -166,8 +201,7 @@ public class ParrotsTest {
     CharaclistTest.add("Intelligence");
 
     test.setCharac(CharaclistTest);
-    assertTrue("Both character lists are not equal", 
-                        CharaclistTest.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest.equals(test.getCharac()));
 
   }
 
@@ -184,13 +218,12 @@ public class ParrotsTest {
     Foodlist.add("buds");
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
     test.removeCharac("Short beak");
 
     ArrayList<String> CharaclistTest2 = new ArrayList<String>();
     CharaclistTest2.add("Intelligence");
-    assertTrue("Both character lists are not equal", 
-                       CharaclistTest2.equals(test.getCharac()));
+    assertTrue("Both character lists are not equal", CharaclistTest2.equals(test.getCharac()));
   }
 
   /**
@@ -198,8 +231,8 @@ public class ParrotsTest {
    */
   @Test
   public void testsetType() {
-    test.setType("Moas");
-    assertEquals("Moas", test.TypeOfBird);
+    test.setType("Gray parrot");
+    assertEquals("Gray parrot", test.TypeOfBird);
   }
 
   /**
@@ -232,7 +265,7 @@ public class ParrotsTest {
     Foodlist.add("buds");
     Foodlist.add("fruit");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
 
     test.addFoodPref("other birds");
 
@@ -241,8 +274,7 @@ public class ParrotsTest {
     FoodlistTest.add("fruit");
     FoodlistTest.add("other birds");
 
-    assertTrue("Both food lists are not equal", 
-                          FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both food lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -259,15 +291,14 @@ public class ParrotsTest {
     Foodlist.add("fish");
     Foodlist.add("buds");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fish");
     FoodlistTest.add("buds");
 
     test.setFoodPref(FoodlistTest);
-    assertTrue("Both character lists are not equal", 
-                            FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
   }
 
@@ -285,16 +316,23 @@ public class ParrotsTest {
     Foodlist.add("fish");
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
     test.removeFoodPref("buds");
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fish");
     FoodlistTest.add("larvae");
 
-    assertTrue("Both character lists are not equal", 
-                             FoodlistTest.equals(test.getFoodPref()));
+    assertTrue("Both character lists are not equal", FoodlistTest.equals(test.getFoodPref()));
 
+  }
+
+  /**
+   * Assertion test: Test set number of words catches negative number.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetnumOfIllegalVocabWords() {
+    test.setNumOfvocabWords(-15);
   }
 
   /**
@@ -302,7 +340,7 @@ public class ParrotsTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testsetWrongType() {
-    test.setType("Gray parrot");
+    test.setType("Eskimo parrot");
   }
 
   /**
@@ -328,7 +366,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Gray parrot", Characlist, false, 0, Foodlist);
+    test = new Parrots("Gray parrot", Characlist, false, 0, Foodlist, 3, "Hamburger");
 
   }
 
@@ -345,7 +383,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
 
   }
 
@@ -362,7 +400,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
     test.addCharac("Lives in a cave");
 
   }
@@ -381,6 +419,18 @@ public class ParrotsTest {
   }
 
   /**
+   * Test set empty character list of an object.
+   * 
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetEmptyCharac() {
+
+    ArrayList<String> CharaclistTest = new ArrayList<String>();
+    test.setCharac(CharaclistTest);
+
+  }
+
+  /**
    * Assertion test on setting an invalid food list
    * 
    */
@@ -394,7 +444,7 @@ public class ParrotsTest {
     Foodlist.add("fish");
     Foodlist.add("berries");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("oat meal");
@@ -417,7 +467,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
     test.addFoodPref("Potatoes");
 
   }
@@ -435,7 +485,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, -89, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, -89, Foodlist, 3, "Hamburger");
   }
 
   /**
@@ -451,7 +501,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 3, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 3, Foodlist, 3, "Hamburger");
   }
 
   /**
@@ -471,7 +521,7 @@ public class ParrotsTest {
     Foodlist.add("buds");
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 3, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 3, Foodlist, 3, "Hamburger");
   }
 
   /**
@@ -487,7 +537,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 3, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 3, Foodlist, 3, "Hamburger");
   }
 
   /**
@@ -502,7 +552,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
     test.setWingsNum(-1);
   }
 
@@ -518,7 +568,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
     test.setWingsNum(10);
   }
 
@@ -534,7 +584,7 @@ public class ParrotsTest {
     ArrayList<String> Foodlist = new ArrayList<String>();
     Foodlist.add("fish");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
     test.removeCharac("Short beak");
   }
 
@@ -579,7 +629,7 @@ public class ParrotsTest {
     Foodlist.add("fish");
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
     test.removeFoodPref("fish");
   }
 
@@ -598,7 +648,7 @@ public class ParrotsTest {
     Foodlist.add("berries");
     Foodlist.add("fruit");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
     test.addFoodPref("other birds");
   }
 
@@ -618,7 +668,7 @@ public class ParrotsTest {
     Foodlist.add("berries");
     Foodlist.add("fruit");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
 
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fish");
@@ -644,7 +694,7 @@ public class ParrotsTest {
     Foodlist.add("fish");
     Foodlist.add("larvae");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 2, Foodlist, 3, "Hamburger");
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("berries");
 
@@ -739,7 +789,7 @@ public class ParrotsTest {
     Foodlist.add("fruit");
     Foodlist.add("other birds");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
   }
 
   /**
@@ -757,6 +807,43 @@ public class ParrotsTest {
     Foodlist.add("larvae");
     Foodlist.add("fruit");
 
-    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist);
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
   }
+
+  /**
+   * Assertion test: Test the object is constructed with a non parrot type
+   * preference.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testWrongParrotinConstructor() {
+    ArrayList<String> Characlist = new ArrayList<String>();
+    Characlist.add("Short beak");
+
+    ArrayList<String> Foodlist = new ArrayList<String>();
+    Foodlist.add("buds");
+    Foodlist.add("Hotdogs");
+    Foodlist.add("larvae");
+    Foodlist.add("fruit");
+
+    test = new Parrots("Animal parakeet", Characlist, false, 0, Foodlist, 3, "Hamburger");
+  }
+
+  /**
+   * Assertion test: Test the object is constructed with a negative number of
+   * words preference.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testWrongNumWordsinConstructor() {
+    ArrayList<String> Characlist = new ArrayList<String>();
+    Characlist.add("Short beak");
+
+    ArrayList<String> Foodlist = new ArrayList<String>();
+    Foodlist.add("buds");
+    Foodlist.add("Hotdogs");
+    Foodlist.add("larvae");
+    Foodlist.add("fruit");
+
+    test = new Parrots("Rose-ringed parakeet", Characlist, false, 0, Foodlist, -3, "Hamburger");
+  }
+
 }
