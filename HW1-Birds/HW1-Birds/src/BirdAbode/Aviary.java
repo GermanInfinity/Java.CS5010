@@ -9,6 +9,7 @@ public class Aviary {
   private ArrayList<Birds> aviary;
   public Boolean locked;
   private String num;
+
   
   
   /** 
@@ -43,16 +44,6 @@ public class Aviary {
   
   
   /** 
-   * getAviarySze returns size of an Aviary.
-   * @param accepts nothing. 
-   */
-  public int getAviarySize() 
-  { 
-    return this.aviary.size();
-  }
-  
-  
-  /** 
    * getAviary returns the array list of birds in the aviary.
    * @param accepts nothing. 
    */
@@ -63,35 +54,28 @@ public class Aviary {
   
   
   /** 
+   * printAviary prints the array list of birds in the aviary.
+   * @param accepts nothing. 
+   */
+  public void printAviary() 
+  { 
+    ArrayList<String> printTypes = new ArrayList<String>();
+    for (int i = 0; i < this.aviary.size(); i++)
+    {
+      printTypes.add(ClassOfBird(this.aviary.get(i).getType()));
+    }
+    System.out.println(printTypes);
+  }
+  
+  
+  /** 
    * getSize function returns the size of an Aviary. 
    */
-  public int getSize()
+  public int Size()
   {
     return this.aviary.size();
   }
 
-  /** 
-   * AddBird function handles adding birds in bird classes that mix with 
-   * other classes.
-   * @param a Bird object to store.
-   */
-  public Boolean AddBird(Birds Bird)
-  {
-    String birdClass = ClassOfBird(Bird.getType());
-    Boolean added = false; 
-    
-    
-    if (birdClass != "Flightless Birds" && birdClass != "Birds Of Prey" && 
-        birdClass != "Waterfowl" && this.locked == false)
-    {
-       this.aviary.add(Bird);
-       added = true; 
-       if (this.aviary.size() == 5) { this.locked = true; };
-       
-       return added;
-    }
-    return added;
-  }
   
   /**
    * FoodKept function combines all the food preferences of the birds in an aviary. 
@@ -113,6 +97,38 @@ public class Aviary {
     
 
   }
+  
+  /** 
+   * AddBird function handles adding birds in bird classes that mix with 
+   * other classes.
+   * @param a Bird object to store.
+   */
+  public Boolean AddBird(Birds Bird)
+  {
+    String birdClass = ClassOfBird(Bird.getType());
+    Boolean added = false; 
+    
+    /**
+     * If aviary is full, we cannot add more birds. 
+     */
+    if (this.aviary.size() == 5) 
+    { 
+      this.locked = true;
+      return added;
+     }
+     
+    
+    if (birdClass != "Flightless Birds" && birdClass != "Birds Of Prey" && 
+        birdClass != "Waterfowl" && this.locked == false)
+    {
+       this.aviary.add(Bird);
+       added = true;   
+       return added;
+    }
+    return added;
+  }
+  
+  
   /**
    * AddSpecialBird function handles adding birds in bird classes that do 
    *                mix with other bird classes. 
@@ -123,18 +139,68 @@ public class Aviary {
     String birdClass = ClassOfBird(Bird.getType());
     Boolean added = false; 
     
-    /*
+    /**
      * If aviary is full, we cannot add more birds. 
      */
     if (this.aviary.size() == 5) 
     { 
       this.locked = true;
+      return added;
      }
+    
+    /**
+     * Avoid mixing with other birds.
+     */
+    if (this.aviary.size() > 0)
+    {
+      for (int i = 0; i < this.aviary.size(); i++)
+      {
+        Birds birdInAviary = this.aviary.get(i);
+        String birdInAviaryClass = ClassOfBird(birdInAviary.getType());
+        if (birdInAviaryClass != "Flightless Birds" && birdInAviaryClass != "Birds Of Prey" && 
+            birdInAviaryClass != "Waterfowl")
+        {
+          return added;
+        }
+      }
+    }
      
+    
     /** 
      * Adding to aviary of special birds. 
      */
     if (this.locked == false && this.aviary.size() < 5)
+    {
+      
+      if (birdClass == "Flightless Birds") 
+      { 
+        this.aviary.add(Bird); 
+        added = true;
+        this.locked = true;
+        return added;
+      }
+      
+      
+      if (birdClass== "Birds Of Prey") 
+      { 
+        this.aviary.add(Bird); 
+        added = true; 
+        this.locked = true;
+        return added;
+      }
+
+
+      if (birdClass == "Waterfowl") 
+      { 
+        this.aviary.add(Bird); 
+        added = true; 
+        this.locked = true;
+        return added;
+      } 
+    }
+    
+    
+    if (this.locked == true && this.aviary.size() < 5)
     {
       
       if (birdClass == "Flightless Birds") 
@@ -158,9 +224,7 @@ public class Aviary {
         this.aviary.add(Bird); 
         added = true; 
         return added;
-      }
-      
-      if (this.aviary.size() == 5) { this.locked = true; };
+      } 
     }
     
     return added;
@@ -201,9 +265,9 @@ public class Aviary {
         + "name of the first bird that was \n|     put in it.                                 |");
     System.out.println("|                                                |");
     System.out.println("|     Can you tell what a                        |");
-    System.out.println("                   " + this.getAviaryName().substring(0,end) + "        "
+    System.out.println("                   " + this.getAviaryName().substring(0,end) + "is?       "
         + "           ");
-    System.out.println("|                                      is?       |");
+    System.out.println("|                                                |");
     System.out.println("|                                                |");
     System.out.println("|                                                |");
     System.out.println("--------------------------------------------------");
@@ -235,6 +299,7 @@ public class Aviary {
     
     ArrayList<String> OwlsList = new ArrayList<String>();
     OwlsList.add("Owls");
+    OwlsList.add("True owl");
     
     if (OwlsList.contains(birdName)) { return "Owls"; } ;
     
@@ -267,7 +332,9 @@ public class Aviary {
     
     if (ShorebirdsList.contains(birdName)) { return "Waterfowl"; } ;
     
-    return "Could not find the bird class.";
+    throw new IllegalArgumentException(
+        "Cannot find bird class");
+    
     
   }
 

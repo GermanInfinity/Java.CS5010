@@ -17,16 +17,15 @@ import BirdAnimal.Pigeons;
  *
  */
 public class Conservatory {
-  
+
   private ArrayList<Aviary> inHouseAviaries;
-  
-  
-  /** 
-   * Constructor of the Conservatory class, initializes 20 aviaries.
-   * Takes no parameters and returns a Conservatory object.
+
+  /**
+   * Constructor of the Conservatory class, initializes 20 aviaries. Takes no
+   * parameters and returns a Conservatory object.
    */
-  public Conservatory() 
-  {
+  public Conservatory() {
+   
     this.inHouseAviaries = new ArrayList<Aviary>();
     this.inHouseAviaries.add(new Aviary(false, "1"));
     this.inHouseAviaries.add(new Aviary(false, "2"));
@@ -50,275 +49,210 @@ public class Conservatory {
     this.inHouseAviaries.add(new Aviary(false, "20"));
 
   }
-  
+
   /**
    * getAviary function returns the aviary object in the conservatory.
+   * 
    * @param takes number of aviary
    */
-  public Aviary getAviary(int idx) { 
-    if (idx < 20 && idx > 0) { return this.inHouseAviaries.get(idx); } 
-    else {
-      throw new IllegalArgumentException(
-          "There are only 20 aviaries in the conservatory.");
+  public Aviary getAviary(int idx) {
+    if (idx < 20 && idx >= 0) {
+      return this.inHouseAviaries.get(idx);
+    } else {
+      throw new IllegalArgumentException("There are only 20 aviaries in the conservatory.");
     }
-    
+
   }
-  /** 
-   * RescueBird function stores a bird object in a desired aviary in the 
-   * conservatory.
-   * @param bird object.
-   */
-  public void RescueBird(Birds bird)
-  {
-    int count = 0;
-    Boolean simpleAdd;
-    Boolean complexAdd;
-    
-    if (bird.getisExtinct() == false) 
-    {
-      for (int i = 0; i < inHouseAviaries.size(); i++)
-      {
-        Aviary currentAviary = inHouseAviaries.get(i);
-        
-        if (currentAviary.locked == false)
-        {
-          simpleAdd = currentAviary.AddSpecialBird(bird);
-          complexAdd = currentAviary.AddBird(bird);
-          
-          //System.out.println(simpleAdd);
-          if (simpleAdd) { break; }
-          if (complexAdd) { break; }
-        }
-        
-        if (currentAviary.locked == true) { count++; }
-      }
-      
-      if (count == 20) {
-        throw new IllegalArgumentException (
-            "All the aviaries in the conseratory are full!");
-      }
-    }
-  }
-  
+
   /**
-   * FoodQuant function calculates what food needs to be kept and the quantity 
-   * across all aviaries in the Conservatory. 
+   * FoodQuant function calculates what food needs to be kept and the quantity
+   * across all aviaries in the Conservatory.
    */
-  public String FoodQuant()
-  {
-    ArrayList<String> totalFood = new ArrayList<String>();;
-    
-    for (int i = 0; i < inHouseAviaries.size(); i++)
-    {
+  public String FoodQuant() {
+    ArrayList<String> totalFood = new ArrayList<String>();
+
+    for (int i = 0; i < inHouseAviaries.size(); i++) {
       Aviary aviary = this.inHouseAviaries.get(i);
       ArrayList<String> foodHere = aviary.FoodKept();
-      
-      for (int idx = 0; idx < foodHere.size(); idx++)
-      { 
+
+      for (int idx = 0; idx < foodHere.size(); idx++) {
         totalFood.add(foodHere.get(i));
       }
     }
-    
-    /* 
-     * This loop loops through the food preference list and counts there occurrences
-     * in the food preferences list from the aviaries. 
+
+    /*
+     * This loop loops through the food preference list and counts there
+     * occurrences in the food preferences list from the aviaries.
      */
-    String[] FoodPrefList = {"berries", "seeds", "fruit", "insects", "other birds",  
-        "eggs", "small mammals", "fish", "buds", "larvae", "aquatic invertebrates", "nuts",
-        "vegetation"};
+    String[] FoodPrefList = { "berries", "seeds", "fruit", "insects", "other birds", "eggs",
+        "small mammals", "fish", "buds", "larvae", "aquatic invertebrates", "nuts", "vegetation" };
     String result = "";
-    for (int i = 0; i < FoodPrefList.length; i++)
-    {
-      result += FoodPrefList[i] + Collections.frequency(totalFood, FoodPrefList[i]) + "\n";
+    for (int i = 0; i < FoodPrefList.length; i++) {
+      result += FoodPrefList[i] + ": " + Collections.frequency(totalFood, FoodPrefList[i]) + "\n";
     }
-    
+
     return result;
   }
+
   
-  /** 
-   * FindBird function finds a bird object's aviary.
-   * @param Bird object type.
+  /**
+   * toString This function lists all birds in the conservatory in alphabetical ordder and 
+   * their location. It returns the resulting list as a string, and is the toStreing method
+   * of the class.
    */
-  public String FindBird(String birdType)
-  {
-    String result = ""; 
-    Boolean found = false;
-    
-    /** 
+  @Override
+  public String toString() 
+  { 
+    ArrayList<String> totalBirds = new ArrayList<String>();
+
+    /**
      * Loop through aviaries in conservatory.
      */
-    for (int i = 0; i < inHouseAviaries.size(); i++)
-    {
+    for (int i = 0; i < inHouseAviaries.size(); i++) {
       Aviary currentAviary = inHouseAviaries.get(i);
       ArrayList<Birds> aviaryList = currentAviary.getAviary();
-      
+
       /**
-       * Loop through birds in aviary. 
+       * Loop through birds in aviary.
        */
-      for (int idx = 0; idx < aviaryList.size(); idx++)
-      {
+      for (int idx = 0; idx < aviaryList.size(); idx++) {
         String birdinAviary = aviaryList.get(idx).getType();
-        if (birdType == birdinAviary) 
-        {
+        totalBirds.add(birdinAviary);
+      }
+    }
+    
+    Collections.sort(totalBirds, String.CASE_INSENSITIVE_ORDER);
+    
+    /**
+     * After sorting, we determine location of each bird. 
+     */
+    String result = "";
+    for (int i = 0; i < totalBirds.size(); i++)
+    {
+      result += FindBird(totalBirds.get(i)) + "\n";
+      
+    }
+    return result;
+    
+  }
+  /**
+   * RescueBird function stores a bird object in a desired aviary in the
+   * conservatory.
+   * 
+   * @param bird object.
+   */
+  public void RescueBird(Birds bird) {
+    Boolean simpleAdd;
+    Boolean complexAdd;
+
+    if (bird.getisExtinct() == false) {
+      for (int i = 0; i < inHouseAviaries.size(); i++) {
+        Aviary currentAviary = inHouseAviaries.get(i);
+        
+        simpleAdd = currentAviary.AddBird(bird);
+        complexAdd = currentAviary.AddSpecialBird(bird);
+
+        if (simpleAdd) {
+          break;
+        }
+        if (complexAdd) {
+          break;
+        }
+      }
+    }
+
+  }
+
+  /**
+   * FindBird function finds a bird object's aviary.
+   * 
+   * @param Bird object type.
+   */
+  public String FindBird(String birdType) {
+    String result = "";
+    Boolean found = false;
+
+    /**
+     * Loop through aviaries in conservatory.
+     */
+    for (int i = 0; i < inHouseAviaries.size(); i++) {
+      Aviary currentAviary = inHouseAviaries.get(i);
+      ArrayList<Birds> aviaryList = currentAviary.getAviary();
+
+      /**
+       * Loop through birds in aviary.
+       */
+      for (int idx = 0; idx < aviaryList.size(); idx++) {
+        String birdinAviary = aviaryList.get(idx).getType();
+        if (birdType == birdinAviary) {
           result += currentAviary.getAviaryName() + "... ";
           found = true;
         }
       }
     }
-    
-    if (found) { return birdType + " was found in " + result; } 
-    else { return "Sorry, that bird is not in the conservatory."; } 
-    
+
+    if (found) {
+      return birdType + " was found in " + result;
+    } else {
+      return "Sorry, that bird is not in the conservatory.";
+    }
+
   }
-  
-  
+
   public static void main(String[] args) {
-    
+
     Conservatory test = new Conservatory();
-    
+
     ArrayList<String> CharaclistTest = new ArrayList<String>();
     CharaclistTest.add("Cannot fly");
-    
+
     ArrayList<String> CharaclistTest2 = new ArrayList<String>();
     CharaclistTest2.add("Facial disk");
-    
+
     ArrayList<String> CharaclistTest3 = new ArrayList<String>();
     CharaclistTest3.add("Small heads");
-    
-    
+
     ArrayList<String> FoodlistTest = new ArrayList<String>();
     FoodlistTest.add("fruit");
     FoodlistTest.add("fish");
-    
+
     FlightlessBirds fll = new FlightlessBirds("Emus", CharaclistTest, false, 0, FoodlistTest);
     Owls ow = new Owls("True owl", CharaclistTest2, false, 2, FoodlistTest);
     Pigeons pgn = new Pigeons("Doves", CharaclistTest3, false, 1, FoodlistTest);
+
     
+
+
+    test.RescueBird(pgn);
+    test.RescueBird(pgn);
+    test.RescueBird(fll);
+    test.RescueBird(ow);
+    test.RescueBird(pgn);
     test.RescueBird(fll);
     test.RescueBird(fll);
     test.RescueBird(fll);
     test.RescueBird(fll);
     test.RescueBird(fll);
+    test.RescueBird(fll);
+    test.RescueBird(pgn);
+    test.RescueBird(pgn);
+    test.RescueBird(fll);
+    test.RescueBird(ow);
+    test.RescueBird(pgn);
+    test.RescueBird(ow);
+    test.RescueBird(pgn);
     
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
-//    test.RescueBird(pgn);
-//    test.RescueBird(ow);
+
+    System.out.println(test.FoodQuant());
+
+    Aviary testAviary = test.getAviary(3);
     
+    testAviary.printAviary();
+    System.out.println(test.FindBird("True owl"));
     
-    Aviary testAviary = test.getAviary(1);
-    System.out.println(testAviary.getSize());
-    //testAviary.AviarySign();
-    
+    System.out.println(test.toString());
+
+
   }
 
 }
