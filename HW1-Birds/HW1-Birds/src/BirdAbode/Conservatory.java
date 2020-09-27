@@ -1,6 +1,8 @@
 package BirdAbode;
 
 import java.util.ArrayList;
+import java.util.Collections;
+
 import BirdAnimal.Birds;
 import BirdAnimal.BirdsOfPrey;
 import BirdAnimal.FlightlessBirds;
@@ -25,170 +27,42 @@ public class Conservatory {
    */
   public Conservatory() 
   {
-    inHouseAviaries = new ArrayList<Aviary>();
-    inHouseAviaries.add(new Aviary(false, "1"));
-    inHouseAviaries.add(new Aviary(false, "2"));
-    inHouseAviaries.add(new Aviary(false, "3"));
-    inHouseAviaries.add(new Aviary(false, "4"));
-    inHouseAviaries.add(new Aviary(false, "5"));
-    inHouseAviaries.add(new Aviary(false, "6"));
-    inHouseAviaries.add(new Aviary(false, "7"));
-    inHouseAviaries.add(new Aviary(false, "8"));
-    inHouseAviaries.add(new Aviary(false, "9"));
-    inHouseAviaries.add(new Aviary(false, "10"));
-    inHouseAviaries.add(new Aviary(false, "11"));
-    inHouseAviaries.add(new Aviary(false, "12"));
-    inHouseAviaries.add(new Aviary(false, "13"));
-    inHouseAviaries.add(new Aviary(false, "14"));
-    inHouseAviaries.add(new Aviary(false, "15"));
-    inHouseAviaries.add(new Aviary(false, "16"));
-    inHouseAviaries.add(new Aviary(false, "17"));
-    inHouseAviaries.add(new Aviary(false, "18"));
-    inHouseAviaries.add(new Aviary(false, "19"));
-    inHouseAviaries.add(new Aviary(false, "20"));
+    this.inHouseAviaries = new ArrayList<Aviary>();
+    this.inHouseAviaries.add(new Aviary(false, "1"));
+    this.inHouseAviaries.add(new Aviary(false, "2"));
+    this.inHouseAviaries.add(new Aviary(false, "3"));
+    this.inHouseAviaries.add(new Aviary(false, "4"));
+    this.inHouseAviaries.add(new Aviary(false, "5"));
+    this.inHouseAviaries.add(new Aviary(false, "6"));
+    this.inHouseAviaries.add(new Aviary(false, "7"));
+    this.inHouseAviaries.add(new Aviary(false, "8"));
+    this.inHouseAviaries.add(new Aviary(false, "9"));
+    this.inHouseAviaries.add(new Aviary(false, "10"));
+    this.inHouseAviaries.add(new Aviary(false, "11"));
+    this.inHouseAviaries.add(new Aviary(false, "12"));
+    this.inHouseAviaries.add(new Aviary(false, "13"));
+    this.inHouseAviaries.add(new Aviary(false, "14"));
+    this.inHouseAviaries.add(new Aviary(false, "15"));
+    this.inHouseAviaries.add(new Aviary(false, "16"));
+    this.inHouseAviaries.add(new Aviary(false, "17"));
+    this.inHouseAviaries.add(new Aviary(false, "18"));
+    this.inHouseAviaries.add(new Aviary(false, "19"));
+    this.inHouseAviaries.add(new Aviary(false, "20"));
 
   }
   
-  
   /**
-   * 
-   * ExtractBirdInfo extracts interesting information for a certain bird type.
-   * @param string name of bird. 
+   * getAviary function returns the aviary object in the conservatory.
+   * @param takes number of aviary
    */
-  public String ExtractBirdInfo(String birdName)
-  {
-    if (birdName == "Hawks")
-    {
-      return "                Hawks often hunt at dawn. \n"
-          + "                Hawks often fight in the air over food. \n"
-          + "                Hawks mate for life. ";
+  public Aviary getAviary(int idx) { 
+    if (idx < 20 && idx > 0) { return this.inHouseAviaries.get(idx); } 
+    else {
+      throw new IllegalArgumentException(
+          "There are only 20 aviaries in the conservatory.");
     }
     
-    if (birdName == "Eagles")
-    {
-      return "                Eagles have excellent eyesight. \n"
-          + "                Eagles have pwerful talons. \n"
-          + "                Eagles build there nests on high cliffs. ";
-    }
-    
-    if (birdName == "Osprey")
-    {
-      return "                Ospreys only eat fish. \n"
-          + "                Ospreys can reverse there outter toes. \n"
-          + "                Ospreys are also called sea-hawks. ";
-    }
-    
-    if (birdName == "Emus")
-    {
-      return "                Emus grow up to 2m tall. \n"
-          + "                Emus can be 20 years old. \n"
-          + "                Emus are covered in soft fluffy feathers. ";
-    }
-    
-    if (birdName == "Kiwis")
-    {
-      return "                Kiwis have tiny wings. \n"
-          + "                Kiwis have a keen sense of smell. \n"
-          + "                Kiwis have whiskers. ";
-    }
-    
-    if (birdName == "Moas")
-    {
-      return "                Moas was the tallest bird that ever lived. \n"
-          + "                Moas female were heavier than male. \n"
-          + "                Moas were covered in rough feathers. ";
-    }
-    
-    if (birdName == "Owls")
-    {
-      return "                A group of Owls is called a parliament. \n"
-          + "                There are over 200 types of Owls. \n"
-          + "                Owls are nocturnal. ";
-    }
-    
-    if (birdName == "Rose-Ringed Parakeet")
-    {
-      return "                Live in large groups. \n"
-          + "                Are excellent mimics!. \n"
-          + "                Have chicks that grow very quickly!. ";
-    }
-    
-    if (birdName == "Gray Parrot")
-    {
-      return "                Fluff up to defend themselves. \n"
-          + "                Most accomplished mimic. \n"
-          + "                Can outlive their human owners!. ";
-    }
-    
-    if (birdName == "Sulfur-crested cockatoo")
-    {
-      return "                Super beuatiful parrots. \n"
-          + "                Very common in forests in Australia. \n"
-          + "                Chew branches to stop ther beaks from going too long. ";
-    }
-    
-    if (birdName == "Pigeons")
-    {
-      return "                Pigeons understand space and time. \n"
-          + "                Can find heir nests from 1300 miles away. \n"
-          + "                Saved thousands of human lives in WWI and WWII. ";
-    }
-    
-    if (birdName == "Doves")
-    {
-      return "                Doves mate for life. \n"
-          + "                Referred to as pigeons with a good PR agent. \n"
-          + "                Don't neeed to lift their head to swallow water. ";
-    }
-    
-    if (birdName == "Great Auk")
-    {
-      return "                Sometimes called a garefowl. \n"
-          + "                Very social! \n"
-          + "                Referred to as penguin of the north. ";
-    }
-    
-    if (birdName == "Horned Puffin")
-    {
-      return "                Carries small fish in it's bill. \n"
-          + "                Nests in rock \n"
-          + "                Nicknames sea-parrots. ";
-    }
-    
-    if (birdName == "African Jacana")
-    {
-      return "                Jacanas can walk on water. \n"
-          + "                Jacanas are weak fliers. \n"
-          + "                Jacana males raise the chick, the females are protectors. ";
-    }
-    
-    if (birdName == "Ducks")
-    {
-      return "                Ducks are omnivors. \n"
-          + "                Male ducks are called Drakes. \n"
-          + "                Female ducks are alled hens. ";
-    }
-    
-    if (birdName == "Swans")
-    {
-      return "                Swans have elongated curved necks. \n"
-          + "                Swans kiss and mate for life. \n"
-          + "                Swans can weigh 30 pounds. ";
-    }
-    
-    
-    if (birdName == "Geese")
-    {
-      return "                Geese are highly social animals. \n"
-          + "                Geese are very loyal. \n"
-          + "                Geese mourn their lost mating partners. ";
-    }
-    
-    
-    
-    return "";
   }
-  
   /** 
    * RescueBird function stores a bird object in a desired aviary in the 
    * conservatory.
@@ -197,6 +71,8 @@ public class Conservatory {
   public void RescueBird(Birds bird)
   {
     int count = 0;
+    Boolean simpleAdd;
+    Boolean complexAdd;
     
     if (bird.getisExtinct() == false) 
     {
@@ -206,8 +82,12 @@ public class Conservatory {
         
         if (currentAviary.locked == false)
         {
-          currentAviary.AddSpecialBird(bird);
-          currentAviary.AddBird(bird);
+          simpleAdd = currentAviary.AddSpecialBird(bird);
+          complexAdd = currentAviary.AddBird(bird);
+          
+          //System.out.println(simpleAdd);
+          if (simpleAdd) { break; }
+          if (complexAdd) { break; }
         }
         
         if (currentAviary.locked == true) { count++; }
@@ -220,6 +100,40 @@ public class Conservatory {
     }
   }
   
+  /**
+   * FoodQuant function calculates what food needs to be kept and the quantity 
+   * across all aviaries in the Conservatory. 
+   */
+  public String FoodQuant()
+  {
+    ArrayList<String> totalFood = new ArrayList<String>();;
+    
+    for (int i = 0; i < inHouseAviaries.size(); i++)
+    {
+      Aviary aviary = this.inHouseAviaries.get(i);
+      ArrayList<String> foodHere = aviary.FoodKept();
+      
+      for (int idx = 0; idx < foodHere.size(); idx++)
+      { 
+        totalFood.add(foodHere.get(i));
+      }
+    }
+    
+    /* 
+     * This loop loops through the food preference list and counts there occurrences
+     * in the food preferences list from the aviaries. 
+     */
+    String[] FoodPrefList = {"berries", "seeds", "fruit", "insects", "other birds",  
+        "eggs", "small mammals", "fish", "buds", "larvae", "aquatic invertebrates", "nuts",
+        "vegetation"};
+    String result = "";
+    for (int i = 0; i < FoodPrefList.length; i++)
+    {
+      result += FoodPrefList[i] + Collections.frequency(totalFood, FoodPrefList[i]) + "\n";
+    }
+    
+    return result;
+  }
   
   /** 
    * FindBird function finds a bird object's aviary.
@@ -261,7 +175,149 @@ public class Conservatory {
   public static void main(String[] args) {
     
     Conservatory test = new Conservatory();
-    test.AviarySign("helo");
+    
+    ArrayList<String> CharaclistTest = new ArrayList<String>();
+    CharaclistTest.add("Cannot fly");
+    
+    ArrayList<String> CharaclistTest2 = new ArrayList<String>();
+    CharaclistTest2.add("Facial disk");
+    
+    ArrayList<String> CharaclistTest3 = new ArrayList<String>();
+    CharaclistTest3.add("Small heads");
+    
+    
+    ArrayList<String> FoodlistTest = new ArrayList<String>();
+    FoodlistTest.add("fruit");
+    FoodlistTest.add("fish");
+    
+    FlightlessBirds fll = new FlightlessBirds("Emus", CharaclistTest, false, 0, FoodlistTest);
+    Owls ow = new Owls("True owl", CharaclistTest2, false, 2, FoodlistTest);
+    Pigeons pgn = new Pigeons("Doves", CharaclistTest3, false, 1, FoodlistTest);
+    
+    test.RescueBird(fll);
+    test.RescueBird(fll);
+    test.RescueBird(fll);
+    test.RescueBird(fll);
+    test.RescueBird(fll);
+    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+//    test.RescueBird(pgn);
+//    test.RescueBird(ow);
+    
+    
+    Aviary testAviary = test.getAviary(1);
+    System.out.println(testAviary.getSize());
+    //testAviary.AviarySign();
     
   }
 

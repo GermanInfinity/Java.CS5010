@@ -2,6 +2,7 @@ package BirdAbode;
 
 import java.util.ArrayList;
 import BirdAnimal.Birds;
+import java.util.Random;
 
 public class Aviary {
   
@@ -40,6 +41,17 @@ public class Aviary {
     return name; 
   }
   
+  
+  /** 
+   * getAviarySze returns size of an Aviary.
+   * @param accepts nothing. 
+   */
+  public int getAviarySize() 
+  { 
+    return this.aviary.size();
+  }
+  
+  
   /** 
    * getAviary returns the array list of birds in the aviary.
    * @param accepts nothing. 
@@ -63,25 +75,53 @@ public class Aviary {
    * other classes.
    * @param a Bird object to store.
    */
-  public void AddBird(Birds Bird)
+  public Boolean AddBird(Birds Bird)
   {
     String birdClass = ClassOfBird(Bird.getType());
-    if ((birdClass != "Flightless Birds" || birdClass != "Birds Of Prey" || 
-        birdClass != "Waterfowl") && this.locked == false)
+    Boolean added = false; 
+    
+    
+    if (birdClass != "Flightless Birds" && birdClass != "Birds Of Prey" && 
+        birdClass != "Waterfowl" && this.locked == false)
     {
        this.aviary.add(Bird);
+       added = true; 
        if (this.aviary.size() == 5) { this.locked = true; };
+       
+       return added;
     }
+    return added;
   }
   
+  /**
+   * FoodKept function combines all the food preferences of the birds in an aviary. 
+   */
+  public ArrayList<String> FoodKept(){ 
+    
+    ArrayList<String> totalFood = new ArrayList<String>(); 
+    
+    for (int i = 0; i < this.aviary.size(); i++) { 
+      Birds bird = this.aviary.get(i); 
+      ArrayList<String> birdFoodPref = bird.getFoodPref(); 
+      
+      for (int idx = 0; idx < birdFoodPref.size(); idx++) { 
+        totalFood.add(birdFoodPref.get(idx));
+      }
+    }
+  
+    return totalFood;
+    
+
+  }
   /**
    * AddSpecialBird function handles adding birds in bird classes that do 
    *                mix with other bird classes. 
    * @param a Bird object to store.
    */
-  public void AddSpecialBird(Birds Bird) 
+  public Boolean AddSpecialBird(Birds Bird) 
   { 
     String birdClass = ClassOfBird(Bird.getType());
+    Boolean added = false; 
     
     /*
      * If aviary is full, we cannot add more birds. 
@@ -97,23 +137,33 @@ public class Aviary {
     if (this.locked == false && this.aviary.size() < 5)
     {
       
-      Birds inAviary = this.aviary.get(0);
       if (birdClass == "Flightless Birds") 
-      {
-        if (ClassOfBird(inAviary.getType()) == "Flightless Birds") { this.aviary.add(Bird); }
+      { 
+        this.aviary.add(Bird); 
+        added = true;
+        return added;
       }
       
-      if (birdClass == "Birds Of Prey") 
-      {
-        if (ClassOfBird(inAviary.getType()) == "Birds Of Prey") { this.aviary.add(Bird); }
-      }
       
+      if (birdClass== "Birds Of Prey") 
+      { 
+        this.aviary.add(Bird); 
+        added = true; 
+        return added;
+      }
+
+
       if (birdClass == "Waterfowl") 
-      {
-        if (ClassOfBird(inAviary.getType()) == "Waterfowl") { this.aviary.add(Bird); }
+      { 
+        this.aviary.add(Bird); 
+        added = true; 
+        return added;
       }
+      
       if (this.aviary.size() == 5) { this.locked = true; };
     }
+    
+    return added;
 
   }
   
@@ -123,26 +173,36 @@ public class Aviary {
    * AviarySign function prints the sign of an Aviary on the console.
    * @param String name of the aviary.
    */
-  public void AviarySign(String aviaryName)
+  public void AviarySign()
   {
+    Random ran = new Random();
+    int randInt = ran.nextInt(5) + 0;
+    
+    Birds bird = this.aviary.get(randInt);
+    String birdName = bird.getType();
+    
+    int aviaryNameLen = this.getAviaryName().length();
+    int end = aviaryNameLen - 1;
+    
     System.out.println("--------------------------------------------------");
     System.out.println("|                                                |");
     System.out.println("|                                                |");
     System.out.println("|                                                |");
-    System.out.println("                   " + "Papegaai I" + "                   ");
+    System.out.println("                   " + this.getAviaryName() + "                   ");
     System.out.println("|                                                |");
     System.out.println("|     Did you know...                            |");
     
     
-    System.out.println(ExtractBirdInfo("Hawks"));
+    System.out.println(ExtractBirdInfo(birdName));
     
     System.out.println("|                                                |");
     System.out.println("|                                                |");
-    System.out.println("|     At our Conservatory, we give each avary \n|     the dutch "
+    System.out.println("|     At our Conservatory, we give each aviary \n|     the dutch "
         + "name of the first bird that was \n|     put in it.                                 |");
     System.out.println("|                                                |");
     System.out.println("|     Can you tell what a                        |");
-    System.out.println("                   " + "Papegaai I" + "                   ");
+    System.out.println("                   " + this.getAviaryName().substring(0,end) + "        "
+        + "           ");
     System.out.println("|                                      is?       |");
     System.out.println("|                                                |");
     System.out.println("|                                                |");
@@ -267,14 +327,14 @@ public class Aviary {
           + "                Owls are nocturnal. ";
     }
     
-    if (birdName == "Rose-Ringed Parakeet")
+    if (birdName == "Rose-ringed parakeet")
     {
       return "                Live in large groups. \n"
           + "                Are excellent mimics!. \n"
           + "                Have chicks that grow very quickly!. ";
     }
     
-    if (birdName == "Gray Parrot")
+    if (birdName == "Gray parrot")
     {
       return "                Fluff up to defend themselves. \n"
           + "                Most accomplished mimic. \n"
