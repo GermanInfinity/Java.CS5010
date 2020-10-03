@@ -31,7 +31,7 @@ public class Aviary {
   public String getAviaryName() {
     String birdName = this.aviary.get(0).getType();
     String name = "";
-    if (ClassOfBird(birdName) == "Birds of Prey") {
+    if (ClassOfBird(birdName) == "Birds Of Prey") {
       name = "Roofvogels " + this.num;
     }
     ;
@@ -62,7 +62,7 @@ public class Aviary {
 
     return name;
   }
-
+  
   /**
    * getAviary returns the array list of birds in the aviary.
    * 

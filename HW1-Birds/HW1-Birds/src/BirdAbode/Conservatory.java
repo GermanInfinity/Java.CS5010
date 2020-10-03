@@ -74,9 +74,10 @@ public class Conservatory {
     for (int i = 0; i < inHouseAviaries.size(); i++) {
       Aviary aviary = this.inHouseAviaries.get(i);
       ArrayList<String> foodHere = aviary.FoodKept();
-
+      
+      
       for (int idx = 0; idx < foodHere.size(); idx++) {
-        totalFood.add(foodHere.get(i));
+        totalFood.add(foodHere.get(idx));
       }
     }
 
@@ -96,7 +97,7 @@ public class Conservatory {
 
   /**
    * toString This function lists all birds in the conservatory in alphabetical
-   * ordder and their location. It returns the resulting list as a string, and
+   * order and their location. It returns the resulting list as a string, and
    * is the toStreing method of the class.
    */
   @Override
@@ -200,20 +201,37 @@ public class Conservatory {
     }
 
   }
-
-  public static void main(String[] args) {
-
-    Conservatory test = new Conservatory();
-
-    System.out.println(test.FoodQuant());
-
-    Aviary testAviary = test.getAviary(3);
-
-    testAviary.printAviary();
-    System.out.println(test.FindBird("True owl"));
-
-    System.out.println(test.toString());
-
+  
+  
+  /** map function creates a small map of thee aviary and the listed birds 
+   * in the aviary 
+   *
+   **/
+  public void map(){
+    
+    String result = "";
+    for (int i = 0; i < inHouseAviaries.size(); i++) {
+      Aviary currentAviary = inHouseAviaries.get(i);
+      if (currentAviary.Size() > 0)
+      {
+        result += "\n";
+        result += currentAviary.getAviaryName();
+        result += "\n";
+        
+        ArrayList<Birds> Bird_array = currentAviary.getAviary();
+        
+        for (int idx = 0; idx < currentAviary.Size() ; idx++)
+        {
+          result += Bird_array.get(idx).getType();
+          result += "\n";
+        }
+        
+      }
+    }
+    
+    System.out.println(result);
+      
   }
+
 
 }
