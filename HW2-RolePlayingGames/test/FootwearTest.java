@@ -4,19 +4,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * HandGear class JUnit test. 
+ * Footwear class JUnit test. 
  * @author Ugo Nwachuku
  *
  */
-public class HandGearTest {
+public class FootwearTest {
 
-  HandGear test;
+  Footwear test;
   /**
-   * Set up variables for HandGear test.
+   * Set up variables for Footwear test.
    */
   @Before
   public void setup() {
-   test = new HandGear("Strong gloves", 30);
+   test = new Footwear("Heavy boots", 30, 45);
   }
   
   /**
@@ -25,9 +25,9 @@ public class HandGearTest {
    */
   @Test
   public void testInputs() {
-    assertEquals("Strong gloves", test.name);
+    assertEquals("Heavy boots", test.name);
     assertEquals(30, test.attack);
-    assertEquals(0, test.defense);
+    assertEquals(45, test.defense);
   }
  
   /** 
@@ -35,14 +35,14 @@ public class HandGearTest {
    */
   @Test
   public void toStringtest(){ 
-    assertEquals("Strong gloves, Attack: 30, Defense: 0", test.toString());
+    assertEquals("Heavy boots, Attack: 30, Defense: 45", test.toString());
   }
   /**
    * Assertion test: Test no name inputed in constructor.
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNoName() { 
-    HandGear test = new HandGear("", 2);
+    Footwear test = new Footwear("", 2, 13);
     test.toString(); //remove unused variable warning.
   }
   
@@ -51,16 +51,25 @@ public class HandGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() { 
-    HandGear test = new HandGear("Tom and Jerry", 2);
+    Footwear test = new Footwear("Tom and Jerry", 2, 13);
     test.toString(); //remove unused variable warning.
   }
   
   /**
-   * Assertion test: Test negative value in constructor.
+   * Assertion test: Test negative defense value in constructor.
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeDefense() { 
-    HandGear test = new HandGear("Strong gloves", -2);
+    Footwear test = new Footwear("Heavy boots", -2, 12);
+    test.toString(); //remove unused variable warning.
+  }
+  
+  /**
+   * Assertion test: Test negative attack value in constructor.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testNegativeAttack() { 
+    Footwear test = new Footwear("Heavy boots", 2, -12);
     test.toString(); //remove unused variable warning.
   }
   
@@ -69,8 +78,8 @@ public class HandGearTest {
    */
   @Test
   public void testsetName() {
-    test.setName("Sloppy gloves");
-    assertEquals("Sloppy gloves", test.name);
+    test.setName("Thick shoes");
+    assertEquals("Thick shoes", test.name);
   }
   
   /**
@@ -86,7 +95,7 @@ public class HandGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalSetName() { 
-    test.setName("Ugly weak gloves");
+    test.setName("Ugly weak boots");
   }
   
   /**
@@ -94,7 +103,7 @@ public class HandGearTest {
    */
   @Test
   public void testgetName() {
-    assertEquals("Strong gloves", test.getName());
+    assertEquals("Heavy boots", test.getName());
   }
   
   /**
@@ -102,7 +111,7 @@ public class HandGearTest {
    */
   @Test
   public void testgetAdjective() {
-    assertEquals("Strong", test.getAdjective());
+    assertEquals("Heavy", test.getAdjective());
   }
   
   /**
@@ -131,11 +140,29 @@ public class HandGearTest {
   }
   
   /**
+   * setDefense, tests the setDefense function works.
+   */
+  @Test
+  public void testsetDefense() {
+    test.setDefense(46);
+    assertEquals(46, test.defense);
+  }
+  
+  /**
+   * setDefense, tests the illegal defense set.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetIllegalDefense() {
+    test.setDefense(-46);
+  }
+  
+  
+  /**
    * getDefense, tests the getDefensefunction works.
    */
   @Test
   public void testgetDefense() {
-    assertEquals(0, test.getDefense());
+    assertEquals(45, test.getDefense());
   }
 
 }
