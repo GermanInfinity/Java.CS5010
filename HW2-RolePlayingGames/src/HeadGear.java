@@ -74,11 +74,7 @@ public class HeadGear implements WearableGear{
     return splited[0];
   }
   
-  /**
-   * setDefense sets defense value of a HeadGear object. 
-   * @param accepts int value
-   * Returns does not return anything
-   */
+  @Override
   public void setDefense(int inp_defense) {
     if (inp_defense < 0){
       throw new IllegalArgumentException("No non-negative defense values.");
@@ -86,21 +82,17 @@ public class HeadGear implements WearableGear{
     this.defense = inp_defense;
   }
   
-  
-  /**
-   * getDefense returns defense value of a HeadGear object. 
-   * @param does not accept anything
-   * Returns int defense value
-   */
+  @Override
   public int getDefense() {
     return this.defense;
   }
   
-  /**
-   * getAttack returns attack value of a HeadGear object. 
-   * @param does not accept anything
-   * Returns int attack value
-   */
+  @Override
+  public void setAttack(int att) {
+    this.attack = 0;
+  }
+  
+  @Override
   public int getAttack() {
     return this.attack;
   }

@@ -123,6 +123,15 @@ public class HeadGearTest {
   }
   
   /**
+   * setAttack, tests the setAttack function works.
+   */
+  @Test
+  public void testsetAttack() {
+    test.setAttack(46);
+    assertEquals(0, test.attack);
+  }
+  
+  /**
    * getDefense, tests the getDefense function works.
    */
   @Test

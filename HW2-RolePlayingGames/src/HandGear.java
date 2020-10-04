@@ -74,11 +74,7 @@ public class HandGear implements WearableGear{
     return splited[0];
   }
   
-  /**
-   * setDefense sets defense value of a HandGear object. 
-   * @param accepts int value
-   * Returns does not return anything
-   */
+  @Override
   public void setAttack(int inp_attack) {
     if (inp_attack< 0){
       throw new IllegalArgumentException("No non-negative attack values.");
@@ -87,20 +83,17 @@ public class HandGear implements WearableGear{
   }
   
   
-  /**
-   * getAttack returns attack value of a HandGear object. 
-   * @param does not accept anything
-   * Returns int attack value
-   */
+  @Override
   public int getAttack() {
     return this.attack;
   }
+   
+  @Override
+  public void setDefense(int def) {
+    this.defense = 0;
+  }
   
-  /**
-   * getAttack returns defense value of a HandGear object. 
-   * @param does not accept anything
-   * Returns int defense value
-   */
+  @Override
   public int getDefense() {
     return this.defense;
   }
@@ -113,5 +106,7 @@ public class HandGear implements WearableGear{
   public String toString() { 
     return this.name + ", Attack: " + this.attack + ", Defense: " + this.defense;  
   }
+
+  
 
 }

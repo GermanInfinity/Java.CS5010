@@ -115,6 +115,15 @@ public class HandGearTest {
   }
   
   /**
+   * setDefense, tests the setDefense function works.
+   */
+  @Test
+  public void testsetDefense() {
+    test.setDefense(46);
+    assertEquals(0, test.defense);
+  }
+  
+  /**
    * setAttack, tests the illegal attack set.
    */
   @Test(expected = IllegalArgumentException.class)

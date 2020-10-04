@@ -77,11 +77,8 @@ public class Footwear implements WearableGear{
     return splited[0];
   }
   
-  /**
-   * setDefense sets defense value of a Footwear object. 
-   * @param accepts int value
-   * Returns does not return anything
-   */
+  
+  @Override
   public void setDefense(int inp_defense) {
     if (inp_defense < 0){
       throw new IllegalArgumentException("No non-negative defense values.");
@@ -90,20 +87,14 @@ public class Footwear implements WearableGear{
   }
   
   
-  /**
-   * getDefense returns defense value of a Footwear object. 
-   * @param does not accept anything
-   * Returns int defense value
-   */
+  
+  @Override
   public int getDefense() {
     return this.defense;
   }
   
-  /**
-   * setAttack sets attack value of a Footwear object. 
-   * @param accepts int value
-   * Returns does not return anything
-   */
+  
+  @Override
   public void setAttack(int inp_attack) {
     if (inp_attack < 0){
       throw new IllegalArgumentException("No non-negative attack values.");
@@ -111,11 +102,8 @@ public class Footwear implements WearableGear{
     this.attack = inp_attack;
   }
   
-  /**
-   * getAttack returns attack value of a Footwear object. 
-   * @param does not accept anything
-   * Returns int attack value
-   */
+  
+  @Override
   public int getAttack() {
     return this.attack;
   }

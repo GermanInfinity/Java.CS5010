@@ -35,5 +35,36 @@ public interface WearableGear {
    * @param: No parameters Returns: String
    */
   public String toString();
+  
+  
+  /**
+   * getAttack returns attack value of a Footwear object. 
+   * @param does not accept anything
+   * Returns int attack value
+   */
+  public int getAttack();
+  
+  
+  /**
+   * getDefense returns defense value of a Footwear object. 
+   * @param does not accept anything
+   * Returns int defense value
+   */
+  public int getDefense();
+  
+  
+  /**
+   * setAttack sets attack value of a Footwear object. 
+   * @param accepts int value
+   * Returns does not return anything
+   */
+  public void setAttack(int att);
+  
+  /**
+   * setDefense sets defense value of a Footwear object. 
+   * @param accepts int value
+   * Returns does not return anything
+   */
+  public void setDefense(int def);
 
 }
