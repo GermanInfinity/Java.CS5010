@@ -119,9 +119,6 @@ public class Character {
    * Returns does not return anything
    */
   public void setDefense(int inp_defense) {
-    if (inp_defense < 0){
-      throw new IllegalArgumentException("No non-negative defense values.");
-    }
     this.defense = inp_defense;
   }
   

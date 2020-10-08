@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+
 
 /**
  * This class represents the CharacterBuilder, which is responsible for creating
  * a character object. The class determines the highest power of attire for each 
- * character object it creates.
+ * character object it creates, wears a character object with these attires; and 
+ * outputs a character object.
  * 
  * @author Ugo Nwachuku
  */
@@ -12,16 +15,11 @@ public class CharacterBuilder {
 
   protected Character player; 
   protected String playerName; 
-  protected ArrayList <WearableGear> attire; 
-  protected ArrayList <WearableGear> bestHeadGear;
-  protected ArrayList <WearableGear> bestHandGear;
-  protected ArrayList <WearableGear> bestFootwear;
-  protected HeadGear combinedHeadGear;
-  protected HandGear combinedHandGear;
-  protected Footwear combinedFootwear;
+  protected ArrayList <WearableGear> attire = new ArrayList<WearableGear>(); 
   protected int attack;
   protected int defense;
   
+  protected ArrayList <ArrayList <Integer>> gearCombinations; 
   
   /**
    * CharacterBuilder constructor: constructs a character with the highest power 
@@ -30,10 +28,15 @@ public class CharacterBuilder {
   public CharacterBuilder(String name, ArrayList <WearableGear> wearable) {
     
     Wear(wearable);
+    HeadGear dropHead = new HeadGear("Dummy HeadGear",0, false, false);
+    MakeGearSolo(dropHead);
+    
     this.attack = getAttack();
     this.defense = getDefense();
     player = new Character(name, this.attire, this.attack, this.defense);
   }
+  
+  
   
   /**
    * uniqueCombinations finds the unique combinations of all elements in a list.
@@ -49,11 +52,48 @@ public class CharacterBuilder {
       
       for (int y = i + 1; y <= list.size(); y++) {
         ArrayList <Integer> midList = new ArrayList<>();
+        midList.add(i);
+        midList.add(y);
         total.add(midList);
       }
     }
+    
     return total;
   }
+  
+  
+  /** 
+   * MakeGearSolo function drops a specified gear from the attire list till there is only
+   *              one left. 
+   *
+   * @param Takes in WearableGear type to be dropped
+   * Returns nothing
+   */
+  public void MakeGearSolo(WearableGear drop) { 
+    int count = 0; 
+
+    /** get number of occurences **/
+    for (int i = 0; i < this.attire.size(); i++) { 
+      WearableGear currentAttire = this.attire.get(i);
+      
+      if (currentAttire.equals(drop)){ count += 1; }
+    }
+    
+    /** Drop gears from lowest to highest **/ 
+    if (count > 1) {      
+      for (int i = this.attire.size()-1; i >= 0; i--) { 
+        WearableGear currentAttire = this.attire.get(i);
+        if (currentAttire.equals(drop)){
+          
+          if (count == 1) { break; }
+          
+          this.attire.remove(i);
+          count -= 1;
+        }
+      }  
+    }
+  }
+  
   
   /** 
    * getAttack returns the total attack from an attire list.
@@ -69,6 +109,8 @@ public class CharacterBuilder {
     return totalAttack;
   }
   
+  
+  
   /** 
    * getDefense returns the total defense from an attire list.
    * 
@@ -83,6 +125,8 @@ public class CharacterBuilder {
     return totalDefense;
   }
 
+  
+  
   /**
    * Wear function  sorts the type of attire for the character, and dresses the 
    * character in the highest power attire. 
@@ -90,119 +134,116 @@ public class CharacterBuilder {
    * @param ArrayList of wearable attire
    */
   public void Wear(ArrayList <WearableGear> wearable) { 
-    ArrayList <WearableGear> headGear = new ArrayList<WearableGear>();
-    ArrayList <WearableGear> handGear = new ArrayList<WearableGear>();
-    ArrayList <WearableGear> footWear = new ArrayList<WearableGear>();
+    /** Combine all types of gears **/ 
+    /** We create combinations on all gears.
+     */
+    this.gearCombinations = uniqueCombinations(wearable);
     
-    for (int i = 0; i < wearable.size(); i++) { 
-      if (wearable.get(i) instanceof HeadGear) { 
-        headGear.add(wearable.get(i));
-      }
-      if (wearable.get(i) instanceof HandGear) { 
-        handGear.add(wearable.get(i));
-      }
-      if (wearable.get(i) instanceof Footwear) { 
-        footWear.add(wearable.get(i));
-      }
+    
+    /** Combine similar type of gears **/ 
+    for (int i = 0; i < this.gearCombinations.size(); i++) { 
+      ArrayList<Integer> indexes = this.gearCombinations.get(i);
+      
+      WearableGear first = wearable.get(indexes.get(0)); 
+      WearableGear second = wearable.get(indexes.get(1)); 
+      WearableGear  newGear = combineGears(first, second);
+      
+      wearable.add(newGear);
     }
+    wearable = DropInvalidGears(wearable);
+
+    /**
+     * Sort wearable list from highest to lowest.
+     */
+    Comparator<WearableGear> attacks = (c1, c2) -> (int) (c1.getAttack() - c2.getAttack()); 
+    wearable.sort(Collections.reverseOrder(attacks)); 
+    getBestGear(wearable);
     
-    /** Get best gear on all types of items **/
-    this.bestHeadGear = getBestGear(headGear);
-    this.bestHandGear = getBestGear(handGear);
-    this.bestFootwear = getBestGear(footWear);
     
-    /** Combine best gear **/
-    this.combinedHeadGear = (HeadGear) combineBestGear(headGear);
-    this.combinedHandGear = (HandGear) combineBestGear(handGear);
-    this.combinedFootwear = (Footwear) combineBestGear(footWear);
-    
-    /** Add to attire list **/
-    this.attire.add(this.combinedHeadGear);
-    this.attire.add(this.combinedHandGear);
-    this.attire.add(this.combinedFootwear);
   }
   
+  
+  
   /**
-   * getBestHeadGear function combines and returns highest scoring gears. 
+   * combineGears function combines two similar type of gears.
+   *             the first input parameter gear is modified to be the newly
+   *             combined gear, if they are of the same type. 
+   * @param Wearable gear, Wearable gear
+   * returns nothing
+   */
+  public WearableGear combineGears(WearableGear gear1, WearableGear gear2) { 
+    return gear1.combine(gear2);
+  }
+  
+  
+  
+
+  /**
+   * getBestHeadGear function populates the attire list with the highest scoring gears. 
    * 
    * @param ArrayList of Wearable gears
    * Returns best wearable gear from list
    */
-  public ArrayList <WearableGear> getBestGear(ArrayList <WearableGear> gear) {
-    if (gear.size() == 1) { return gear; } 
-    if (gear.size() == 0) { 
-      ArrayList <WearableGear> dummyList = new ArrayList <WearableGear>();
-      return dummyList;
-    }
+  public void getBestGear(ArrayList <WearableGear> wearable) {
     
-    ArrayList <ArrayList <Integer>> combinationList = uniqueCombinations(gear);
-    ArrayList <Integer> scores = new ArrayList<Integer>();
-    
-    for (int i = 0; i < combinationList.size(); i++) {
-      ArrayList<Integer> intSet = combinationList.get(i);
-      int gearIndex1 = intSet.get(0);
-      int gearIndex2 = intSet.get(1);
+    /** Add to attire list, highest powered items **/ 
+    for (int i = 0; i < wearable.size(); i++) { 
+
+      WearableGear currentGear = wearable.get(i);
       
-      /** Get scores from unique combinations **/
-      int sum = gear.get(gearIndex1).getAttack() + gear.get(gearIndex2).getAttack();
-      /** Store scores **/
-      scores.add(sum);
+      /** First entry in attire list. **/ 
+      if (this.attire.size() == 0) { 
+        this.attire.add(currentGear);
+        continue;
+      }
+
+      int similarTypeCount = 0;
+ 
+      /** Loop to check what is already in attire list **/
+      for (int y = 0; y < this.attire.size(); y++) { 
+        WearableGear attireGear = this.attire.get(y);
+        
+        if (attireGear.getCombined()) { 
+          similarTypeCount = 2;
+          break;
+        }
+        
+        /** Seen the same type **/
+        if (currentGear.equals(attireGear)) { similarTypeCount += 1; }
+      }
+      
+      if (similarTypeCount < 2) { this.attire.add(currentGear); }
     }
-    /** Find combination with highest score **/
-    int highestAttack = Collections.max(scores);
-    int combinationIdx = combinationList.indexOf(highestAttack);
-    
-    ArrayList <Integer> highest_combIdx = combinationList.get(combinationIdx);
-    int first_idx = highest_combIdx.get(0);
-    int second_idx = highest_combIdx.get(1);
-    
-    /** return highest combining Wearable gears **/
-    ArrayList <WearableGear> bestCombination = new ArrayList<WearableGear>();
-    bestCombination.add(gear.get(first_idx));
-    bestCombination.add(gear.get(second_idx));
-    
-    return bestCombination;
+
   }
   
-
-
+  
+  
   /**
-   * combineBestGear function combines two types of gears. 
+   * DropInvalidGears function drops all invalid gears from an arraylist of wearableGears
    * 
-   * @param ArrayList of Wearable gears
-   * Returns Wearable gear combination
+   * @param ArrayList <WearableGear> wearable
+   * Returns ArrayList <WearableGear> wearable
    */
-  public WearableGear combineBestGear(ArrayList <WearableGear> gear) {
-    if (gear.size() == 1) { return gear.get(0); }
-    
-    /** Get adjective **/
-    String adjective = gear.get(0).getAdjective();
-    /** Get name **/
-    String name = adjective + ", " + gear.get(1).getName();
-    /** Get defense  **/
-    int defense0 = gear.get(0).getDefense();
-    int defense1 = gear.get(1).getDefense();
-    int totaldefense = defense0 + defense1;
-    /** Get attack **/
-    int attack0 = gear.get(0).getAttack();
-    int attack1 = gear.get(1).getAttack();
-    int totalattack = attack0 + attack1;
-    
-    if (gear.get(0) instanceof HeadGear) { 
-      HeadGear combinedHeadGear = new HeadGear(name, totaldefense);
-      return combinedHeadGear;
+  public ArrayList <WearableGear> DropInvalidGears(ArrayList <WearableGear> wearable){ 
+    ArrayList <WearableGear> edittedList = new ArrayList<WearableGear>(); 
+    for (int i = 0; i < wearable.size(); i++) { 
+      WearableGear currentGear = wearable.get(i); 
+      if (currentGear.getValid()) { 
+        edittedList.add(currentGear);
+      }
     }
-    if (gear.get(0) instanceof HandGear) { 
-      HandGear combinedHandGear = new HandGear(name, totalattack);
-      return combinedHandGear;
-    }
-    if (gear.get(0) instanceof Footwear) { 
-      Footwear combindedFootwear = new Footwear(name, totalattack, totaldefense);
-      return combindedFootwear;
-    }
-    HeadGear dummyGear = new HeadGear("",0);
-    return dummyGear;
-    
+    return edittedList;
+  }
+  
+  /**
+   * This method builds a completely constructed Character.
+   *
+   * @return level Level Object
+   * 
+   */
+  public Character build() { 
+    return player;
   }
   
 }

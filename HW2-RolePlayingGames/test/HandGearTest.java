@@ -16,7 +16,7 @@ public class HandGearTest {
    */
   @Before
   public void setup() {
-   test = new HandGear("Strong gloves", 30);
+   test = new HandGear("Strong gloves", 30, false, true);
   }
   
   /**
@@ -42,7 +42,7 @@ public class HandGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNoName() { 
-    HandGear test = new HandGear("", 2);
+    HandGear test = new HandGear("", 2, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -51,7 +51,7 @@ public class HandGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() { 
-    HandGear test = new HandGear("Tom and Jerry", 2);
+    HandGear test = new HandGear("Tom and Jerry", 2, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -60,7 +60,7 @@ public class HandGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeDefense() { 
-    HandGear test = new HandGear("Strong gloves", -2);
+    HandGear test = new HandGear("Strong gloves", -2, false, true);
     test.toString(); //remove unused variable warning.
   }
   

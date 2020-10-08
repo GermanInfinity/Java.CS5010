@@ -16,7 +16,7 @@ public class FootwearTest {
    */
   @Before
   public void setup() {
-   test = new Footwear("Heavy boots", 30, 45);
+   test = new Footwear("Heavy boots", 30, 45, false, true);
   }
   
   /**
@@ -42,7 +42,7 @@ public class FootwearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNoName() { 
-    Footwear test = new Footwear("", 2, 13);
+    Footwear test = new Footwear("", 2, 13, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -51,7 +51,7 @@ public class FootwearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() { 
-    Footwear test = new Footwear("Tom and Jerry", 2, 13);
+    Footwear test = new Footwear("Tom and Jerry", 2, 13, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -60,7 +60,7 @@ public class FootwearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeDefense() { 
-    Footwear test = new Footwear("Heavy boots", -2, 12);
+    Footwear test = new Footwear("Heavy boots", -2, 12, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -69,7 +69,7 @@ public class FootwearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeAttack() { 
-    Footwear test = new Footwear("Heavy boots", 2, -12);
+    Footwear test = new Footwear("Heavy boots", 2, -12, false, true);
     test.toString(); //remove unused variable warning.
   }
   

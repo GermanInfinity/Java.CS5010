@@ -1,16 +1,12 @@
 
 /**
- * This class represents the HeadGear class which implements the 
- * WearableGear interface. The class is responsible for storing 
+ * This class represents the HeadGear class which extends the 
+ * WearableGear abstract class. The class is responsible for storing 
  * the attack and defense values of a HeadGear. 
  */
 
-public class HeadGear implements WearableGear{
+public class HeadGear extends WearableGear{
 
-  protected String name;
-  protected int attack;
-  protected int defense;
-  
   /**
    * HeadGear constructor, constructs a head gear object with it's name,
    * attack and defense values. 
@@ -19,7 +15,7 @@ public class HeadGear implements WearableGear{
    *         defense
    * Returns: HeadGear object
    */
-  public HeadGear(String inp_name, int inp_defense) {
+  public HeadGear(String inp_name, int inp_defense, Boolean combined, Boolean valid) {
 
     if (inp_name == ""){
       throw new IllegalArgumentException("No name inputed!");
@@ -34,67 +30,45 @@ public class HeadGear implements WearableGear{
     this.name = inp_name;
     this.defense = inp_defense;
     this.attack = 0;
+    this.isCombined = combined;
+    this.isValid = valid; 
     
   }
 
-  /**
-   * setName sets the name of a HeadGear.
-   * @param String name of an object
-   * Returns does not return anything
-   */
-  @Override
-  public void setName(String inp_name) {
-    if (inp_name == ""){
-      throw new IllegalArgumentException("No name inputed!");
-    }
-    if (inp_name.split("\\s+").length != 2){
-      throw new IllegalArgumentException("Name is comprised of an adjective and a noun");
-    }
-    this.name = inp_name;
-  }
 
-  /**
-   * getName returns the name of a HeadGear.
-   * @param does not accept anything
-   * Returns String name of an object
-   */
-  @Override
-  public String getName() {
-    return this.name;
-  }
-
-  /**
-   * getAdjective returns the adjective in the name of the HeadGear.
-   * @param accepts nothing
-   * Returns String adjective
-   */
-  @Override
-  public String getAdjective() {
-    String[] splited = this.name.split("\\s+");
-    return splited[0];
-  }
-  
-  @Override
-  public void setDefense(int inp_defense) {
-    if (inp_defense < 0){
-      throw new IllegalArgumentException("No non-negative defense values.");
-    }
-    this.defense = inp_defense;
-  }
-  
-  @Override
-  public int getDefense() {
-    return this.defense;
-  }
-  
   @Override
   public void setAttack(int att) {
-    this.attack = 0;
+    if (att != 0) { 
+      throw new IllegalArgumentException  
+        ("Attack value can only be 0 for a HeadGear object.");
+      }
+     
+    this.attack = att;
   }
   
+  
+  
+  @Override 
+  protected Boolean equalsHeadGear(WearableGear object) { 
+    return true;
+  }
+  
+  
+  
+  @Override 
+  public Boolean equals(WearableGear object) { 
+    object.equalsHeadGear(this);
+    return false;
+  }
+  
+  
+  
+  /** It is important to note Headgear objects are not alloweed to combine **/ 
   @Override
-  public int getAttack() {
-    return this.attack;
+  public WearableGear combine(WearableGear object) { 
+
+    HeadGear dummyHeadgear = new HeadGear("Dummy gear", 0, false, false);
+    return dummyHeadgear;
   }
   
   /**

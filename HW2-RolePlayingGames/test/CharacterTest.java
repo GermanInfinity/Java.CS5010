@@ -18,9 +18,9 @@ public class CharacterTest {
    */
   @Before
   public void setup() {
-   Footwear footGear = new Footwear("Heavy boots", 30, 45);
-   HandGear handGear = new HandGear("Strong gloves", 30);
-   HeadGear headGear = new HeadGear("Fat hat", 2);
+   Footwear footGear = new Footwear("Heavy boots", 30, 45, false, true);
+   HandGear handGear = new HandGear("Strong gloves", 30, false, true);
+   HeadGear headGear = new HeadGear("Fat hat", 2, false, true);
    
    ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
    attire.add(footGear);
@@ -57,9 +57,9 @@ public class CharacterTest {
    */
   @Test
   public void testEmptyNameInput() {
-    Footwear footGear = new Footwear("Heavy boots", 30, 45);
-    HandGear handGear = new HandGear("Strong gloves", 30);
-    HeadGear headGear = new HeadGear("Fat hat", 2);
+    Footwear footGear = new Footwear("Heavy boots", 30, 45, false, true);
+    HandGear handGear = new HandGear("Strong gloves", 30, false, true);
+    HeadGear headGear = new HeadGear("Fat hat", 2, false, true);
     
     ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
     attire.add(footGear);
@@ -76,9 +76,9 @@ public class CharacterTest {
    */
   @Test
   public void testEmptyAttireInput() {
-    Footwear footGear = new Footwear("Heavy boots", 30, 45);
-    HandGear handGear = new HandGear("Strong gloves", 30);
-    HeadGear headGear = new HeadGear("Fat hat", 2);
+    Footwear footGear = new Footwear("Heavy boots", 30, 45, false, true);
+    HandGear handGear = new HandGear("Strong gloves", 30, false, true);
+    HeadGear headGear = new HeadGear("Fat hat", 2, false, true);
     
     ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
     
@@ -92,9 +92,9 @@ public class CharacterTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegAttackInput() {
-    Footwear footGear = new Footwear("Heavy boots", 30, 45);
-    HandGear handGear = new HandGear("Strong gloves", 30);
-    HeadGear headGear = new HeadGear("Fat hat", 2);
+    Footwear footGear = new Footwear("Heavy boots", 30, 45, false, true);
+    HandGear handGear = new HandGear("Strong gloves", 30, false, true);
+    HeadGear headGear = new HeadGear("Fat hat", 2, false, true);
     
     ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
     attire.add(footGear);
@@ -109,9 +109,9 @@ public class CharacterTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegDefenseInput() {
-    Footwear footGear = new Footwear("Heavy boots", 30, 45);
-    HandGear handGear = new HandGear("Strong gloves", 30);
-    HeadGear headGear = new HeadGear("Fat hat", 2);
+    Footwear footGear = new Footwear("Heavy boots", 30, 45, false, true);
+    HandGear handGear = new HandGear("Strong gloves", 30, false, true);
+    HeadGear headGear = new HeadGear("Fat hat", 2, false, true);
     
     ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
     attire.add(footGear);
@@ -135,13 +135,13 @@ public class CharacterTest {
    */
   @Test
   public void testsetAttire() {
-    Footwear footGear = new Footwear("Strong boots", 30, 45);
+    Footwear footGear = new Footwear("Strong boots", 30, 45, false, true);
     ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
     attire.add(footGear);
     
     test = new Character("John doe", attire, 30, 45);
     
-    HeadGear headgear = new HeadGear("Big Head", 45);
+    HeadGear headgear = new HeadGear("Big Head", 45, false, true);
     ArrayList<WearableGear> attire2 = new ArrayList<WearableGear>(); 
     attire2.add(headgear);
     
@@ -156,7 +156,7 @@ public class CharacterTest {
    */
   @Test
   public void testgetAttire() {
-    HeadGear headgear = new HeadGear("Big Head", 45);
+    HeadGear headgear = new HeadGear("Big Head", 45, false, true);
     ArrayList<WearableGear> attire = new ArrayList<WearableGear>(); 
     attire.add(headgear);
 
@@ -170,7 +170,7 @@ public class CharacterTest {
    * setName, tests the setting the correct name.
    */
   @Test
-  public void testsetEmptyName() {
+  public void testsetName() {
     test.setName("John Doe");
     assertEquals("John Doe", test.getName());
   }
@@ -179,7 +179,7 @@ public class CharacterTest {
    * setName, tests the setting empty name.
    */
   @Test
-  public void testsetName() {
+  public void testsetEmptyName() {
     test.setName("");
     assertEquals("unknown", test.getName());
   }

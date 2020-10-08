@@ -16,7 +16,7 @@ public class HeadGearTest {
    */
   @Before
   public void setup() {
-   test = new HeadGear("Fat hat", 2);
+   test = new HeadGear("Fat hat", 2, false, true);
   }
   
   /**
@@ -42,7 +42,7 @@ public class HeadGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNoName() { 
-    HeadGear test = new HeadGear("", 2);
+    HeadGear test = new HeadGear("", 2, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -51,7 +51,7 @@ public class HeadGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() { 
-    HeadGear test = new HeadGear("Tom and Jerry", 2);
+    HeadGear test = new HeadGear("Tom and Jerry", 2, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -60,7 +60,7 @@ public class HeadGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testNegativeDefense() { 
-    HeadGear test = new HeadGear("Fat hat", -2);
+    HeadGear test = new HeadGear("Fat hat", -2, false, true);
     test.toString(); //remove unused variable warning.
   }
   
