@@ -227,14 +227,6 @@ public class CharacterTest {
     assertEquals(46, test.defense);
   }
   
-  /**
-   * setDefense, tests the illegal defense set.
-   */
-  @Test(expected = IllegalArgumentException.class)
-  public void testsetIllegalDefense() {
-    test.setDefense(-46);
-  }
-  
   
   /**
    * getDefense, tests the getDefensefunction works.

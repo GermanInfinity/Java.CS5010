@@ -37,6 +37,95 @@ public class FootwearTest {
   public void toStringtest(){ 
     assertEquals("Heavy boots, Attack: 30, Defense: 45", test.toString());
   }
+  /** 
+   * setValid test. We set the valid parameter of a WearableGear object. 
+   */
+  @Test
+  public void testsetValid(){ 
+    test.setValid(false);
+    assertEquals(false, test.isValid);
+  }
+  /** 
+   * getValid test. We set the valid parameter of a WearableGear object. 
+   */
+  @Test
+  public void testgetValid(){ 
+    assertEquals(true, test.getValid());
+  }
+  /** 
+   * setCombined test. We set the combined parameter of a WearableGear object. 
+   */
+  @Test
+  public void testsetCombined(){ 
+    test.setCombined(true);
+    assertEquals(true, test.isCombined);
+  }
+  /** 
+   * getCombined test. We set the combined parameter of a WearableGear object. 
+   */
+  @Test
+  public void testgetCombined(){ 
+    assertEquals(false, test.getCombined());
+  }
+  /**
+   * testIllegalCombine tests the dummy combine function.
+   */
+  @Test 
+  public void testIllegalCombine(){ 
+    HandGear test2 = new HandGear("Hairy hands", 2, false, true);
+    WearableGear res = test.combine(test2);
+    assertEquals("Dummy gear", res.getName());
+    assertEquals(false, res.getValid());
+    assertEquals(0, res.getDefense());
+  }
+  /**
+   * testCombine tests the combine function between two similar gears.
+   */
+  @Test 
+  public void testCombine(){ 
+    Footwear test2 = new Footwear("Big feet",2, 2, false, true);
+    WearableGear res = test.combine(test2);
+    assertEquals("Heavy, Big feet", res.getName());
+    assertEquals(true, res.getValid());
+    assertEquals(47, res.getDefense());
+  }
+  /**
+   * equals test this returns false and true.
+   */
+  @Test 
+  public void testequals() { 
+    Footwear test3 = new Footwear("Heavy boots", 45, 12, false, true);
+    assertEquals(true, test.equals(test3));
+    HandGear test4 = new HandGear("Heavy hands", 12, false, true);
+    assertEquals(false, test.equals(test4));
+  }
+  /**
+   * equalsFootwear test this returns false and true.
+   */
+  @Test 
+  public void testequalsFootwear() { 
+    HandGear test2 = new HandGear("Heavy gloves", 45, false, true);
+    assertEquals(false, test2.equalsFootwear(test));
+    
+    Footwear test3 = new Footwear("Heavy boots", 45, 12, false, true);
+    assertEquals(true, test3.equalsFootwear(test));
+  }
+  /**
+   * equalsHeadGear test this returns false.
+   */
+  @Test 
+  public void testequalsHeadGear() { 
+    Footwear test2 = new Footwear("Heavy boots", 30, 45, false, true);
+    assertEquals(false, test.equalsHeadGear(test2));
+  }
+  /**
+   * equalsHandGear test this returns false.
+   */
+  @Test 
+  public void testequalsHandGear() { 
+    Footwear test2 = new Footwear("Heavy boots", 30, 45, false, true);
+    assertEquals(false, test.equalsHandGear(test2));
+  }
   /**
    * Assertion test: Test no name inputed in constructor.
    */
@@ -51,7 +140,7 @@ public class FootwearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() { 
-    Footwear test = new Footwear("Tom and Jerry", 2, 13, false, true);
+    Footwear test = new Footwear("Ed, Edd, and Eddy", 2, 13, false, true);
     test.toString(); //remove unused variable warning.
   }
   

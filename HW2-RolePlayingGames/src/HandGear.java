@@ -20,7 +20,7 @@ public class HandGear extends WearableGear{
     if (inp_name == ""){
       throw new IllegalArgumentException("No name inputed!");
     }
-    if (inp_name.split("\\s+").length != 2){
+    if (inp_name.split("\\s+").length != 2 && inp_name.split("\\s+").length != 3){
       throw new IllegalArgumentException("Name is comprised of an adjective and a noun");
     }
     if (inp_attack < 0){
@@ -43,8 +43,6 @@ public class HandGear extends WearableGear{
       throw new IllegalArgumentException  
         ("Defense value can only be 0 for a HandGear object.");
       }
-     
-    this.defense = def;
   }
   
   
@@ -58,8 +56,7 @@ public class HandGear extends WearableGear{
   
   @Override 
   public Boolean equals(WearableGear object) {
-    object.equalsHandGear(this);
-    return false;
+    return object.equalsHandGear(this);
   }
   
   

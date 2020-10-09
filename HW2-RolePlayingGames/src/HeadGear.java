@@ -42,8 +42,6 @@ public class HeadGear extends WearableGear{
       throw new IllegalArgumentException  
         ("Attack value can only be 0 for a HeadGear object.");
       }
-     
-    this.attack = att;
   }
   
   
@@ -57,13 +55,12 @@ public class HeadGear extends WearableGear{
   
   @Override 
   public Boolean equals(WearableGear object) { 
-    object.equalsHeadGear(this);
-    return false;
+    return object.equalsHeadGear(this);
   }
   
   
   
-  /** It is important to note Headgear objects are not alloweed to combine **/ 
+  /** It is important to note Headgear objects are not allowed to combine **/ 
   @Override
   public WearableGear combine(WearableGear object) { 
 

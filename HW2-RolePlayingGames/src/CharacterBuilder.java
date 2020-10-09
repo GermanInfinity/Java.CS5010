@@ -29,8 +29,9 @@ public class CharacterBuilder {
     
     Wear(wearable);
     HeadGear dropHead = new HeadGear("Dummy HeadGear",0, false, false);
+ 
     MakeGearSolo(dropHead);
-    
+ 
     this.attack = getAttack();
     this.defense = getDefense();
     player = new Character(name, this.attire, this.attack, this.defense);
@@ -50,7 +51,7 @@ public class CharacterBuilder {
     ArrayList <ArrayList <Integer>> total = new ArrayList<>();
     for (int i = 0; i <= list.size(); i++) {
       
-      for (int y = i + 1; y <= list.size(); y++) {
+      for (int y = i + 1; y < list.size(); y++) {
         ArrayList <Integer> midList = new ArrayList<>();
         midList.add(i);
         midList.add(y);
@@ -75,8 +76,10 @@ public class CharacterBuilder {
     /** get number of occurences **/
     for (int i = 0; i < this.attire.size(); i++) { 
       WearableGear currentAttire = this.attire.get(i);
-      
-      if (currentAttire.equals(drop)){ count += 1; }
+
+      if (currentAttire.equals(drop)){ 
+        count += 1; 
+        }
     }
     
     /** Drop gears from lowest to highest **/ 
@@ -89,6 +92,7 @@ public class CharacterBuilder {
           
           this.attire.remove(i);
           count -= 1;
+          
         }
       }  
     }
@@ -139,26 +143,31 @@ public class CharacterBuilder {
      */
     this.gearCombinations = uniqueCombinations(wearable);
     
-    
-    /** Combine similar type of gears **/ 
+   
+    /** Combine all gears, but set valid parameter on combinable gears **/ 
+    ArrayList <WearableGear> combinedGears = new ArrayList<WearableGear>();
     for (int i = 0; i < this.gearCombinations.size(); i++) { 
       ArrayList<Integer> indexes = this.gearCombinations.get(i);
       
       WearableGear first = wearable.get(indexes.get(0)); 
       WearableGear second = wearable.get(indexes.get(1)); 
-      WearableGear  newGear = combineGears(first, second);
+      WearableGear newGear = combineGears(first, second);
       
-      wearable.add(newGear);
+      combinedGears.add(newGear);
     }
-    wearable = DropInvalidGears(wearable);
+    /**Add combined gears original gear list **/
+    wearable.addAll(combinedGears);
 
+    /** Invalid Gears **/
+    wearable = DropInvalidGears(wearable);
+    
     /**
      * Sort wearable list from highest to lowest.
      */
     Comparator<WearableGear> attacks = (c1, c2) -> (int) (c1.getAttack() - c2.getAttack()); 
     wearable.sort(Collections.reverseOrder(attacks)); 
+    System.out.println(wearable);
     getBestGear(wearable);
-    
     
   }
   
@@ -203,7 +212,7 @@ public class CharacterBuilder {
       for (int y = 0; y < this.attire.size(); y++) { 
         WearableGear attireGear = this.attire.get(y);
         
-        if (attireGear.getCombined()) { 
+        if (attireGear.getCombined() && currentGear.equals(attireGear)) { 
           similarTypeCount = 2;
           break;
         }

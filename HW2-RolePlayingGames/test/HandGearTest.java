@@ -37,6 +37,93 @@ public class HandGearTest {
   public void toStringtest(){ 
     assertEquals("Strong gloves, Attack: 30, Defense: 0", test.toString());
   }
+  /** 
+   * setValid test. We set the valid parameter of a WearableGear object. 
+   */
+  @Test
+  public void testsetValid(){ 
+    test.setValid(false);
+    assertEquals(false, test.isValid);
+  }
+  /** 
+   * getValid test. We set the valid parameter of a WearableGear object. 
+   */
+  @Test
+  public void testgetValid(){ 
+    assertEquals(true, test.getValid());
+  }
+  /** 
+   * setCombined test. We set the combined parameter of a WearableGear object. 
+   */
+  @Test
+  public void testsetCombined(){ 
+    test.setCombined(true);
+    assertEquals(true, test.isCombined);
+  }
+  /** 
+   * getCombined test. We set the combined parameter of a WearableGear object. 
+   */
+  @Test
+  public void testgetCombined(){ 
+    assertEquals(false, test.getCombined());
+  }
+  /**
+   * testCombine method. Ensures combines gears correctly. 
+   */
+  @Test
+  public void testCombine(){ 
+    HandGear test2 = new HandGear("Hairy hands", 2, false, true);
+    WearableGear res = test.combine(test2);
+    assertEquals("Strong, Hairy hands", res.getName());
+    assertEquals(32, res.getAttack());
+    assertEquals(0, res.getDefense());
+  }
+  /**
+   * testFalseCombine method. Ensures combines illegal gears combine but return 
+   * invalid gears. 
+   */
+  @Test
+  public void testFalseCombine(){ 
+    HeadGear test2 = new HeadGear("Hairy head", 2, false, true);
+    WearableGear res = test.combine(test2);
+    assertEquals("Dummy gear", res.getName());
+    assertEquals(false, res.getValid());
+    assertEquals(0, res.getAttack());
+  }
+  /**
+   * equals test this returns true.
+   */
+  @Test 
+  public void testequals() { 
+    HandGear test2 = new HandGear("Strong hand", 30, false, true);
+    assertEquals(true, test.equals(test2));
+    HeadGear test3 = new HeadGear("Strong hat", 30, false, true);
+    assertEquals(false, test.equals(test3));
+  }
+  /**
+   * equalsHandgear test this returns false.
+   */
+  @Test 
+  public void testequalsHandgear() { 
+    HeadGear test2 = new HeadGear("Strong hat", 30, false, true);
+    assertEquals(false, test2.equalsHandGear(test));
+  }
+  /**
+   * equalsFootwear test this returns false.
+   */
+  @Test 
+  public void testequalsFootwear() { 
+    HandGear test2 = new HandGear("Strong gloves", 30, false, true);
+    assertEquals(false, test.equalsFootwear(test2));
+  }
+  /**
+   * equalsHandGear test this returns false.
+   */
+  @Test 
+  public void testequalsHeadGear() { 
+    HandGear test2 = new HandGear("Strong gloves", 30, false, true);
+    assertEquals(false, test.equalsHeadGear(test2));
+  }
   /**
    * Assertion test: Test no name inputed in constructor.
    */
@@ -51,7 +138,7 @@ public class HandGearTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalName() { 
-    HandGear test = new HandGear("Tom and Jerry", 2, false, true);
+    HandGear test = new HandGear("Ed, Edd and Eddy", 2, false, true);
     test.toString(); //remove unused variable warning.
   }
   
@@ -113,24 +200,24 @@ public class HandGearTest {
     test.setAttack(46);
     assertEquals(46, test.attack);
   }
-  
   /**
-   * setDefense, tests the setDefense function works.
-   */
-  @Test
-  public void testsetDefense() {
-    test.setDefense(46);
-    assertEquals(0, test.defense);
-  }
-  
-  /**
-   * setAttack, tests the illegal attack set.
+   * setIllegalAttack, tests the setAttack function works for illegal arguements. 
    */
   @Test(expected = IllegalArgumentException.class)
   public void testsetIllegalAttack() {
     test.setAttack(-46);
   }
   
+  /**
+   * setDefense, tests the setDefense function works.
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testsetDefense() {
+    test.setDefense(46);
+    assertEquals(0, test.defense);
+  }
+  
+ 
   /**
    * getAttack, tests the getAttack function works.
    */
