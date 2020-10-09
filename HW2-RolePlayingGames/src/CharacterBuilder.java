@@ -166,7 +166,6 @@ public class CharacterBuilder {
      */
     Comparator<WearableGear> attacks = (c1, c2) -> (int) (c1.getAttack() - c2.getAttack()); 
     wearable.sort(Collections.reverseOrder(attacks)); 
-    System.out.println(wearable);
     getBestGear(wearable);
     
   }

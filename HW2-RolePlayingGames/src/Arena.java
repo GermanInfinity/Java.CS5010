@@ -1,3 +1,4 @@
+import java.awt.List;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +14,13 @@ public class Arena {
   
   private Boolean gameOn;
   private int firstFighter;
+  private int starter;
   String fightStatus;
+  Random rand = new Random();
+  ArrayList <String> hits = new ArrayList<String>();
+  
+ 
+
 
   /**
    * Arena class constructor: creates an arena for two incoming 
@@ -24,9 +31,18 @@ public class Arena {
    */
   public Arena(Character player1, Character player2) {
     this.gameOn = true;
-    this.fightStatus = "Let's get ready to rumble!";
+    this.fightStatus = "Let's get ready to rumble! \n";
     System.out.println(this.fightStatus);
     setFirstPlayer(player1, player2);
+    
+    this.hits.add("punched");
+    this.hits.add("drop-kicked");
+    this.hits.add("slapped");
+    this.hits.add("face-planted");
+    this.hits.add("hadoukened");
+    this.hits.add("upper-cutted");
+    this.hits.add("hugged");
+    
   }
   
   
@@ -53,23 +69,44 @@ public class Arena {
    * Return does not return anything
    */
   public void fightMedic(Character player1, Character player2) { 
+    
     if (player1.getDefense() < 0 && player2.getDefense() < 0) { 
       this.gameOn = false; 
       this.fightStatus = "Draw!";
     }
-    if (player2.getDefense() < 0) { 
+    
+    else if (player2.getDefense() < 0) { 
       this.gameOn = false; 
       this.fightStatus = player1.getName() + " wins the Fight!";
+      this.fightStatus = player1.getName() + " attacked " + player2.getName() +
+                         " leaving the fighter with " + player2.getDefense() + " health!";
     }
-    if (player1.getDefense() < 0) { 
+    
+    else if (player1.getDefense() < 0) { 
       this.gameOn = false; 
       this.fightStatus = player2.getName() + " wins the Fight!";
+      this.fightStatus = player2.getName() + " attacked " + player1.getName() +
+                         " leaving the fighter with " + player1.getDefense() + " health!";
+
     }
     else { 
-      System.out.println(player1.getDefense());
-      System.out.println(player2.getDefense());
       this.gameOn = true; 
-      this.fightStatus = "Fight is ongoing, keep an eye out for low blows!";
+      int randomIdx = this.rand.nextInt(hits.size());
+      String action = hits.get(randomIdx);
+      
+      if (this.starter == 0){ 
+        this.fightStatus = player1.getName() + " " + action + " " + player2.getName() +
+                           ". " + player2.getName() + " has " + player2.getDefense() +
+                           " health while, " + player1.getName() + " has " + player1.getDefense()
+                           + " health. \n";
+      }
+      if (this.starter == 1){ 
+        this.fightStatus = player2.getName() + " " + action + " "  + player1.getName() + 
+                           ". " + player1.getName() + " has " + player1.getDefense() +
+                           " health while, " + player2.getName() + " has " + player2.getDefense()
+                           + " health. \n";
+      }
+      
     }
     System.out.println(this.fightStatus);
   }
@@ -84,6 +121,9 @@ public class Arena {
    * Return does not return anything
    */
   public void Duel(Character player1, Character player2, int turn) { 
+    if (turn != 0 && turn != 1) { 
+      throw new IllegalArgumentException("Wrong number for turns.");
+    }
     if (turn == 0) { 
       int attackValue = player1.getAttack();
       int defenseValue = player2.getDefense();
@@ -109,13 +149,16 @@ public class Arena {
    * Return Character winner of fight
    */
   public void Fight(Character player1, Character player2) { 
+
+    
     while (this.gameOn) { 
-      //System.out.println(this.firstFighter);
-      Duel(player1, player2, this.firstFighter);
+      Duel(player1, player2, starter);
       fightMedic(player1, player2);
-      //System.out.println(this.firstFighter % 1);
+      
+      if (this.starter == 0){ this.starter = 1;} 
+      else { this.starter = 0;}
     }
-    System.out.println(this.fightStatus);
+    
   }
   
   /**
@@ -125,13 +168,13 @@ public class Arena {
   public static void main(String args[]) {
     ArrayList <WearableGear> list = new ArrayList<WearableGear>();
     
-    Footwear foot = new Footwear("Fat shoes", 3, 2, false, true);
+    Footwear foot = new Footwear("Fat shoes", 5, 0, false, true);
     list.add(foot);
     
-    HeadGear head = new HeadGear("Heavy heads", 30, false, true);
+    HeadGear head = new HeadGear("Heavy heads", 10, false, true);
     list.add(head);
     
-    HandGear hand = new HandGear("Slow hands", 1, false, true);
+    HandGear hand = new HandGear("Slow hands", 0, false, true);
     list.add(hand);
     
     
@@ -140,13 +183,13 @@ public class Arena {
     
     ArrayList <WearableGear> list2 = new ArrayList<WearableGear>();
     
-    Footwear foot2 = new Footwear("Fat shoes", 3, 1, false, true);
+    Footwear foot2 = new Footwear("Fat shoes", 5, 0, false, true);
     list2.add(foot2);
     
-    HeadGear head2 = new HeadGear("Heavy heads", 20, false, true);
+    HeadGear head2 = new HeadGear("Heavy heads", 10, false, true);
     list2.add(head2);
     
-    HandGear hand2 = new HandGear("Slow hands", 4, false, true);
+    HandGear hand2 = new HandGear("Slow hands", 0, false, true);
     list2.add(hand2);
     
     
@@ -157,8 +200,8 @@ public class Arena {
     
     //System.out.println(playerA.getAttire());
     Arena battleRoyal = new Arena(playerA, playerB);
-    
     battleRoyal.Fight(playerA, playerB);
+    //System.out.println(playerA.toString());
     //System.out.println(playerB.toString());
     
   }
