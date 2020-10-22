@@ -1,49 +1,125 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 /**
- * This MazeBuilder class represents the structure of a MazeBuilder with an Array.
+ * This abstract class represents the abstraction of a maze.
  * 
- * @author ugoslight
+ * @author Ugo Nwachuku
  *
  */
-public class MazeBuilder {
-  
+public abstract class MazeImpl implements Maze {
+
   private Maze maze;
+  private Player player;
+
   private int row;
   private int col;
-  private int goal;
-  private int[] array1;
-  private int[] array2;
+  private int startRow;
+  private int startCol;
+  private int goalRow;
+  private int goalCol;
+
+  private Room[] array;
   private String mazeType;
+
+  private ArrayList<String> possibleMoves;
+  private String playerMove;
+
   private ArrayList<String> walls;
   private ArrayList<String> removedWalls;
   private Map<String, Set<String>> sets;
 
-  public MazeBuilder(int row, int col, String mazeType, int remainingWalls, int startRow, int startCol, int goalRow, int goalCol) {
-    
-    this.row = row;
-    this.col = col;
-    this.array1 = new int[this.row];
-    this.array2 = new int[this.col];
-    
-    makeWalls();
-    this.sets = new HashMap<String, Set<String>>();
-    this.removedWalls = new ArrayList<String>();
-    
-    if (remainingWalls == 0) { 
-      this.goal = this.walls.size() - this.row * this.col + 1;
-    }
-    else { 
-      this.goal = remainingWalls; 
-    }
-    
-    //this.maze = new Maze(row, col, startRow, startCol, goalRow, goalCol, this.walls, this.removedWalls);
+  public void insertRooms() {
+    this.array = new Room[row * col];
 
+    for (int i = 0; i < row * col; i++) {
+      String name = Integer.toString(row) + Integer.toString(col);
+      this.array[i] = new Room(name, false, 0);
+    }
+
+  }
+
+  public void spreadGold() {
+    HashSet<Integer> set = generateRandomSet(0.20);
+    /** Put into maze **/
+    for (int i = 0; i < set.size(); i++) {
+      this.array[i].setGold(100);
+    }
+  }
+
+  public void spreadThieves() {
+    HashSet<Integer> set = generateRandomSet(0.10);
+    /** Put into maze **/
+    for (int i = 0; i < set.size(); i++) {
+      this.array[i].placeThief(true);
+    }
+  }
+
+  public String playerPosition() {
+    return this.player.getPosition();
+  }
+
+  public void playerMove() {
+    this.playerMove = player.pickMove(this.possibleMoves);
+  }
+
+  public void possibleMoves() {
+    int[][] boundaryArray = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+    char playerRow = this.player.getPosition().charAt(0);
+    char playerCol = this.player.getPosition().charAt(0);
+    int playerRowNum = Character.getNumericValue(playerRow);
+    int playerColNum = Character.getNumericValue(playerCol);
+
+    for (int i = 0; i < boundaryArray.length; i++) {
+      int currRow = playerRowNum + boundaryArray[i][0];
+      int currCol = playerColNum + boundaryArray[i][1];
+
+      String neighbour = Integer.toString(currRow) + Integer.toString(currCol);
+      String possibleWall = this.player.getPosition() + "." + neighbour;
+      if (this.walls.contains(possibleWall)) {
+        continue;
+      }
+
+      if (i == 0) {
+        this.possibleMoves.add("South");
+      }
+      if (i == 1) {
+        this.possibleMoves.add("North");
+      }
+      if (i == 2) {
+        this.possibleMoves.add("East");
+      }
+      if (i == 3) {
+        this.possibleMoves.add("West");
+      }
+    }
+
+  }
+
+  public Boolean mazeSolved() {
+    String goal = Integer.toString(goalRow) + Integer.toString(goalCol);
+    if (player.getPosition().equals(goal)) {
+      return true;
+    }
+    return false;
+  }
+
+  public void Action() {
+    for (int i = 0; i < this.array.length; i++) {
+      Room currentRoom = this.array[i];
+      if (this.player.getPosition().equals(currentRoom.getName())) {
+
+        this.player.addGold(currentRoom.getGold());
+
+        if (currentRoom.hasThief()) {
+          this.player.addGold(-50);
+        }
+      }
+    }
   }
 
   public void makeWalls() {
@@ -78,7 +154,7 @@ public class MazeBuilder {
     }
   }
 
-  public ArrayList<String> showWalls() { 
+  public ArrayList<String> showWalls() {
     return this.walls;
   }
 
@@ -113,15 +189,15 @@ public class MazeBuilder {
       }
     }
   }
-  
-  public void updateSets(){ 
-    
+
+  public void updateSets() {
+
     for (int row = 0; row < this.row; row++) {
       for (int col = 0; col < this.col; col++) {
         String room = Integer.toString(row) + Integer.toString(col);
-        for (String wall : this.removedWalls) { 
-          String wallSide1 = wall.substring(0,2);
-          String wallSide2 = wall.substring(3,5);
+        for (String wall : this.removedWalls) {
+          String wallSide1 = wall.substring(0, 2);
+          String wallSide2 = wall.substring(3, 5);
           Set<String> addInSet = new HashSet<>();
 
           if (room.equals(wallSide1)) {
@@ -134,45 +210,42 @@ public class MazeBuilder {
             addInSet.add(wallSide1);
             this.sets.put(room, addInSet);
           }
- 
+
         }
       }
     }
     updateSetsHelper();
   }
-  
-  
-  public void updateSetsHelper(){ 
+
+  public void updateSetsHelper() {
 
     /** Loop through sets **/
     for (Map.Entry<String, Set<String>> entry : this.sets.entrySet()) {
       String key = entry.getKey();
       Set<String> val = entry.getValue();
-      
-      if (val.size() == 0) { continue; } 
-      
+
+      if (val.size() == 0) {
+        continue;
+      }
+
       Set<String> setPairs = new HashSet<>();
       /** Current Key's value **/
       setPairs.addAll(val);
-      
+
       /** Combining with paired keys values **/
-      for (String ele: val) { 
+      for (String ele : val) {
         Set<String> pairedEle = this.sets.get(ele);
         setPairs.addAll(pairedEle);
       }
       /** Remove duplicate key in value list **/
       setPairs.remove(key);
-      
+
       /** Replace new value to current key value **/
       this.sets.put(key, setPairs);
-      
-          
-  }
+
+    }
 
   }
-  
-  
-
 
   public Boolean breakWall(String breakWall) {
     String[] rooms = breakWall.split("\\.");
@@ -184,63 +257,36 @@ public class MazeBuilder {
     }
 
     Set<String> inSet = this.sets.get(room1);
-    
+
     if (inSet.contains(room2)) {
       return false;
     }
-    
+
     int idx = this.walls.indexOf(room1 + "." + room2);
 
     this.removedWalls.add(breakWall);
-    
+
     this.walls.remove(idx);
     return true;
   }
-  
 
-  public void buildNonWrappingMaze() {
-    
+  /**
+   * generateRandomSet generates a set of random non-repeating numbers in a
+   * certain range.
+   * 
+   * @param amount is the percentage of numbers to generate.
+   * @return set of random integer values.
+   */
+  public HashSet<Integer> generateRandomSet(double amount) {
+    HashSet<Integer> set = new HashSet<Integer>();
     Random ran = new Random();
-    makeSets();
-
-    while (this.walls.size() != this.goal) {
-
-      int wallToBreak = ran.nextInt(this.walls.size()) + 0;
-      
-      if (breakWall(this.walls.get(wallToBreak))) {
-       updateSets();
-      }
-      
+    double roomsWithGold = Math.ceil(amount * this.row * this.col);
+    /** Generate random numbers **/
+    while (set.size() < roomsWithGold) {
+      int num = ran.nextInt((int) this.row * this.col);
+      set.add(num);
     }
-    
-  }
-  
-  public Maze build () {
-    return maze;
-  }
-
-  public static void main(String[] args) {
-    // row, col, perfect...,0,0, 4,0
-    // error check starting point and goal point could be in MazeBuilder
-    // make MazeBuilder
-    // make walls
-    // make sets
-    // array of room objects
-
-    // MazeBuilder has all walls
-    // a away to refer to wall-- 00.10
-    // kruskals algo
-    // randomly select wall, break if doesnt form cycle
-    // update sets
-    // function goes into every node, checks the wall list with names of nodes
-
-    // break until we have nEdges-n+1 edges left
-    MazeBuilder test = new MazeBuilder(6, 6, "Perfect Maze", 3, 0, 0, 1, 1);
-    test.buildNonWrappingMaze();
-
-    System.out.println(test.showWalls());
-    System.out.println("Done");
-
+    return set;
   }
 
 }
