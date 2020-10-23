@@ -5,7 +5,8 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * This abstract class represents the abstraction of a maze.
+ * This abstract class represents an abstraction of a maze. This abstract class
+ * is a construction of methods in the Maze interface.
  * 
  * @author Ugo Nwachuku
  *
@@ -18,13 +19,15 @@ public abstract class MazeImpl implements Maze {
     for (int i = 0; i < row; i++) {
       for (int j = 0; j < col; j++) {
         String name = Integer.toString(i) + Integer.toString(j);
-        name = name.substring(0,1) + name.substring(1,2);
+        name = name.substring(0, 1) + name.substring(1, 2);
         array[idxCount] = new Room(name, false, false, 0);
         idxCount += 1;
       }
     }
     return array;
   }
+
+  public abstract String findPlayer();
 
   public String playerLocation(Room[] array, int row, int col) {
     for (int i = 0; i < row * col; i++) {
@@ -37,21 +40,18 @@ public abstract class MazeImpl implements Maze {
 
   public void updatePlayerPosition(Room[] array, int row, int col, int newPosRow, int newPosCol) {
     for (int i = 0; i < row * col; i++) {
-      
-      String name = Integer.toString(newPosRow) + Integer.toString(newPosCol);
-      name = name.substring(0,1) + name.substring(name.length()-1,name.length());
 
-      
-      if (array[i].getName().equals(name)) { 
+      String name = Integer.toString(newPosRow) + Integer.toString(newPosCol);
+      name = name.substring(0, 1) + name.substring(name.length() - 1, name.length());
+
+      if (array[i].getName().equals(name)) {
         array[i].setPlayerIn(true);
         continue;
       }
-      
+
       array[i].setPlayerIn(false);
     }
-    
-    
-    
+
   }
 
   public abstract void makeMove(String move);
@@ -85,7 +85,6 @@ public abstract class MazeImpl implements Maze {
 
       updatePlayerPosition(array, row, col, playRow, playCol);
     }
-    
 
   }
 
@@ -104,18 +103,43 @@ public abstract class MazeImpl implements Maze {
       array[i].placeThief(true);
     }
   }
-
+  
+  public abstract String gotGold(); 
+  
+  public abstract String wasAttacked();
+  
   public abstract int Event();
+  
+  public String checkGotGold(Room[] array, int row, int col) { 
+    for (int i = 0; i < row * col; i++) {
+      if (array[i].hasPlayer()) {
+        if (array[i].getGold() > 0) { 
+          return "Player picked up some Gold!";
+        }
+     }
+    }
+    return "Player didn't get any Gold.";  
+  }
+  public String checkWasAttacked(Room[] array, int row, int col) { 
+    for (int i = 0; i < row * col; i++) {
+      if (array[i].hasPlayer()) {
+        if (array[i].hasThief()) { 
+          return "Player got Robbed";
+        }
+     }
+    }
+    return "Player didn't get attacked.";
+  }
 
   public int Action(Room[] array, int row, int col) {
     int score = 0;
     for (int i = 0; i < row * col; i++) {
-
       if (array[i].hasPlayer()) {
         score += array[i].getGold();
-        if (array[i].hasThief()) { score += array[i].thiefAttack(); } 
+        if (array[i].hasThief()) {
+          score += array[i].thiefAttack();
+        }
         array[i].setGold(0);
-        //System.out.println(score);
       }
     }
     return score;
@@ -125,20 +149,18 @@ public abstract class MazeImpl implements Maze {
 
   public ArrayList<String> possibleMoves(Room[] array, ArrayList<String> walls,
       ArrayList<String> possibleMoves, int mazeRow, int mazeCol) {
-    
+
     int[][] boundaryArray = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 
     char playerRow = playerLocation(array, mazeRow, mazeCol).charAt(0);
     char playerCol = playerLocation(array, mazeRow, mazeCol).charAt(1);
-    
+
     int playerRowNum = Character.getNumericValue(playerRow);
     int playerColNum = Character.getNumericValue(playerCol);
 
-    
     for (int i = 0; i < boundaryArray.length; i++) {
       int currRow = playerRowNum + boundaryArray[i][0];
       int currCol = playerColNum + boundaryArray[i][1];
-
 
       if (currRow >= mazeRow || currRow < 0) {
         continue;
@@ -146,12 +168,17 @@ public abstract class MazeImpl implements Maze {
       if (currCol >= mazeCol || currCol < 0) {
         continue;
       }
-      
-      String neighbour = Integer.toString(currRow) + Integer.toString(currCol);
-      neighbour = neighbour.substring(0,1) + neighbour.substring(1,2);
-      String possibleWall = playerLocation(array, mazeRow, mazeCol) + "." + neighbour;
 
-      if (walls.contains(possibleWall)) {
+      String neighbour = Integer.toString(currRow) + Integer.toString(currCol);
+      neighbour = neighbour.substring(0, 1) + neighbour.substring(1, 2);
+      
+      String possibleWall1 = playerLocation(array, mazeRow, mazeCol) + "." + neighbour;
+      if (walls.contains(possibleWall1)) {
+        continue;
+      }
+      
+      String possibleWall2 = neighbour + "." + playerLocation(array, mazeRow, mazeCol);
+      if (walls.contains(possibleWall2)) {
         continue;
       }
 
@@ -176,9 +203,8 @@ public abstract class MazeImpl implements Maze {
 
   public Boolean mazeSolved(Room[] array, int row, int col, int goalRow, int goalCol) {
     String goal = Integer.toString(goalRow) + Integer.toString(goalCol);
-    goal = goal.substring(0,1) + goal.substring(1,2);
+    goal = goal.substring(0, 1) + goal.substring(1, 2);
     if (playerLocation(array, row, col).equals(goal)) {
-      System.out.println("Solved.");
       return true;
     }
     return false;
@@ -264,7 +290,7 @@ public abstract class MazeImpl implements Maze {
     for (int i = 0; i < row; i++) {
       for (int j = 0; j < col; j++) {
         String room = Integer.toString(i) + Integer.toString(j);
-        room = room.substring(0,1) + room.substring(1,2);
+        room = room.substring(0, 1) + room.substring(1, 2);
         for (String wall : removedWalls) {
           String wallSide1 = wall.substring(0, 2);
           String wallSide2 = wall.substring(3, 5);
@@ -347,12 +373,35 @@ public abstract class MazeImpl implements Maze {
     return walls;
   }
 
+  public void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
+      Map<String, Set<String>> sets, String mazeType, int row, int col, int goal) {
+    Random ran = new Random();
+
+    while (walls.size() > goal) {
+      int wallToBreak = ran.nextInt(walls.size()) + 0;
+
+      if (mazeType == "perfect") {
+        if (canBreakWall(walls.get(wallToBreak), sets, walls)) {
+          walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
+          sets = updateSets(row, col, sets, removedWalls);
+        }
+      }
+
+      else if (mazeType == "room") {
+        walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
+        sets = updateSets(row, col, sets, removedWalls);
+      }
+
+    }
+  }
 
   /**
    * generateRandomSet generates a set of random non-repeating numbers in a
    * certain range. Function is a helper to spreadGold and spreadThieves.
    * 
    * @param amount is the percentage of numbers to generate.
+   * @param col the number of columns in the maze
+   * @param row the number of rows in the maze
    * @return set of random integer values.
    */
   public HashSet<Integer> generateRandomSet(int row, int col, double amount) {

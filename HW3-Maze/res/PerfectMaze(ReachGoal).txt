@@ -1,21 +1,6 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+EXAMPLE RUN: SHOWING PLAYER REACH THE GOAL 
 
-/**
- * The Driver class represents an execution of a player traversing various
- * mazes.
- * 
- * @author Ugo Nwachuku
- *
- */
-public class Driver {
-
-  /**
-   * main method, runs the different traversals of a player in various mazes.
-   * 
-   * @param args
-   */
-  public static void main(String args[]) {
+public static void main(String args[]) {
 
     System.out.println("Please enter the size of maze, type of maze, starting point "
         + "of player and goal location.");
@@ -110,4 +95,64 @@ public class Driver {
 
   }
 
-}
+
+
+OUTPUT
+Please enter the size of maze, type of maze, starting point of player and goal location.
+Please enter the number of rows in the maze: 
+4
+Please enter the number of columns in the maze: 
+4
+Please input values in brackets for type of maze: (1) for Perfect maze, (2) for Room maze or Non-perfect maze and (3) for Wrapping room maze:
+1
+Please enter the starting row position of the player: 
+1
+Please enter the starting column position of the player: 
+1
+Please enter the row position of the goal: 
+3
+Please enter the column position of the goal: 
+3
+
+Player has these possible moves: [South, West]
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 
+2
+Player chose: South
+Player didn't get any Gold.
+Player didn't get attacked.
+Player: John has 0 gold coins.
+Player row position: 2 Player column position: 1
+
+
+Player has these possible moves: [South, North, East, West]
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 
+3
+Player chose: East
+Player didn't get any Gold.
+Player didn't get attacked.
+Player: John has 0 gold coins.
+Player row position: 2 Player column position: 2
+
+
+Player has these possible moves: [North, East, West]
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 
+3
+Player chose: East
+Player didn't get any Gold.
+Player didn't get attacked.
+Player: John has 0 gold coins.
+Player row position: 2 Player column position: 3
+
+
+Player has these possible moves: [South, West]
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 
+2
+Player chose: South
+Player didn't get any Gold.
+Player didn't get attacked.
+Player: John has 0 gold coins.
+Player row position: 3 Player column position: 3
+
+
+Player reached goal.
+

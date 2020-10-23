@@ -5,13 +5,13 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * This class represents the perfect maze that extends the mazeImple abstract
+ * This class represents the room maze that extends the mazeImple abstract
  * class.
  * 
  * @author Ugo Nwachuku
  *
  */
-public class PerfectMaze extends MazeImpl {
+public class RoomMaze extends MazeImpl {
 
   private int row;
   private int col;
@@ -19,7 +19,7 @@ public class PerfectMaze extends MazeImpl {
   private int startCol;
   private int goalRow;
   private int goalCol;
-  private int perfectMazeGoal;
+  private int remainingWalls;
 
   private Room[] array;
 
@@ -27,10 +27,10 @@ public class PerfectMaze extends MazeImpl {
 
   private ArrayList<String> walls;
   private ArrayList<String> removedWalls;
-
   private Map<String, Set<String>> sets;
 
-  public PerfectMaze(int row, int col, int startRow, int startCol, int goalRow, int goalCol) {
+  public RoomMaze(int row, int col, int remainingWalls, int startRow, int startCol, int goalRow,
+      int goalCol) {
     if (row < 0 || col < 0 || startRow < 0 || goalRow < 0 || startCol < 0 || goalCol < 0) {
       throw new IllegalArgumentException("No negative values.");
     }
@@ -40,6 +40,7 @@ public class PerfectMaze extends MazeImpl {
     if (goalRow < 0 || goalRow >= row || goalCol < 0 || goalCol >= col) {
       throw new IllegalArgumentException("Invalid goal location.");
     }
+
     this.row = row;
     this.col = col;
     this.startRow = startRow;
@@ -54,15 +55,20 @@ public class PerfectMaze extends MazeImpl {
     this.array = insertRooms(this.array, this.row, this.col);
     this.walls = makeWalls(this.row, this.col, this.walls);
     this.sets = makeSets(this.row, this.col, this.sets, this.walls);
-    this.perfectMazeGoal = this.walls.size() - this.row * this.col + 1;
+    this.remainingWalls = remainingWalls;
 
-    String mazeType = "perfect";
-    buildMaze(this.walls, this.removedWalls, this.sets, mazeType, this.row, this.col, this.perfectMazeGoal);
+    if (this.remainingWalls >= this.walls.size() - this.row * this.col + 1) {
+      throw new IllegalArgumentException("This is a Perfect room specification.");
+    }
 
+    String mazeType = "room";
+    buildMaze(this.walls, this.removedWalls, this.sets, mazeType, this.row, this.col, this.remainingWalls);
 
     spreadGold(this.array, this.row, this.col);
     spreadThieves(this.array, this.row, this.col);
     updatePlayerPosition(this.array, this.row, this.col, this.startRow, this.startCol);
+    System.out.println(this.walls);
+    System.out.println(this.walls.size());
 
   }
 
@@ -99,6 +105,7 @@ public class PerfectMaze extends MazeImpl {
     return checkWasAttacked(this.array, this.row, this.col);
   }
 
+
   @Override
   public int Event() {
     return Action(this.array, this.row, this.col);
@@ -107,7 +114,7 @@ public class PerfectMaze extends MazeImpl {
   @Override
   public String toString() {
     return "A wall format is [row, column position in maze].[row, column position in maze]. Example a wall "
-        + "between cell 00 and 01 would be: 00.01. Thus, the walls in the perfect maze are: "
+        + "between cell 00 and 01 would be: 00.01. Thus, the walls in the room maze are: "
         + showWalls(this.walls);
   }
 
