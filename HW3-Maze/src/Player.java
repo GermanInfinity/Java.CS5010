@@ -4,16 +4,15 @@ import java.util.Random;
 public class Player {
 
   private String name;
-  private String position; 
+  //private String location; 
   private double gold;
   
-  public Player(String name, String position, double gold) {
+  public Player(String name, int gold) {
    
     if (gold < 0) { 
       throw new IllegalArgumentException ("Cannot start player with negative gold value.");
     }
     this.name = name; 
-    this.position = position; 
     this.gold = gold; 
     
   }
@@ -32,24 +31,18 @@ public class Player {
     return moves.get(i);
   }
   
-  public String getPosition() { 
-    return this.position;
-  }
-  
-  public void setPosition(String position) { 
-    this.position = position; 
-  }
   
   public double getGold() { 
     return this.gold;
   }
   
-  public void addGold(double gold) { 
+  public void addGold(int gold) { 
     this.gold += gold; 
+    if (this.gold < 0) { this.gold = 0; } 
   }
 
   @Override
   public String toString() { 
-    return this.name + " is at " + this.position + " and has " + this.getGold();
+    return this.name + " has " + this.getGold();
   }
 }
