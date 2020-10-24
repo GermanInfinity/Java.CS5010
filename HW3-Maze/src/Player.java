@@ -55,7 +55,9 @@ public class Player {
    * @return
    */
   public String pickMove(int move) {
-    if (move == 1) { return "North"; }
+    
+    if (move > 4 || move < 1) { throw new IllegalArgumentException("Please enter a valid movement."); }
+    else if (move == 1) { return "North"; }
     else if (move == 2) { return "South"; }
     else if (move == 3) { return "East"; }
     else if (move == 4) { return "West"; }

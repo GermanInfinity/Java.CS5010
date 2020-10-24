@@ -46,13 +46,24 @@ public interface Maze {
   /**
    * Wrapper function for playerMove.
    */
-  void makeMove(String move);
+  void makeMove(String move, ArrayList<String> moves);
 
   /**
    * playerMoves moves a player in the cell.
    */
-  void playerMove(int mazeRow, int mazeCol, Room[] array, String move);
+  void playerMove(int mazeRow, int mazeCol, String mazeType, Room[] array, String move);
 
+  /**
+   * BoundaryHelper, updates the row and columns of a wrapping room maze properly. 
+   * @param row
+   * @param col
+   * @param mazeRow
+   * @param mazeCol
+   * @return
+   */
+  int[] boundaryHelper(int row, int col, int mazeRow, int mazeCol);
+  
+  
   /**
    * Wrapper for mazeSolved.
    */
@@ -74,7 +85,7 @@ public interface Maze {
    * possibleMoves returns the possible moves a player can make.
    */
 
-  ArrayList<String> possibleMoves(Room[] array, ArrayList<String> walls,
+  ArrayList<String> possibleMoves(String mazeType, Room[] array, ArrayList<String> walls,
       ArrayList<String> possibleMoves, int mazeRow, int mazeCol);
 
   /**

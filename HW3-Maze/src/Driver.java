@@ -30,6 +30,9 @@ public class Driver {
     System.out.println("Please input values in brackets for type of maze: (1) for Perfect maze, "
         + "(2) for Room maze or Non-perfect maze and (3) for Wrapping room maze:");
     int maze = in.nextInt();
+    if (maze < 1 || maze > 3) { 
+      throw new IllegalArgumentException("Please enter a valid maze type.");
+    }
 
     System.out.println("Please enter the starting row position of the player: ");
     int startRow = in.nextInt();
@@ -58,7 +61,7 @@ public class Driver {
         String move = player.pickMove(choice);
         System.out.println("Player chose: " + move);
 
-        perfectMaze.makeMove(move);
+        perfectMaze.makeMove(move, moves);
         System.out.println(perfectMaze.gotGold()); 
         System.out.println(perfectMaze.wasAttacked()); 
         int goldValue = perfectMaze.Event();
@@ -91,7 +94,7 @@ public class Driver {
         String move = player.pickMove(choice);
         System.out.println("Player chose: " + move);
 
-        roomMaze.makeMove(move);
+        roomMaze.makeMove(move, moves);
         System.out.println(roomMaze.gotGold()); 
         System.out.println(roomMaze.wasAttacked()); 
         int goldValue = roomMaze.Event();
@@ -104,6 +107,39 @@ public class Driver {
         System.out.println("\n");
       }
       if (roomMaze.atGoal() == true) { 
+        System.out.println("Player reached goal.");
+      }
+    }
+    
+    if (maze == 3) {
+      System.out.println("Please enter the remaining walls in the maze: ");
+      int remainingWalls = in.nextInt();
+
+      Maze WrappingroomMaze = new WrappingRoomMaze(row, col, remainingWalls, startRow, startCol, goalRow, goalCol);
+      Player player = new Player("John", 0);
+
+      while (WrappingroomMaze.atGoal() == false) {
+        ArrayList<String> moves = WrappingroomMaze.getMoves();
+        System.out.println("Player has these possible moves: " + moves);
+
+        System.out.println("Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: ");
+        int choice = in.nextInt();
+        String move = player.pickMove(choice);
+        System.out.println("Player chose: " + move);
+
+        WrappingroomMaze.makeMove(move, moves);
+        System.out.println(WrappingroomMaze.gotGold()); 
+        System.out.println(WrappingroomMaze.wasAttacked()); 
+        int goldValue = WrappingroomMaze.Event();
+
+        player.addGold(goldValue);
+        System.out.println(player.toString());
+        String position = WrappingroomMaze.findPlayer();
+        System.out.println("Player row position: " + position.substring(0, 1)
+            + " Player column position: " + position.substring(1, 2));
+        System.out.println("\n");
+      }
+      if (WrappingroomMaze.atGoal() == true) { 
         System.out.println("Player reached goal.");
       }
     }

@@ -5,13 +5,13 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * This class represents the room maze that extends the mazeImple abstract
+ * This class represents the wrapping room maze that extends the mazeImpl abstract
  * class.
  * 
  * @author Ugo Nwachuku
  *
  */
-public class RoomMaze extends MazeImpl {
+public class WrappingRoomMaze extends MazeImpl {
 
   private int row;
   private int col;
@@ -21,7 +21,7 @@ public class RoomMaze extends MazeImpl {
   private int goalCol;
   private int remainingWalls;
   private String mazeType;
-  
+
   private Room[] array;
 
   private ArrayList<String> possibleMoves;
@@ -30,7 +30,7 @@ public class RoomMaze extends MazeImpl {
   private ArrayList<String> removedWalls;
   private Map<String, Set<String>> sets;
 
-  public RoomMaze(int row, int col, int remainingWalls, int startRow, int startCol, int goalRow,
+  public WrappingRoomMaze(int row, int col, int remainingWalls, int startRow, int startCol, int goalRow,
       int goalCol) {
     if (row < 0 || col < 0 || startRow < 0 || goalRow < 0 || startCol < 0 || goalCol < 0) {
       throw new IllegalArgumentException("No negative values.");
@@ -62,14 +62,13 @@ public class RoomMaze extends MazeImpl {
       throw new IllegalArgumentException("This is a Perfect room specification.");
     }
 
-    this.mazeType = "room";
-    buildMaze(this.walls, this.removedWalls, this.sets, this.mazeType, this.row, this.col, this.remainingWalls);
+    this.mazeType = "Wrapping room";
+    String primaryMazeType = "room";
+    buildMaze(this.walls, this.removedWalls, this.sets, primaryMazeType, this.row, this.col, this.remainingWalls);
 
     spreadGold(this.array, this.row, this.col);
     spreadThieves(this.array, this.row, this.col);
     updatePlayerPosition(this.array, this.row, this.col, this.startRow, this.startCol);
-    System.out.println(this.walls);
-    System.out.println(this.walls.size());
 
   }
 
@@ -121,7 +120,5 @@ public class RoomMaze extends MazeImpl {
         + "between cell 00 and 01 would be: 00.01. Thus, the walls in the room maze are: "
         + showWalls(this.walls);
   }
-
-
 
 }

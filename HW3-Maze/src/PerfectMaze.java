@@ -20,6 +20,7 @@ public class PerfectMaze extends MazeImpl {
   private int goalRow;
   private int goalCol;
   private int perfectMazeGoal;
+  private String mazeType;
 
   private Room[] array;
 
@@ -56,8 +57,8 @@ public class PerfectMaze extends MazeImpl {
     this.sets = makeSets(this.row, this.col, this.sets, this.walls);
     this.perfectMazeGoal = this.walls.size() - this.row * this.col + 1;
 
-    String mazeType = "perfect";
-    buildMaze(this.walls, this.removedWalls, this.sets, mazeType, this.row, this.col, this.perfectMazeGoal);
+    this.mazeType = "perfect";
+    buildMaze(this.walls, this.removedWalls, this.sets, this.mazeType, this.row, this.col, this.perfectMazeGoal);
 
 
     spreadGold(this.array, this.row, this.col);
@@ -72,8 +73,11 @@ public class PerfectMaze extends MazeImpl {
   }
 
   @Override
-  public void makeMove(String move) {
-    playerMove(this.row, this.col, this.array, move);
+  public void makeMove(String move, ArrayList<String> moves) {
+    if (moves.contains(move) == false) { 
+      throw new IllegalArgumentException("Please play a possible move next time.");
+    }
+    playerMove(this.row, this.col, this.mazeType, this.array, move);
   }
 
   @Override
@@ -83,7 +87,7 @@ public class PerfectMaze extends MazeImpl {
 
   @Override
   public ArrayList<String> getMoves() {
-    ArrayList<String> moves = possibleMoves(this.array, this.walls, this.possibleMoves, this.row,
+    ArrayList<String> moves = possibleMoves(this.mazeType, this.array, this.walls, this.possibleMoves, this.row,
         this.col);
     this.possibleMoves = new ArrayList<String>();
     return moves;
