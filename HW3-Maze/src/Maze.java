@@ -54,16 +54,11 @@ public interface Maze {
   void playerMove(int mazeRow, int mazeCol, String mazeType, Room[] array, String move);
 
   /**
-   * BoundaryHelper, updates the row and columns of a wrapping room maze properly. 
-   * @param row
-   * @param col
-   * @param mazeRow
-   * @param mazeCol
-   * @return
+   * BoundaryHelper, updates the row and columns of a wrapping room maze
+   * properly.
    */
   int[] boundaryHelper(int row, int col, int mazeRow, int mazeCol);
-  
-  
+
   /**
    * Wrapper for mazeSolved.
    */
@@ -84,43 +79,42 @@ public interface Maze {
   /**
    * possibleMoves returns the possible moves a player can make.
    */
-
   ArrayList<String> possibleMoves(String mazeType, Room[] array, ArrayList<String> walls,
       ArrayList<String> possibleMoves, int mazeRow, int mazeCol);
 
   /**
-   * Wrapper for got gold. 
-   * @return
+   * Wrapper for got gold.
    */
   String gotGold();
-  
-  /** 
+
+  /**
    * Wrapper for was attacked.
+   * 
    * @return
    */
   String wasAttacked();
-  
+
   /**
-   * Checks if player got gold. 
+   * Checks if player got gold.
    *
    */
   String checkGotGold(Room[] array, int row, int col);
-  
+
   /**
    * Checks if player was attacked.
    */
   String checkWasAttacked(Room[] array, int row, int col);
-  
+
   /**
    * Wrapper for action method.
    */
-  int Event();
+  double event(double gold);
 
   /**
    * Action determines what happens to a player in the room. Depending on if a
    * thief or gold is in the room.
    */
-  int Action(Room[] array, int mazeRow, int mazeCol);
+  double action(Room[] array, int mazeRow, int mazeCol, double gold);
 
   /**
    * makeWalls makes the walls in the maze.
@@ -133,7 +127,7 @@ public interface Maze {
   ArrayList<String> showWalls(ArrayList<String> walls);
 
   /**
-   * makeSets makes the initials sets in the maze. Sets represent rooms that are
+   * makeSets makes the initial sets in the maze. Sets represent rooms that are
    * linked by a hallway.
    */
   Map<String, Set<String>> makeSets(int mazeRow, int mazeCol, Map<String, Set<String>> sets,
@@ -167,5 +161,5 @@ public interface Maze {
    */
   void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
       Map<String, Set<String>> sets, String mazeType, int row, int col, int goal);
-  
+
 }

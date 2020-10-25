@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * This class represents the player class. A player is an object that traverses
@@ -11,7 +9,7 @@ import java.util.Random;
 public class Player {
 
   private String name;
-  private int gold;
+  private double gold;
 
   /**
    * Player constructor. Constructs a player object with a name, and gold
@@ -20,7 +18,7 @@ public class Player {
    * @param name is the name of player
    * @param gold is how much gold the player has
    */
-  public Player(String name, int gold) {
+  public Player(String name, double gold) {
 
     if (gold < 0) {
       throw new IllegalArgumentException("Cannot start player with negative gold value.");
@@ -51,36 +49,43 @@ public class Player {
   /**
    * pickMove selects move to make for the player.
    * 
-   * @param moves, list of possible moves to make
+   * @param move list of possible moves to make
    * @return
    */
   public String pickMove(int move) {
-    
-    if (move > 4 || move < 1) { throw new IllegalArgumentException("Please enter a valid movement."); }
-    else if (move == 1) { return "North"; }
-    else if (move == 2) { return "South"; }
-    else if (move == 3) { return "East"; }
-    else if (move == 4) { return "West"; }
-    
+
+    if (move > 4 || move < 1) {
+      throw new IllegalArgumentException("Please enter a valid movement.");
+
+    } else if (move == 1) {
+      return "North";
+    } else if (move == 2) {
+      return "South";
+    } else if (move == 3) {
+      return "East";
+    } else if (move == 4) {
+      return "West";
+    }
+
     return null;
   }
 
   /**
    * getGold gets the gold value a player object has.
    * 
-   * @return this.gold
+   * @return this.gold gold value player has.
    */
-  public int getGold() {
+  public double getGold() {
     return this.gold;
   }
 
   /**
-   * addGold adds gold to a player's gold quantity.
+   * setGold sets gold of a player's gold quantity.
    * 
-   * @param gold
+   * @param gold value to set for player. 
    */
-  public void addGold(int gold) {
-    this.gold += gold;
+  public void setGold(double gold) {
+    this.gold = gold;
     if (this.gold < 0) {
       this.gold = 0;
     }

@@ -1,6 +1,6 @@
 
 /**
- * The ROom class represents a room in a maze. A room can have a thief or gold
+ * The Room class represents a room in a maze. A room can have a thief or gold
  * in it.
  * 
  * @author Ugo Nwachuku
@@ -10,7 +10,7 @@ public class Room {
 
   private String name;
   private Boolean thief;
-  private int goldValue;
+  private double goldValue;
   private Boolean playerIn;
 
   /**
@@ -22,7 +22,7 @@ public class Room {
    * @param playerIn if a player is in the room
    * @param gold the value of gold in the room
    */
-  public Room(String name, Boolean thief, Boolean playerIn, int gold) {
+  public Room(String name, Boolean thief, Boolean playerIn, double gold) {
     if (gold < 0) {
       throw new IllegalArgumentException("Gold value cannot be negative.");
     }
@@ -34,15 +34,17 @@ public class Room {
   }
 
   /**
-   * setName sets the name of a room. 
-   * @param name
+   * setName sets the name of a room.
+   * 
+   * @param name of room
    */
   public void setName(String name) {
     this.name = name;
   }
 
-  /** 
-   * getName returns the name of a room. 
+  /**
+   * getName returns the name of a room.
+   * 
    * @return
    */
   public String getName() {
@@ -51,6 +53,7 @@ public class Room {
 
   /**
    * hasThief checks if a thief is in a room.
+   * 
    * @return
    */
   public Boolean hasThief() {
@@ -58,15 +61,17 @@ public class Room {
   }
 
   /**
-   * thiefAttack takes a value of gold from player object in the room. 
+   * thiefAttack takes a value of gold from player object in the room.
+   * 
    * @return
    */
-  public int thiefAttack() {
-    return -50;
+  public double thiefAttack(double score) {
+    return 0.90 * score;
   }
 
   /**
-   * hasPlayer checks if a player is in a room. 
+   * hasPlayer checks if a player is in a room.
+   * 
    * @return boolean value for is a player is in a room
    */
   public Boolean hasPlayer() {
@@ -75,6 +80,7 @@ public class Room {
 
   /**
    * setPlayerIn allows a player to be in a room.
+   * 
    * @param in boolean value for if a player is in a room
    */
   public void setPlayerIn(Boolean in) {
@@ -82,18 +88,20 @@ public class Room {
   }
 
   /**
-   * placeThief allows a thief to be in a room. 
-   * @param placed boolean value for if a thief is in a room. 
+   * placeThief allows a thief to be in a room.
+   * 
+   * @param placed boolean value for if a thief is in a room.
    */
   public void placeThief(Boolean placed) {
     this.thief = true;
   }
 
-  /** 
+  /**
    * setGold sets the gold value in a room.
+   * 
    * @param gold is the new value of gold in the room
    */
-  public void setGold(int gold) {
+  public void setGold(double gold) {
     if (gold < 0) {
       throw new IllegalArgumentException("Gold value cannot be negative.");
     }
@@ -101,11 +109,18 @@ public class Room {
   }
 
   /**
-   * getGold returns the gold stored in a room. 
+   * getGold returns the gold stored in a room.
+   * 
    * @return
    */
-  public int getGold() {
+  public double getGold() {
     return goldValue;
+  }
+
+  @Override
+  public String toString() {
+    return "This room: " + getName() + " has this gold value in it: " + getGold() + ". Player in: "
+        + hasPlayer() + " Thief in: " + hasThief();
   }
 
 }

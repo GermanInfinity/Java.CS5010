@@ -54,7 +54,7 @@ public abstract class MazeImpl implements Maze {
 
   }
 
-  public abstract void makeMove(String move,ArrayList<String> moves);
+  public abstract void makeMove(String move, ArrayList<String> moves);
 
   public void playerMove(int row, int col, String mazeType, Room[] array, String move) {
     char playerRow = playerLocation(array, row, col).charAt(0);
@@ -62,57 +62,76 @@ public abstract class MazeImpl implements Maze {
 
     int playerRowNum = Character.getNumericValue(playerRow);
     int playerColNum = Character.getNumericValue(playerCol);
-    
-    if (move == "East") {
+
+    if (move.equals("East")) {
       int playRow = playerRowNum + 0;
       int playCol = playerColNum + 1;
       int[] positions = boundaryHelper(playRow, playCol, row, col);
-      
-      if (mazeType == "perfect" || mazeType == "room") { updatePlayerPosition(array, row, col, playRow, playCol); }
-      else { updatePlayerPosition(array, row, col, positions[0], positions[1]); } 
-      }
 
-    if (move == "West") {
+      if (mazeType.equals("perfect") || mazeType.equals("room")) {
+        updatePlayerPosition(array, row, col, playRow, playCol);
+      } else {
+        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+      }
+    }
+
+    if (move.equals("West")) {
       int playRow = playerRowNum + 0;
       int playCol = playerColNum - 1;
       int[] positions = boundaryHelper(playRow, playCol, row, col);
-      
-      if (mazeType == "perfect" || mazeType == "room") { updatePlayerPosition(array, row, col, playRow, playCol); }
-      else { updatePlayerPosition(array, row, col, positions[0], positions[1]); } 
+
+      if (mazeType.equals("perfect") || mazeType.equals("room")){
+        updatePlayerPosition(array, row, col, playRow, playCol);
+      } else {
+        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+      }
     }
-    if (move == "North") {
+    if (move.equals("North")) {
       int playRow = playerRowNum - 1;
       int playCol = playerColNum + 0;
       int[] positions = boundaryHelper(playRow, playCol, row, col);
-      
-      if (mazeType == "perfect" || mazeType == "room") { updatePlayerPosition(array, row, col, playRow, playCol); }
-      else { updatePlayerPosition(array, row, col, positions[0], positions[1]); } 
+
+      if (mazeType.equals("perfect") || mazeType.equals("room")) {
+        updatePlayerPosition(array, row, col, playRow, playCol);
+      } else {
+        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+      }
     }
-    if (move == "South") {
+    if (move.equals("South")) {
       int playRow = playerRowNum + 1;
       int playCol = playerColNum + 0;
       int[] positions = boundaryHelper(playRow, playCol, row, col);
-      
-      if (mazeType == "perfect" || mazeType == "room") { updatePlayerPosition(array, row, col, playRow, playCol); }
-      else { updatePlayerPosition(array, row, col, positions[0], positions[1]); } 
+
+      if (mazeType.equals("perfect") || mazeType.equals("room")) {
+        updatePlayerPosition(array, row, col, playRow, playCol);
+      } else {
+        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+      }
     }
 
   }
-  
 
   public int[] boundaryHelper(int row, int col, int mazeRow, int mazeCol) {
     int[] positions = new int[2];
-    
+
     if (row >= mazeRow || row < 0) {
-      if (row >= mazeRow) { row = row - mazeRow; }
-      if (row < 0) { row = row  + mazeRow;}
+      if (row >= mazeRow) {
+        row = row - mazeRow;
+      }
+      if (row < 0) {
+        row = row + mazeRow;
+      }
     }
-    
+
     if (col >= mazeCol || col < 0) {
-      if (col >= mazeCol) { col = col - mazeCol; }
-      if (col < 0) { col = col  + mazeCol; }
+      if (col >= mazeCol) {
+        col = col - mazeCol;
+      }
+      if (col < 0) {
+        col = col + mazeCol;
+      }
     }
-    
+
     positions[0] = row;
     positions[1] = col;
     return positions;
@@ -133,41 +152,43 @@ public abstract class MazeImpl implements Maze {
       array[i].placeThief(true);
     }
   }
-  
-  public abstract String gotGold(); 
-  
+
+  public abstract String gotGold();
+
   public abstract String wasAttacked();
-  
-  public abstract int Event();
-  
-  public String checkGotGold(Room[] array, int row, int col) { 
+
+  public abstract double event(double gold);
+
+  public String checkGotGold(Room[] array, int row, int col) {
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayer()) {
-        if (array[i].getGold() > 0) { 
+        if (array[i].getGold() > 0) {
           return "Player picked up some Gold!";
         }
-     }
+      }
     }
-    return "Player didn't get any Gold.";  
+    return "Player didn't get any Gold.";
   }
-  public String checkWasAttacked(Room[] array, int row, int col) { 
+
+  public String checkWasAttacked(Room[] array, int row, int col) {
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayer()) {
-        if (array[i].hasThief()) { 
+        if (array[i].hasThief()) {
           return "Player got Robbed";
         }
-     }
+      }
     }
     return "Player didn't get attacked.";
   }
 
-  public int Action(Room[] array, int row, int col) {
-    int score = 0;
+  public double action(Room[] array, int row, int col, double gold) {
+    double score = 0;
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayer()) {
         score += array[i].getGold();
+        score += gold;
         if (array[i].hasThief()) {
-          score += array[i].thiefAttack();
+          score = array[i].thiefAttack(score);
         }
         array[i].setGold(0);
       }
@@ -178,8 +199,8 @@ public abstract class MazeImpl implements Maze {
   public abstract ArrayList<String> getMoves();
 
   public ArrayList<String> possibleMoves(String mazeType, Room[] array, ArrayList<String> walls,
-      ArrayList<String> possibleMoves, int mazeRow, int mazeCol) { 
-    
+      ArrayList<String> possibleMoves, int mazeRow, int mazeCol) {
+
     int[][] boundaryArray = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 
     char playerRow = playerLocation(array, mazeRow, mazeCol).charAt(0);
@@ -193,34 +214,38 @@ public abstract class MazeImpl implements Maze {
       int currCol = playerColNum + boundaryArray[i][1];
 
       if (currRow >= mazeRow || currRow < 0) {
-        //continue;
-        if (mazeType == "perfect" || mazeType == "room") { continue; }
-        if (currRow >= mazeRow) { 
+        // continue;
+        if (mazeType.equals("perfect") || mazeType.equals("room")) {
+          continue;
+        }
+        if (currRow >= mazeRow) {
           currRow = currRow - mazeRow;
         }
-        if (currRow < 0) { 
-          currRow = currRow  + mazeRow;
+        if (currRow < 0) {
+          currRow = currRow + mazeRow;
         }
       }
       if (currCol >= mazeCol || currCol < 0) {
-        //continue;
-        if (mazeType == "perfect" || mazeType == "room") { continue; }
-        if (currCol >= mazeCol) { 
+        // continue;
+        if (mazeType.equals("perfect") || mazeType.equals("room")) {
+          continue;
+        }
+        if (currCol >= mazeCol) {
           currCol = currCol - mazeCol;
         }
-        if (currCol < 0) { 
-          currCol = currCol  + mazeCol;
+        if (currCol < 0) {
+          currCol = currCol + mazeCol;
         }
       }
 
       String neighbour = Integer.toString(currRow) + Integer.toString(currCol);
       neighbour = neighbour.substring(0, 1) + neighbour.substring(1, 2);
-      
+
       String possibleWall1 = playerLocation(array, mazeRow, mazeCol) + "." + neighbour;
       if (walls.contains(possibleWall1)) {
         continue;
       }
-      
+
       String possibleWall2 = neighbour + "." + playerLocation(array, mazeRow, mazeCol);
       if (walls.contains(possibleWall2)) {
         continue;
@@ -241,7 +266,6 @@ public abstract class MazeImpl implements Maze {
     }
     return possibleMoves;
   }
-  
 
   public abstract Boolean atGoal();
 
@@ -314,8 +338,8 @@ public abstract class MazeImpl implements Maze {
           String position = currentRowPosition + currentColPosition;
           String neighbor = String.valueOf(neighborRow) + String.valueOf(neighborCol);
 
-          if (walls.contains(position + "." + neighbor) == false) {
-            if (walls.contains(neighbor + "." + position) == false) {
+          if (!walls.contains(position + "." + neighbor)) {
+            if (!walls.contains(neighbor + "." + position)) {
               addInSet.add(neighbor);
             }
           }
@@ -394,7 +418,7 @@ public abstract class MazeImpl implements Maze {
     String room1 = rooms[0];
     String room2 = rooms[1];
 
-    if (walls.contains(breakWall) == false) {
+    if (!walls.contains(breakWall)) {
       throw new IllegalArgumentException("That is not a real wall.");
     }
 
@@ -424,14 +448,14 @@ public abstract class MazeImpl implements Maze {
     while (walls.size() > goal) {
       int wallToBreak = ran.nextInt(walls.size()) + 0;
 
-      if (mazeType == "perfect") {
+      if (mazeType.equals("perfect")) {
         if (canBreakWall(walls.get(wallToBreak), sets, walls)) {
           walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
           sets = updateSets(row, col, sets, removedWalls);
         }
       }
 
-      else if (mazeType == "room") {
+      else if (mazeType.equals("room")) {
         walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
         sets = updateSets(row, col, sets, removedWalls);
       }
