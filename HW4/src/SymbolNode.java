@@ -1,33 +1,40 @@
+import java.util.Comparator;
 
-public class SymbolNode implements Comparable<SymbolNode>{
+/**
+ * This class represents a symbol node that goes into a priority queue.
+ * @author Ugo Nwachuku
+ *
+ */
+public class SymbolNode implements Comparable <SymbolNode>{
 
   private String symbol;
   private Integer value;
   
+  /**
+   * Constructor makes a symbol node. 
+   * @param sym string value of node
+   * @param num integer value of node
+   */
   public SymbolNode(String sym, int num) {
     this.symbol = sym;
     this.value = num;
   }
   
-  public int lexCompare(SymbolNode node) { 
+  @Override
+  public int compareTo(SymbolNode node) {
     return this.symbol.compareTo(node.symbol);
   }
   
-  @Override
-  public int compareTo(SymbolNode node) {
-    return this.value.compareTo(node.value);
-  }
-  
-  public Boolean equalFrequency(SymbolNode node) { 
-    if (this.getValue() == node.getValue()) { return true; } 
-    return false;
-  }
-  
+  /**
+   * Returns symbol of node.
+   */
   public String getSymbol() { 
     return this.symbol;
   }
-
   
+  /**
+   * Returns value of node/ 
+   */
   public int getValue() { 
     return this.value;
   }
@@ -37,4 +44,9 @@ public class SymbolNode implements Comparable<SymbolNode>{
     return symbol + " " + value;
   }
 
+  
+  
 }
+
+
+
