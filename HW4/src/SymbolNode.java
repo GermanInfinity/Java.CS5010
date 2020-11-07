@@ -1,11 +1,9 @@
-import java.util.Comparator;
-
 /**
  * This class represents a symbol node that goes into a priority queue.
  * @author Ugo Nwachuku
  *
  */
-public class SymbolNode implements Comparable <SymbolNode>{
+public class SymbolNode implements Comparable <SymbolNode> {
 
   private String symbol;
   private Integer value;
@@ -33,7 +31,7 @@ public class SymbolNode implements Comparable <SymbolNode>{
   }
   
   /**
-   * Returns value of node/ 
+   * Returns value of node.
    */
   public int getValue() { 
     return this.value;

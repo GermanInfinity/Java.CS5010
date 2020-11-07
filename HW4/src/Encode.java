@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 
@@ -47,10 +45,14 @@ public class Encode {
   }
 
   /**
-   * THis function encodes a message. 
+   * This function encodes a message. 
    * @return codeMessage the message encoded
    */
   public String encodeMessage() { 
+    if (this.symbolSet == null) { 
+      throw new IllegalArgumentException ("No symbol set provided.");
+    }
+    
     String store = "";
     String codedMessage = "";
     for (int i = 0; i < this.message.length(); i++) {
@@ -108,7 +110,7 @@ public class Encode {
    * createPriorityQueue makes a priority queue of all the elements.
    */
   public void createPriorityQueue() {
-    this.queue = new PriorityQueue<SymbolNode>(new symbolComparator());
+    this.queue = new PriorityQueue<SymbolNode>(new SymbolComparator());
 
     for (String key : this.frequencyTable.keySet()) {
       SymbolNode sym = new SymbolNode(key, this.frequencyTable.get(key));
@@ -117,17 +119,6 @@ public class Encode {
    
   }
   
-  /**
-   * This function determines if the encoding table is done being built.
-   * @return
-   */
-  public Boolean stillEncoding() { 
-    
-    if (this.queue.size() == 1) {
-      return false;
-    }
-    return true;
-  }
   
   /**
    * encodedMessage returns the coded message.
@@ -142,20 +133,6 @@ public class Encode {
     return value; 
   }
 
-  /**
-   * build function builds the encoding table, by popping and adding to the
-   * priorityQueue.
-   */
-  public void build() {
-    ArrayList<SymbolNode> popped = popQueue();
-    updateEncodingTable(popped);
-    addToQueue(popped);
-    
-    System.out.println(this.queue);
-    //System.out.println(this.encodingTable);
-    
-    
-  }
 
   /**
    * popQueue pops symbol nodes from the queue.
@@ -206,20 +183,50 @@ public class Encode {
       for (int j = 0; j < symbol.length(); j++) {
         
         String key = Character.toString(symbol.charAt(j));
-        String value = this.encodingTable.get(key);
-        value += Integer.toString(i); //this needs to change
-        this.encodingTable.put(key, value);  
+        
+        if (this.encodingTable.get(key) == null) { 
+          String value = Integer.toString(i); //this needs to change
+          this.encodingTable.put(key, value);  
+        }
+        else { 
+          String value = this.encodingTable.get(key);
+          value += Integer.toString(i); //this needs to change
+          this.encodingTable.put(key, value);  
+        }
+        
       }
     }
     
-    // Reverse Values
-//    for (String key : this.encodingTable.keySet()) {
-//      String value = new StringBuilder(this.encodingTable.get(key)).reverse().toString();
-//      this.encodingTable.put(key, value);  
-//    }
-    
   }
 
+  /**
+   * This function determines if the encoding table is done being built.
+   * @return
+   */
+  public Boolean stillEncoding() { 
+    
+    if (this.queue.size() == 1) {
+      // Reverse encoding table here
+      for (String key : this.encodingTable.keySet()) {
+        String value = new StringBuilder(this.encodingTable.get(key)).reverse().toString();
+        this.encodingTable.put(key, value);
+      }
+      return false;
+    }
+    return true;
+  }
+  
+  /**
+   * build function builds the encoding table, by popping and adding to the
+   * priorityQueue.
+   */
+  public void build() {
+    ArrayList<SymbolNode> popped = popQueue();
+    updateEncodingTable(popped);
+    addToQueue(popped);
+    
+    
+  }
   
 
 }

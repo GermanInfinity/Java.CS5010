@@ -1,7 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 /** 
  * This class exists to tests the methods in State.java
  * @author Ugo nwachuku 
@@ -9,6 +5,9 @@ import java.util.Map;
  */
 public class EncodeTest {
 
+  /**
+   * main method for testing the encoding class. 
+   */
   public static void main(String [] args) { 
 
     
@@ -17,7 +16,6 @@ public class EncodeTest {
     message.createPriorityQueue();
     while (message.stillEncoding()) { 
       message.build();
-
     }
 
 

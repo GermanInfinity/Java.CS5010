@@ -7,9 +7,12 @@ import java.util.Scanner;
  */
 public class Driver {
 
-  
+  /**
+   * main method for showing examples. 
+   */
   public static void main(String [] args) {
     
+    @SuppressWarnings("resource")
     Scanner scanner = new Scanner(System.in);
     String inputString = scanner.nextLine();
     Encode encodeThis = new Encode(inputString, 2);
