@@ -18,26 +18,36 @@ public class Encode {
   private Map<String, String> encodingTable;
   private PriorityQueue<SymbolNode> queue;
   private Map<String, String> symbolSet;
+  private String type;
 
   /**
-   * This is the constructor for encoding without a dictionary. 
+   * Constructor for encoding without a dictionary.
+   * 
    * @param message the message to encode
    * @param codeLength the length of the code for encoding
    */
   public Encode(String message, int codeLength) {
-    if (codeLength < 2) {
+    if (codeLength < 2 || codeLength > 79) {
       throw new IllegalArgumentException("Cannot construct a code with length specified.");
     }
+
     this.message = message;
     this.codeLen = codeLength;
     this.frequencyTable = new HashMap<String, Integer>();
     this.encodingTable = new HashMap<String, String>();
+
+    if (codeLength == 16) {
+      this.type = "HEX";
+    } else {
+      this.type = "BINARY OR CUSTOM";
+    }
   }
-  
+
   /**
-   * This constructor encodes based on dictionary provided by user.
-   * @param message  the message to encode
-   * @param symbolSet the dictionary to encode with 
+   * Constructor for encoding with dictionary.
+   * 
+   * @param message the message to encode
+   * @param symbolSet the dictionary to encode with
    */
   public Encode(String message, Map<String, String> symbolSet) {
     this.message = message;
@@ -45,36 +55,36 @@ public class Encode {
   }
 
   /**
-   * This function encodes a message. 
+   * This function encodes a message.
+   * 
    * @return codeMessage the message encoded
    */
-  public String encodeMessage() { 
-    if (this.symbolSet == null) { 
-      throw new IllegalArgumentException ("No symbol set provided.");
+  public String encodeMessage() {
+    if (this.symbolSet == null) {
+      throw new IllegalArgumentException("No symbol set provided.");
     }
-    
+
     String store = "";
     String codedMessage = "";
     for (int i = 0; i < this.message.length(); i++) {
-      store += Character.toString(this.message.charAt(i));
-      
-      
-      if (this.symbolSet.containsValue(store)) { 
-        // get key 
-        for (String key : this.symbolSet.keySet()) { 
-          if (store.equals(this.symbolSet.get(key))) {
-            codedMessage += key;
-          }
-        }
-        //reset store
-        store = "";
+      store = Character.toString(this.message.charAt(i));
+
+      if (!this.symbolSet.containsKey(store)) {
+        throw new IllegalArgumentException(
+            "Every character in the message must be in the code set.");
       }
+
+      for (String key : this.symbolSet.keySet()) {
+        if (key.equals(store)) {
+          codedMessage += this.symbolSet.get(key);
+        }
+      }
+
     }
-    
-    
+
     return codedMessage;
   }
-  
+
   /**
    * createFrequencyTable makes a frequency table for the encoding.
    */
@@ -96,15 +106,6 @@ public class Encode {
       this.frequencyTable.put(Character.toString(message.charAt(i)), count);
     }
   }
-  
-  /**
-   * This function creates an encoding table.
-   */
-  public void createEncodingTable() { 
-    for (String ele : this.frequencyTable.keySet()) { 
-      this.encodingTable.put(ele, "");
-    }
-  }
 
   /**
    * createPriorityQueue makes a priority queue of all the elements.
@@ -116,23 +117,20 @@ public class Encode {
       SymbolNode sym = new SymbolNode(key, this.frequencyTable.get(key));
       this.queue.add(sym);
     }
-   
   }
-  
-  
+
   /**
    * encodedMessage returns the coded message.
    */
-  public String encodedMessage() { 
+  public String getEncodedMessage() {
     String value = "";
-    for (int i = 0; i < this.message.length(); i++) { 
+    for (int i = 0; i < this.message.length(); i++) {
       String messageChar = Character.toString(this.message.charAt(i));
       value += this.encodingTable.get(messageChar);
     }
-    
-    return value; 
-  }
 
+    return value;
+  }
 
   /**
    * popQueue pops symbol nodes from the queue.
@@ -148,12 +146,12 @@ public class Encode {
 
   /**
    * addToQueue adds popped elements back into priority queue.
+   * 
    * @param popped array list of popped elements
    */
   public void addToQueue(ArrayList<SymbolNode> popped) {
     String symbolName = "";
     int totalNum = 0;
-    
 
     for (int i = 0; i < popped.size(); i++) {
       if (popped.get(i) == null) {
@@ -166,67 +164,82 @@ public class Encode {
     this.queue.add(newSymbol);
 
   }
-  
+
   /**
    * This function updates the encoding table.
+   * 
    * @param poppedSymbols are popped symbols from priority queue
    */
   public void updateEncodingTable(ArrayList<SymbolNode> poppedSymbols) {
-  
-    for (int i = 0; i < poppedSymbols.size(); i++) { 
-      if (poppedSymbols.get(i) == null) { 
-        continue; 
+
+    for (int i = 0; i < poppedSymbols.size(); i++) {
+      if (poppedSymbols.get(i) == null) {
+        continue;
       }
-      
+
       String symbol = poppedSymbols.get(i).getSymbol();
-      
+
       for (int j = 0; j < symbol.length(); j++) {
-        
+
         String key = Character.toString(symbol.charAt(j));
-        
-        if (this.encodingTable.get(key) == null) { 
-          String value = Integer.toString(i); //this needs to change
-          this.encodingTable.put(key, value);  
+
+        if (this.encodingTable.get(key) == null) {
+          if (this.type == "HEX") {
+            String value = Integer.toHexString(i);
+            this.encodingTable.put(key, value);
+          } else {
+            int asciiNum = 48 + i;
+            String asciiSymbolVal = Character.toString((char) asciiNum);
+            this.encodingTable.put(key, asciiSymbolVal);
+          }
+
+        } else {
+          if (this.type == "HEX") {
+            String value = this.encodingTable.get(key);
+            value += Integer.toHexString(i);
+            this.encodingTable.put(key, value);
+          } else {
+            int asciiNum = 48 + i;
+            String value = this.encodingTable.get(key);
+            value += Character.toString((char) asciiNum);
+            this.encodingTable.put(key, value);
+          }
+
         }
-        else { 
-          String value = this.encodingTable.get(key);
-          value += Integer.toString(i); //this needs to change
-          this.encodingTable.put(key, value);  
-        }
-        
       }
     }
-    
+
   }
 
   /**
    * This function determines if the encoding table is done being built.
+   * 
    * @return
    */
-  public Boolean stillEncoding() { 
-    
+  public Boolean stillEncoding() {
+
     if (this.queue.size() == 1) {
       // Reverse encoding table here
       for (String key : this.encodingTable.keySet()) {
         String value = new StringBuilder(this.encodingTable.get(key)).reverse().toString();
         this.encodingTable.put(key, value);
       }
+      System.out.println(this.encodingTable);
       return false;
     }
     return true;
   }
-  
+
   /**
    * build function builds the encoding table, by popping and adding to the
    * priorityQueue.
    */
   public void build() {
     ArrayList<SymbolNode> popped = popQueue();
+
     updateEncodingTable(popped);
     addToQueue(popped);
-    
-    
+
   }
-  
 
 }

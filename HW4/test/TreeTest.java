@@ -15,26 +15,10 @@ public class TreeTest {
     test.put("d", "11");
     test.put("e", "101");
 
-    //Tree testTree = new Tree(test);
-    // testTree.buildTree();
+    
+    Tree treeTest = new Tree(test);
     
     
-
-    Node root = new Node(3);
-    Node c = new Node("1", 3);
- 
-    
-//    root.addChild(c);
-//    
-//    root.getChild(0).addChild("0");
-//    root.getChild(0).getChild(0).addChild("0");
-//    root.getChild(0).getChild(0).addChild("1");
-//    root.addChild("1");
-//    Node.print(root);
-    
-    Tree abc = new Tree(test);
-    abc.callAdd();
-    abc.print();
   }
 
 }
