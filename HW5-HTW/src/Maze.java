@@ -15,27 +15,36 @@ public interface Maze {
    * insertCaves fills every position in the maze with Cave objects.
    */
   Cave[] insertCaves(Cave[] array, int mazeRow, int mazeCol);
+  
+  /**
+   * getCaves returns all the caves in the maze.
+   */
+  Cave[] getCaves();
 
   /**
    * updatePlayerPosition updates Cave to reflect position of player.
    */
   void updatePlayerPosition(Cave[] array, int mazeRow, int mazeCol, int newPlayRow, int newPlayCol);
 
-  /**
-   * spreadGold spreads gold in 20% of the cells in the maze.
-   */
-  void spreadGold(Cave[] array, int mazeRow, int mazeCol);
 
+  Cave currentCave(); 
+  
+  Cave getCave(Cave[] array, int row, int col);
   /**
-   * spreadThief places thieves in 10% of the cells in the maze.
+   * findPlayerPosition wrapper for playerPosition function.
    */
-  void spreadThieves(Cave[] array, int mazeRow, int mazeCol);
-
+  String findPlayerPosition(); 
+  
   /**
    * findPlayer wrapper for playerLocation function.
    */
   String findPlayer();
 
+  /**
+   * Returns player position in a different format.
+   */
+  String playerPosition(Cave[] array, int row, int col);
+  
   /**
    * playerLocation returns the players location in the maze.
    * 
@@ -43,15 +52,20 @@ public interface Maze {
    */
   String playerLocation(Cave[] array, int mazeRow, int mazeCol);
 
+  /** 
+   * Prints all startable locations for the player.
+   */
+  ArrayList<String> printLocations(Cave[] array, int row, int col);
+  
   /**
    * Wrapper function for playerMove.
    */
-  void makeMove(String move, ArrayList<String> moves);
+  Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav);
 
   /**
    * playerMoves moves a player in the cell.
    */
-  void playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move);
+  Cave[] playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move);
 
   /**
    * BoundaryHelper, updates the row and columns of a wrapping Cave maze
@@ -82,39 +96,6 @@ public interface Maze {
   ArrayList<String> possibleMoves(String mazeType, Cave[] array, ArrayList<String> walls,
       ArrayList<String> possibleMoves, int mazeRow, int mazeCol);
 
-  /**
-   * Wrapper for got gold.
-   */
-  String gotGold();
-
-  /**
-   * Wrapper for was attacked.
-   * 
-   * @return
-   */
-  String wasAttacked();
-
-  /**
-   * Checks if player got gold.
-   *
-   */
-  String checkGotGold(Cave[] array, int row, int col);
-
-  /**
-   * Checks if player was attacked.
-   */
-  String checkWasAttacked(Cave[] array, int row, int col);
-
-  /**
-   * Wrapper for action method.
-   */
-  double event(double gold);
-
-  /**
-   * Action determines what happens to a player in the Cave. Depending on if a
-   * thief or gold is in the Cave.
-   */
-  double action(Cave[] array, int mazeRow, int mazeCol, double gold);
 
   /**
    * makeWalls makes the walls in the maze.
@@ -161,5 +142,7 @@ public interface Maze {
    */
   void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
       Map<String, Set<String>> sets, String mazeType, int row, int col, int goal);
+
+
 
 }
