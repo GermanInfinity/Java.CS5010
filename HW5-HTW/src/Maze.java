@@ -15,7 +15,7 @@ public interface Maze {
    * insertCaves fills every position in the maze with Cave objects.
    */
   Cave[] insertCaves(Cave[] array, int mazeRow, int mazeCol);
-  
+
   /**
    * getCaves returns all the caves in the maze.
    */
@@ -26,15 +26,21 @@ public interface Maze {
    */
   void updatePlayerPosition(Cave[] array, int mazeRow, int mazeCol, int newPlayRow, int newPlayCol);
 
+  /**
+   * wrapper to find current cave player is in.
+   */
+  Cave currentCave();
 
-  Cave currentCave(); 
-  
+  /**
+   * finds current cave player is in.
+   */
   Cave getCave(Cave[] array, int row, int col);
+
   /**
    * findPlayerPosition wrapper for playerPosition function.
    */
-  String findPlayerPosition(); 
-  
+  String findPlayerPosition();
+
   /**
    * findPlayer wrapper for playerLocation function.
    */
@@ -44,7 +50,7 @@ public interface Maze {
    * Returns player position in a different format.
    */
   String playerPosition(Cave[] array, int row, int col);
-  
+
   /**
    * playerLocation returns the players location in the maze.
    * 
@@ -52,11 +58,21 @@ public interface Maze {
    */
   String playerLocation(Cave[] array, int mazeRow, int mazeCol);
 
-  /** 
+  /**
+   * findCave finds cave by name in maze.
+   */
+  Cave findCave(Cave[] array, int row, int col, int posRow, int posCol);
+
+  /**
+   * locateCave finds a cave basedon secondary name.
+   */
+  Cave locateCave(Cave[] array, int row, int col, String num);
+
+  /**
    * Prints all startable locations for the player.
    */
   ArrayList<String> printLocations(Cave[] array, int row, int col);
-  
+
   /**
    * Wrapper function for playerMove.
    */
@@ -68,22 +84,21 @@ public interface Maze {
   Cave[] playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move);
 
   /**
+   * Wrapper for fire arrow.
+   */
+  String fire(int dist, int direct);
+  
+  /**
+   * Shoots arrow in the maze.
+   */
+  String shootArrow(Cave[] array, ArrayList<String> walls, String mazeType, int row, int col,
+      int distance, int direction);
+
+  /**
    * BoundaryHelper, updates the row and columns of a wrapping Cave maze
    * properly.
    */
   int[] boundaryHelper(int row, int col, int mazeRow, int mazeCol);
-
-  /**
-   * Wrapper for mazeSolved.
-   */
-  Boolean atGoal();
-
-  /**
-   * mazeSolved returns if the maze has been solved or not.
-   * 
-   * @return true or false
-   */
-  Boolean mazeSolved(Cave[] array, int mazeRow, int mazeCol, int goalRow, int goalCol);
 
   /**
    * Wrapper function for possibleMoves.
@@ -96,7 +111,6 @@ public interface Maze {
   ArrayList<String> possibleMoves(String mazeType, Cave[] array, ArrayList<String> walls,
       ArrayList<String> possibleMoves, int mazeRow, int mazeCol);
 
-
   /**
    * makeWalls makes the walls in the maze.
    */
@@ -106,7 +120,21 @@ public interface Maze {
    * showWalls shows the walls in the maze.
    */
   ArrayList<String> showWalls(ArrayList<String> walls);
-
+  
+  /**
+   * doorCount counts the doors in the maze.
+   */
+  Map<String, Integer> doorCount(Cave[] array, int row, int col, ArrayList<String> walls);
+  
+  /**
+   * makeNeighbours finds the neighbours in the maze.
+   */
+  Map<String, ArrayList<String>> makeNeighbours(Cave[] array, int row, int col, ArrayList<String> walls);
+  
+  /** 
+   * builTunnels builds tunnels in the maze. 
+   */
+  void buildTunnels(Cave[] array, Map<String, Integer> doors, Map<String, ArrayList<String>> neighbours);
   /**
    * makeSets makes the initial sets in the maze. Sets represent Caves that are
    * linked by a hallway.
@@ -142,7 +170,5 @@ public interface Maze {
    */
   void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
       Map<String, Set<String>> sets, String mazeType, int row, int col, int goal);
-
-
 
 }

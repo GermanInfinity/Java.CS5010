@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
@@ -12,9 +13,10 @@ import java.util.Set;
  *
  */
 public abstract class MazeImpl implements Maze {
-  
+
   /**
    * insertCaves fills every position in the maze with Cave objects.
+   * 
    * @param array Caves in maze
    * @param row number of rows in maze
    * @param col number of columns in maze
@@ -34,12 +36,14 @@ public abstract class MazeImpl implements Maze {
   }
 
   public abstract String findPlayerPosition();
+
   public abstract String findPlayer();
-  public abstract Cave currentCave(); 
-  
-  
+
+  public abstract Cave currentCave();
+
   /**
    * playerPosition returns location of player in a numeric format.
+   * 
    * @param array Caves in maze
    * @param row number of rows in maze
    * @param col number of columns in maze
@@ -52,9 +56,10 @@ public abstract class MazeImpl implements Maze {
     }
     return null;
   }
-  
+
   /**
    * playerPosition returns location of player in a numeric format.
+   * 
    * @param array Caves in maze
    * @param row number of rows in maze
    * @param col number of columns in maze
@@ -70,6 +75,7 @@ public abstract class MazeImpl implements Maze {
 
   /**
    * playerLocation returns location of player.
+   * 
    * @param array Caves in maze
    * @param row number of rows in maze
    * @param col number of columns in maze
@@ -82,12 +88,12 @@ public abstract class MazeImpl implements Maze {
     }
     return "No player in maze.";
   }
-  
+
   /**
-   * pritnLocations returns all possible locations in maze. 
+   * pritnLocations returns all possible locations in maze.
    */
-  public ArrayList<String> printLocations(Cave[] array, int row, int col) { 
-    ArrayList<String> locations = new ArrayList<String>(); 
+  public ArrayList<String> printLocations(Cave[] array, int row, int col) {
+    ArrayList<String> locations = new ArrayList<String>();
     for (int i = 0; i < row * col; i++) {
       if (array[i].getSecondaryName().equals("tunnel")) {
         continue;
@@ -96,10 +102,19 @@ public abstract class MazeImpl implements Maze {
     }
     return locations;
   }
-  
-  public Cave findCave(Cave[]array, int row, int col, int posRow, int posCol) {
+
+  public Cave findCave(Cave[] array, int row, int col, int posRow, int posCol) {
     for (int i = 0; i < row * col; i++) {
-      if (array[i].getName().equals(Integer.toString(posRow) + Integer.toString(posCol))) { 
+      if (array[i].getName().equals(Integer.toString(posRow) + Integer.toString(posCol))) {
+        return array[i];
+      }
+    }
+    return null;
+  }
+
+  public Cave locateCave(Cave[] array, int row, int col, String num) {
+    for (int i = 0; i < row * col; i++) {
+      if (array[i].getSecondaryName().equals(num)) {
         return array[i];
       }
     }
@@ -108,6 +123,7 @@ public abstract class MazeImpl implements Maze {
 
   /**
    * updatePlayerPosition updates player position after moving.
+   * 
    * @param array rooms in maze
    * @param row number of rows in maze
    * @param col number of columns in maze
@@ -130,15 +146,14 @@ public abstract class MazeImpl implements Maze {
 
   }
 
-  public Boolean ifTunnel(Cave[] array, int row, int col, int playRow, int playCol) { 
-    
-    for (int i = 0; i < row * col; i++) { 
-      String rowStr = Integer.toString(playRow); 
-      String column = Integer.toString(playCol); 
-      
-      
-      if (array[i].getName().equals(rowStr+column)) {
-        
+  public Boolean ifTunnel(Cave[] array, int row, int col, int playRow, int playCol) {
+
+    for (int i = 0; i < row * col; i++) {
+      String rowStr = Integer.toString(playRow);
+      String column = Integer.toString(playCol);
+
+      if (array[i].getName().equals(rowStr + column)) {
+
         if (array[i].getSecondaryName().equals("tunnel")) {
 
           return true;
@@ -147,11 +162,12 @@ public abstract class MazeImpl implements Maze {
     }
     return false;
   }
-  
+
   public abstract Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav);
 
   /**
    * playerMove moves player in maze.
+   * 
    * @param row number of rows in maze
    * @param col number of columns in maze
    * @param mazeType type of maze
@@ -162,7 +178,6 @@ public abstract class MazeImpl implements Maze {
     char playerRow = playerLocation(array, row, col).charAt(0);
     char playerCol = playerLocation(array, row, col).charAt(1);
 
-
     int playerRowNum = java.lang.Character.getNumericValue(playerRow);
     int playerColNum = java.lang.Character.getNumericValue(playerCol);
 
@@ -172,10 +187,10 @@ public abstract class MazeImpl implements Maze {
       int[] positions = boundaryHelper(playRow, playCol, row, col);
 
       if (mazeType.equals("perfect") || mazeType.equals("room")) {
-        if (ifTunnel(array, row, col, playRow, playCol)) { 
+        if (ifTunnel(array, row, col, playRow, playCol)) {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
-          
+
           updatePlayerPosition(array, row, col, playRow, playCol);
           playerMove(row, col, mazeType, array, correctDirection);
           return array;
@@ -186,8 +201,11 @@ public abstract class MazeImpl implements Maze {
 
       } else {
         if (ifTunnel(array, row, col, playRow, playCol)) {
+          Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
+          String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
+
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, move);
+          playerMove(row, col, mazeType, array, correctDirection);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
@@ -200,10 +218,10 @@ public abstract class MazeImpl implements Maze {
       int[] positions = boundaryHelper(playRow, playCol, row, col);
 
       if (mazeType.equals("perfect") || mazeType.equals("room")) {
-        if (ifTunnel(array, row, col, playRow, playCol)) { 
+        if (ifTunnel(array, row, col, playRow, playCol)) {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
-          
+
           updatePlayerPosition(array, row, col, playRow, playCol);
           playerMove(row, col, mazeType, array, correctDirection);
           return array;
@@ -214,8 +232,12 @@ public abstract class MazeImpl implements Maze {
 
       } else {
         if (ifTunnel(array, row, col, playRow, playCol)) {
+          Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
+          String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
+
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, move);
+          playerMove(row, col, mazeType, array, correctDirection);
+          return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
       }
@@ -226,10 +248,10 @@ public abstract class MazeImpl implements Maze {
       int[] positions = boundaryHelper(playRow, playCol, row, col);
 
       if (mazeType.equals("perfect") || mazeType.equals("room")) {
-        if (ifTunnel(array, row, col, playRow, playCol)) { 
+        if (ifTunnel(array, row, col, playRow, playCol)) {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
-          
+
           updatePlayerPosition(array, row, col, playRow, playCol);
           playerMove(row, col, mazeType, array, correctDirection);
           return array;
@@ -240,8 +262,11 @@ public abstract class MazeImpl implements Maze {
 
       } else {
         if (ifTunnel(array, row, col, playRow, playCol)) {
+          Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
+          String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
+
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, move);
+          playerMove(row, col, mazeType, array, correctDirection);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
@@ -253,23 +278,26 @@ public abstract class MazeImpl implements Maze {
       int[] positions = boundaryHelper(playRow, playCol, row, col);
 
       if (mazeType.equals("perfect") || mazeType.equals("room")) {
-        if (ifTunnel(array, row, col, playRow, playCol)) { 
+        if (ifTunnel(array, row, col, playRow, playCol)) {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
-          
+
           updatePlayerPosition(array, row, col, playRow, playCol);
           playerMove(row, col, mazeType, array, correctDirection);
           return array;
         }
-        
+
         updatePlayerPosition(array, row, col, playRow, playCol);
 
         return array;
 
       } else {
         if (ifTunnel(array, row, col, playRow, playCol)) {
+          Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
+          String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
+
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, move);
+          playerMove(row, col, mazeType, array, correctDirection);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
@@ -281,8 +309,267 @@ public abstract class MazeImpl implements Maze {
   }
 
   /**
+   * Wrapper for shooting an arrow function.
+   */
+
+  public abstract String fire(int distance, int direction);
+  
+  public int directionFinderHelper(String nextRow, String nextCol, String neighRow, String neighCol) { 
+    int nRow = Integer.parseInt(nextRow);
+    int nCol = Integer.parseInt(nextCol);
+    int pRow = Integer.parseInt(neighRow);
+    int pCol = Integer.parseInt(neighCol);
+
+    if (nRow - pRow == 1 && nCol - pCol == 0) { 
+      return 1;
+    }
+    else if (nRow - pRow == -1 && nCol - pCol == 0) { 
+      return 2;
+    }
+    
+    else if (nRow - pRow == 0 && nCol - pCol == 1) { 
+      return 4;
+    }
+    
+    else if (nRow - pRow == 0 && nCol - pCol == -1) { 
+      return 3;
+    }
+    return 0;
+  }
+
+  /**
+   * shootArrow shoots an arrow from the player in the maze.
+   */
+  public String shootArrow(Cave[] array, ArrayList<String> walls, String mazeType, int row, int col,
+      int distance, int direction) {
+    String arrowPos = findPlayer();
+
+    while (distance > 0) {
+      if (direction == 1) { // N
+        int caveRow = java.lang.Character.getNumericValue(arrowPos.charAt(0));
+        int caveCol = java.lang.Character.getNumericValue(arrowPos.charAt(1));
+
+        int nextRow = caveRow - 1;
+        int nextCol = caveCol;
+        
+        String wall = Integer.toString(caveRow) + Integer.toString(caveCol) + "."
+            + Integer.toString(nextRow) + Integer.toString(nextCol);
+        String reverseWall = Integer.toString(nextRow) + Integer.toString(nextCol) + "."
+            + Integer.toString(caveRow) + Integer.toString(caveCol);
+
+        // Hit a wall check.
+        if (walls.contains(wall) || walls.contains(reverseWall)) {
+          return "You hit a wall.";
+        }
+        
+        if (findCave(array, row, col, nextRow, nextCol) == null) {
+          return "You hit a wall.";
+        }
+        else { 
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() != "tunnel") {
+            distance--;
+            arrowPos = findCave(array, row, col, nextRow, nextCol).getName();
+          }
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() == "tunnel") {
+            String currNeigh = Integer.toString(caveRow) + Integer.toString(caveCol);
+            int newNeighIdx = findCave(array, row, col, nextRow, nextCol).getNeighbours().indexOf(currNeigh);
+            
+            if (newNeighIdx == 0) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(1);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            else if (newNeighIdx == 1) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(0);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            
+            
+          }
+        }
+        
+      }
+
+      if (direction == 2) { // S
+        int caveRow = java.lang.Character.getNumericValue(arrowPos.charAt(0));
+        int caveCol = java.lang.Character.getNumericValue(arrowPos.charAt(1));
+
+        int nextRow = caveRow + 1;
+        int nextCol = caveCol;
+
+        String wall = Integer.toString(caveRow) + Integer.toString(caveCol) + "."
+            + Integer.toString(nextRow) + Integer.toString(nextCol);
+        String reverseWall = Integer.toString(nextRow) + Integer.toString(nextCol) + "."
+            + Integer.toString(caveRow) + Integer.toString(caveCol);
+
+        // Hit a wall check.
+        if (walls.contains(wall) || walls.contains(reverseWall)) {
+          return "You hit a wall.";
+        }
+
+        if (findCave(array, row, col, nextRow, nextCol) == null) {
+          return "You hit a wall.";
+        }
+        else { 
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() != "tunnel") {
+            distance--;
+            arrowPos = findCave(array, row, col, nextRow, nextCol).getName();
+          }
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() == "tunnel") {
+            String currNeigh = Integer.toString(caveRow) + Integer.toString(caveCol);
+            int newNeighIdx = findCave(array, row, col, nextRow, nextCol).getNeighbours().indexOf(currNeigh);
+            
+            if (newNeighIdx == 0) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(1);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            else if (newNeighIdx == 1) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(0);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            
+            
+          }
+        }
+
+      }
+      if (direction == 3) { // E
+        int caveRow = java.lang.Character.getNumericValue(arrowPos.charAt(0));
+        int caveCol = java.lang.Character.getNumericValue(arrowPos.charAt(1));
+
+        int nextRow = caveRow;
+        int nextCol = caveCol + 1;
+        
+        String wall = Integer.toString(caveRow) + Integer.toString(caveCol) + "."
+            + Integer.toString(nextRow) + Integer.toString(nextCol);
+        String reverseWall = Integer.toString(nextRow) + Integer.toString(nextCol) + "."
+            + Integer.toString(caveRow) + Integer.toString(caveCol);
+
+        // Hit a wall check.
+        if (walls.contains(wall) || walls.contains(reverseWall)) {
+          return "You hit a wall.";
+        }
+
+        if (findCave(array, row, col, nextRow, nextCol) == null) {
+          return "You hit a wall.";
+        }
+        else { 
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() != "tunnel") {
+            distance--;
+            arrowPos = findCave(array, row, col, nextRow, nextCol).getName();
+          }
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() == "tunnel") {
+            String currNeigh = Integer.toString(caveRow) + Integer.toString(caveCol);
+            int newNeighIdx = findCave(array, row, col, nextRow, nextCol).getNeighbours().indexOf(currNeigh);
+            
+            if (newNeighIdx == 0) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(1);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            else if (newNeighIdx == 1) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(0);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            
+            
+          }
+        }
+      }
+      if (direction == 4) { // W
+        int caveRow = java.lang.Character.getNumericValue(arrowPos.charAt(0));
+        int caveCol = java.lang.Character.getNumericValue(arrowPos.charAt(1));
+
+        int nextRow = caveRow;
+        int nextCol = caveCol - 1;
+        
+        String wall = Integer.toString(caveRow) + Integer.toString(caveCol) + "."
+            + Integer.toString(nextRow) + Integer.toString(nextCol);
+        String reverseWall = Integer.toString(nextRow) + Integer.toString(nextCol) + "."
+            + Integer.toString(caveRow) + Integer.toString(caveCol);
+
+        // Hit a wall check.
+        if (walls.contains(wall) || walls.contains(reverseWall)) {
+          return "You hit a wall.";
+        }
+
+        if (findCave(array, row, col, nextRow, nextCol) == null) {
+          return "You hit a wall.";
+        }
+        else { 
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() != "tunnel") {
+            distance--;
+            arrowPos = findCave(array, row, col, nextRow, nextCol).getName();
+          }
+          if (findCave(array, row, col, nextRow, nextCol).getSecondaryName() == "tunnel") {
+            String currNeigh = Integer.toString(caveRow) + Integer.toString(caveCol);
+            int newNeighIdx = findCave(array, row, col, nextRow, nextCol).getNeighbours().indexOf(currNeigh);
+            
+            if (newNeighIdx == 0) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(1);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            else if (newNeighIdx == 1) {
+              String newPos = findCave(array, row, col, nextRow, nextCol).getNeighbours().get(0);
+              String newNeighRow = java.lang.Character.toString(newPos.charAt(0));
+              String newNeighCol = java.lang.Character.toString(newPos.charAt(1));
+
+              //get new direction 
+              direction = directionFinderHelper(Integer.toString(nextRow), Integer.toString(nextCol), newNeighRow, newNeighCol);
+              arrowPos = Integer.toString(nextRow) + Integer.toString(nextCol);
+            }
+            
+            
+          }
+        }
+      }
+    }
+    int caveRow = java.lang.Character.getNumericValue(arrowPos.charAt(0));
+    int caveCol = java.lang.Character.getNumericValue(arrowPos.charAt(1));
+    Cave landedCave = findCave(array, row, col, caveRow, caveCol);
+    if (landedCave.getWumpus()) {
+      return "Win";
+    }
+    return "Arrow didn't hit anything.";
+  }
+
+  /**
    * BoundaryHelper, updates the row and columns of a wrapping room maze
    * properly.
+   * 
    * @param row row position of player in maze
    * @param col column position of player in maze
    * @param mazeRow rows in maze
@@ -314,13 +601,11 @@ public abstract class MazeImpl implements Maze {
     return positions;
   }
 
-
-
-
   public abstract ArrayList<String> getMoves();
 
   /**
    * possibleMoves returns the possible moves a player can make.
+   * 
    * @param mazeType type of maze
    * @param array of rooms in maze
    * @param walls walls in maze
@@ -397,9 +682,9 @@ public abstract class MazeImpl implements Maze {
     return possibleMoves;
   }
 
-
   /**
    * makeWalls makes the walls in the maze.
+   * 
    * @param row rows in maze
    * @param col columns in maze
    * @param walls walls in maze
@@ -444,6 +729,7 @@ public abstract class MazeImpl implements Maze {
   /**
    * makeSets makes the initial sets in the maze. Sets represent rooms that are
    * linked by a hallway.
+   * 
    * @param row rows in maze
    * @param col columns in maze
    * @param sets hallways in maze
@@ -486,9 +772,10 @@ public abstract class MazeImpl implements Maze {
     }
     return sets;
   }
-  
+
   /**
    * updateSets updates the sets in the maze after a wall has been broken.
+   * 
    * @param row rows in maze
    * @param col columns in maze
    * @param sets hallways in maze
@@ -527,11 +814,12 @@ public abstract class MazeImpl implements Maze {
   /**
    * updateSetsHelper calculates all the connections from other cells that are
    * linked to a certain cell have. Helps the updateSets method by doing this.
+   * 
    * @param sets hallways in maze
    */
   public void updateSetsHelper(Map<String, Set<String>> sets) {
 
-    // Loop through sets 
+    // Loop through sets
     for (Map.Entry<String, Set<String>> entry : sets.entrySet()) {
       String key = entry.getKey();
       Set<String> val = entry.getValue();
@@ -541,18 +829,18 @@ public abstract class MazeImpl implements Maze {
       }
 
       Set<String> setPairs = new HashSet<>();
-      // Current Key's value 
+      // Current Key's value
       setPairs.addAll(val);
 
-      // Combining with paired keys values 
+      // Combining with paired keys values
       for (String ele : val) {
         Set<String> pairedEle = sets.get(ele);
         setPairs.addAll(pairedEle);
       }
-      // Remove duplicate key in value list 
+      // Remove duplicate key in value list
       setPairs.remove(key);
 
-      // Replace new value to current key value 
+      // Replace new value to current key value
       sets.put(key, setPairs);
 
     }
@@ -561,6 +849,7 @@ public abstract class MazeImpl implements Maze {
 
   /**
    * canBreakWall determines if a wall can be broken.
+   * 
    * @param breakWall string representation of wall to break
    * @param sets hallways in maze
    */
@@ -584,6 +873,7 @@ public abstract class MazeImpl implements Maze {
 
   /**
    * breakWall breaks a wall between two cells.
+   * 
    * @param breakWall string representation of wall to break
    * @param walls the walls in the maze
    * @param removedWalls walls removed from maze
@@ -594,14 +884,100 @@ public abstract class MazeImpl implements Maze {
     String room1 = rooms[0];
     String room2 = rooms[1];
     int idx = walls.indexOf(room1 + "." + room2);
-    //System.out.println(room1 + "." + room2);
+
     removedWalls.add(breakWall);
     walls.remove(idx);
     return walls;
   }
 
   /**
+   * countDoor counts all the doors per room in the maze.
+   */
+  public Map<String, Integer> doorCount(Cave[] array, int row, int col, ArrayList<String> walls) {
+    Map<String, Integer> doors = new HashMap<String, Integer>();
+    int[][] boundaryArray = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+    for (Cave room : array) {
+      String cave = room.getName();
+      int caveRow = java.lang.Character.getNumericValue(cave.charAt(0));
+      int caveCol = java.lang.Character.getNumericValue(cave.charAt(1));
+      int doorCount = 0;
+      ArrayList<String> closeBys = new ArrayList<String>();
+
+      for (int i = 0; i < boundaryArray.length; i++) {
+        int nexRow = caveRow + boundaryArray[i][0];
+        int nexCol = caveCol + boundaryArray[i][1];
+
+        if (nexRow < row && nexRow >= 0 && nexCol < col && nexCol >= 0) {
+          if (walls.contains(cave + "." + Integer.toString(nexRow) + Integer.toString(nexCol))) {
+            continue;
+          }
+          if (walls.contains(Integer.toString(nexRow) + Integer.toString(nexCol) + "." + cave)) {
+            continue;
+          }
+          doorCount++;
+          closeBys.add(Integer.toString(nexRow) + Integer.toString(nexCol));
+        }
+      }
+      doors.put(cave, doorCount);
+    }
+    return doors;
+  }
+
+  /**
+   * makeNeighbours finds all the neighbours of caves in the maze.
+   */
+  public Map<String, ArrayList<String>> makeNeighbours(Cave[] array, int row, int col,
+      ArrayList<String> walls) {
+    Map<String, ArrayList<String>> neighbours = new HashMap<String, ArrayList<String>>();
+    int[][] boundaryArray = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+    for (Cave room : array) {
+      String cave = room.getName();
+      int caveRow = java.lang.Character.getNumericValue(cave.charAt(0));
+      int caveCol = java.lang.Character.getNumericValue(cave.charAt(1));
+      ArrayList<String> closeBys = new ArrayList<String>();
+
+      for (int i = 0; i < boundaryArray.length; i++) {
+        int nexRow = caveRow + boundaryArray[i][0];
+        int nexCol = caveCol + boundaryArray[i][1];
+
+        if (nexRow < row && nexRow >= 0 && nexCol < col && nexCol >= 0) {
+          if (walls.contains(cave + "." + Integer.toString(nexRow) + Integer.toString(nexCol))) {
+            continue;
+          }
+          if (walls.contains(Integer.toString(nexRow) + Integer.toString(nexCol) + "." + cave)) {
+            continue;
+          }
+          closeBys.add(Integer.toString(nexRow) + Integer.toString(nexCol));
+        }
+      }
+
+      neighbours.put(cave, closeBys);
+    }
+    return neighbours;
+  }
+
+  /**
+   * builTunnels builds tunnels in the dungeon.
+   */
+  public void buildTunnels(Cave[] array, Map<String, Integer> doors,
+      Map<String, ArrayList<String>> neighbours) {
+    for (String tunnel : doors.keySet()) {
+      if (doors.get(tunnel) == 2) {
+        for (Cave currCave : array) {
+          if (currCave.getName().equals(tunnel)) {
+            currCave.setSecondaryName("tunnel");
+            currCave.setNeighbours(neighbours.get(currCave.getName()));
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * buildMaze builds the specified maze.
+   * 
    * @param walls the walls in the maze
    * @param removedWalls walls removed from the maze
    * @param sets hallways in maze
@@ -612,8 +988,8 @@ public abstract class MazeImpl implements Maze {
   public void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
       Map<String, Set<String>> sets, String mazeType, int row, int col, int goal) {
     Random ran = new Random();
-    Boolean madeCycle = false; 
-    
+    Boolean madeCycle = false;
+
     while (walls.size() > goal) {
       int wallToBreak = ran.nextInt(walls.size()) + 0;
 
@@ -623,18 +999,16 @@ public abstract class MazeImpl implements Maze {
           sets = updateSets(row, col, sets, removedWalls);
         }
       }
-      
+
       else if (mazeType.equals("room")) {
-        if (!madeCycle) { 
+        if (!madeCycle) {
           makeCycle(walls, removedWalls, sets, row, col);
           madeCycle = true;
           continue;
         }
-        
-        if (canBreakWall(walls.get(wallToBreak), sets, walls)) {
-          walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
-          sets = updateSets(row, col, sets, removedWalls);      
-        }
+
+        walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
+        sets = updateSets(row, col, sets, removedWalls);
       }
 
       else if (mazeType.equals("wrapping room")) {
@@ -644,30 +1018,29 @@ public abstract class MazeImpl implements Maze {
 
     }
   }
-  
+
   /**
    * makeCycle makes a cycle of rooms in a room maze.
    */
-  public void makeCycle(ArrayList<String> walls, ArrayList<String> removedWalls,  
-                                Map<String, Set<String>> sets, int row, int col) { 
+  public void makeCycle(ArrayList<String> walls, ArrayList<String> removedWalls,
+      Map<String, Set<String>> sets, int row, int col) {
     Random ran = new Random();
     int ranRow = ran.nextInt(row);
     int ranCol = ran.nextInt(col);
     int diagRow = ranRow + 1;
     int diagCol = ranCol + 1;
-    
-    String rRow = Integer.toString(ranRow); 
-    String rCol = Integer.toString(ranCol); 
-    String dRow = Integer.toString(diagRow); 
-    String dCol = Integer.toString(diagCol); 
-   
-    
-    if (diagRow < row && diagCol < col) { 
 
-      String wall1 = rRow+rCol+"."+rRow+dCol;
-      String wall2 = rRow+rCol+"."+dRow+rCol;
-      String wall3 = dRow+rCol+"."+dRow+dCol;
-      String wall4 = rRow+dCol+"."+dRow+dCol;
+    String rRow = Integer.toString(ranRow);
+    String rCol = Integer.toString(ranCol);
+    String dRow = Integer.toString(diagRow);
+    String dCol = Integer.toString(diagCol);
+
+    if (diagRow < row && diagCol < col) {
+
+      String wall1 = rRow + rCol + "." + rRow + dCol;
+      String wall2 = rRow + rCol + "." + dRow + rCol;
+      String wall3 = dRow + rCol + "." + dRow + dCol;
+      String wall4 = rRow + dCol + "." + dRow + dCol;
       walls = breakWall(wall1, walls, removedWalls);
       sets = updateSets(row, col, sets, removedWalls);
       walls = breakWall(wall2, walls, removedWalls);
@@ -675,9 +1048,8 @@ public abstract class MazeImpl implements Maze {
       walls = breakWall(wall3, walls, removedWalls);
       sets = updateSets(row, col, sets, removedWalls);
       walls = breakWall(wall4, walls, removedWalls);
-      sets = updateSets(row, col, sets, removedWalls); 
-    }
-    else { 
+      sets = updateSets(row, col, sets, removedWalls);
+    } else {
       makeCycle(walls, removedWalls, sets, row, col);
     }
   }
@@ -695,7 +1067,7 @@ public abstract class MazeImpl implements Maze {
     HashSet<Integer> set = new HashSet<Integer>();
     Random ran = new Random();
     double roomsWithGold = Math.ceil(amount * row * col);
-    // Generate random numbers 
+    // Generate random numbers
     while (set.size() < roomsWithGold) {
       int num = ran.nextInt((int) row * col);
       set.add(num);

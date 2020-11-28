@@ -10,39 +10,40 @@ public class SuperBat implements Character {
 
   private String name;
   
+  /**
+   * Constructor for super bat object.
+   * @param type of superbat
+   */
   public SuperBat(String type) {
     this.name = type; 
   }
 
+  
+  
+  
   @Override
   public String getType() {
     return this.name; 
   }
 
+  
+  
 
   /**
    * Produces a new random location to transport the player to.
-   * @param row row size of maze
-   * @param col column size of maze
+   * @param locations all possible locations player could go
    */
-  public ArrayList<Integer> action(int row, int col) {
+  public ArrayList<Integer> action(ArrayList<Cave> locations) {
     Random ran = new Random();
-    int newRow = ran.nextInt(row);
-    int newCol = ran.nextInt(col);
+    int num =  ran.nextInt(locations.size());
     ArrayList<Integer> ans = new ArrayList<Integer>();
+    Cave toCave = locations.get(num);
+    int newRow = java.lang.Character.getNumericValue(toCave.getName().charAt(0));
+    int newCol = java.lang.Character.getNumericValue(toCave.getName().charAt(1));
     ans.add(newRow); 
     ans.add(newCol);
     return ans;
   }
 
-  @Override
-  public String action() {
-    return null;
-  }
-  
-  @Override
-  public String pickMove(int direction) {
-    return null;
-  }
 
 }

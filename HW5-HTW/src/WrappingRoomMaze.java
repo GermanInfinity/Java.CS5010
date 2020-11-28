@@ -21,24 +21,21 @@ public class WrappingRoomMaze extends MazeImpl {
   private ArrayList<String> possibleMoves;
 
   private ArrayList<String> walls;
+  private Map<String, Integer> doors;
+  private Map<String, ArrayList<String>> neighbours;
 
   /**
-   * WrappingRoomMaze constructor constructs a maze that has rooms and hallways,
-   * multiple paths exist to the goal in this maze. A player in the maze can
+   * WrappingRoomMaze constructor constructs a maze that has caves, tunnels and hallways,
+   * multiple paths exist to the wumpus in this maze. A player in the maze can
    * also wrap around the edges of this maze.
    * 
    * @param row size of row in maze
    * @param col size of columns in maze
    * @param remainingWallsarg specifies the walls to remain in the maze
-   * @param startRowarg starting row position of player in maze
-   * @param startColarg starting column position of player in maze
    */
-  public WrappingRoomMaze(int row, int col, int remainingWallsarg, int startRowarg, int startColarg) {
-    if (row < 0 || col < 0 || startRowarg < 0 || startColarg < 0) {
+  public WrappingRoomMaze(int row, int col, int remainingWallsarg) {
+    if (row < 0 || col < 0) {
       throw new IllegalArgumentException("No negative values.");
-    }
-    if (startRowarg < 0 || startRowarg >= row || startColarg < 0 || startColarg >= col) {
-      throw new IllegalArgumentException("Invalid starting entry.");
     }
     if (remainingWallsarg < 0) {
       throw new IllegalArgumentException("Cannot have negative remaining walls.");
@@ -46,8 +43,7 @@ public class WrappingRoomMaze extends MazeImpl {
 
     this.row = row;
     this.col = col;
-    int startRow = startRowarg;
-    int startCol = startColarg;
+
     this.walls = new ArrayList<String>();
     
     Map<String, Set<String>> sets = new HashMap<String, Set<String>>();
@@ -56,6 +52,8 @@ public class WrappingRoomMaze extends MazeImpl {
 
     this.array = insertCaves(this.array, this.row, this.col);
     this.walls = makeWalls(this.row, this.col, this.walls);
+    this.doors = new HashMap<String, Integer>();
+    this.neighbours = new HashMap<String, ArrayList<String>>();
     sets = makeSets(this.row, this.col, sets, this.walls);
     int remainingWalls = remainingWallsarg;
 
@@ -67,7 +65,11 @@ public class WrappingRoomMaze extends MazeImpl {
     String primaryMazeType = "wrapping room";
     buildMaze(this.walls, removedWalls, sets, primaryMazeType, this.row, this.col, remainingWalls);
 
-    updatePlayerPosition(this.array, this.row, this.col, startRow, startCol);
+    this.doors = doorCount(this.array, row, col, this.walls);
+    this.neighbours = makeNeighbours(this.array, row, col, this.walls);
+
+    buildTunnels(this.array, this.doors, this.neighbours);
+    System.out.println(this.neighbours);
 
   }
   
@@ -80,19 +82,18 @@ public class WrappingRoomMaze extends MazeImpl {
   public String findPlayer() {
     return playerLocation(this.array, this.row, this.col);
   }
-
+  
   @Override
-  public void makeMove(String move, ArrayList<String> moves) {
-    if (!moves.contains(move)) {
-      throw new IllegalArgumentException("Please play a possible move next time.");
-    }
-    playerMove(this.row, this.col, this.mazeType, this.array, move);
+  public Cave currentCave() {
+    return getCave(this.array, this.row, this.col);
   }
 
   @Override
-  public Boolean atGoal() {
-    // Np solution to dungeon maze.
-    return null;
+  public Cave[] makeMove(String move, ArrayList<String> moves, Cave[] array2) {
+    if (!moves.contains(move)) {
+      throw new IllegalArgumentException("Please play a possible move next time.");
+    }
+    return playerMove(this.row, this.col, this.mazeType, array2, move);
   }
 
   @Override
@@ -102,7 +103,14 @@ public class WrappingRoomMaze extends MazeImpl {
     this.possibleMoves = new ArrayList<String>();
     return moves;
   }
+  
+  @Override
+  public String fire(int distance, int direction) {
+    return shootArrow(this.array, this.walls, this.mazeType, this.row, this.col, distance,
+        direction);
+  }
 
+  
   @Override
   public String toString() {
     return "A wall format is [row, column position in maze]."
@@ -113,14 +121,9 @@ public class WrappingRoomMaze extends MazeImpl {
   }
 
   @Override
-  public Boolean mazeSolved(Cave[] array, int mazeRow, int mazeCol, int goalRow, int goalCol) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
   public Cave[] getCaves() {
     return this.array;
   }
+
 
 }

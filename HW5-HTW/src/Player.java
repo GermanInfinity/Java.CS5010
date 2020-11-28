@@ -5,7 +5,7 @@
  * @author Ugo Nwachuku
  *
  */
-public class Player implements Character{
+public class Player implements Character {
 
   private String name;
   private int arrowsHeld;
@@ -18,19 +18,19 @@ public class Player implements Character{
   public Player(String type, int arrows) {
 
     this.name = type;
-    this.arrowsHeld = arrows; 
+    this.arrowsHeld = arrows;
 
   }
 
-  /** 
-   * Returns name of player; 
+  /**
+   * Returns name of player;
    */
   public String getType() {
     return this.name;
   }
-  
-  /** 
-   * Returns arrows held. 
+
+  /**
+   * Returns arrows held.
    */
   public int getArrows() {
     return this.arrowsHeld;
@@ -60,18 +60,9 @@ public class Player implements Character{
     return null;
   }
 
-  
-  @Override
-  public String action() {
-    return "Shot arrow.";
-  }
-
-
   @Override
   public String toString() {
     return "Hi, i'm a " + this.name + " character.";
   }
-
-
 
 }

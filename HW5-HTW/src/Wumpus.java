@@ -9,37 +9,47 @@ public class Wumpus implements Character{
   private String name;
   private Boolean alive; 
  
-  
+  /**
+   * Constructs a wumpus object.
+   * @param name of the wumpus
+   * @param alive if the wumpus is alive
+   */
   public Wumpus(String name, Boolean alive) {
     this.name = name;
     this.alive = alive;
   }
 
+  
+  
+  
+  /**
+   * Returns a string on action wumpus takes on player. 
+   */
   public String action() { 
     return "Player capped.";
   }
   
+  
+  
+  
+  /**
+   * Returns string representation of wumpus. 
+   */
   public String toString() { 
     return "Hi, I'm a Wumpus. Eat me!";
   }
   
-  public Boolean isAlive() { 
-    return this.alive; 
-  }
-  
-  public void setAlive(Boolean alive) { 
-    this.alive = alive;
-  }
 
+  
+  
+  /**
+   * Returns name of wumpus.  
+   */
   @Override
   public String getType() {
     return this.name; 
   }
 
-  @Override
-  public String pickMove(int a) {
-    return null;
-  }
 
 }
 

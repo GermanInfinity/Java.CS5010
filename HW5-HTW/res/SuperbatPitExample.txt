@@ -1,0 +1,95 @@
+/**
+ * This class acts as the entry point into the program. 
+ *
+ */
+public class Driver {
+
+  public static void main(String[] args) throws IOException {
+    HTW model = new HTW();
+    Readable reader = new InputStreamReader(System.in);
+    Controller control = new Controller(reader, System.out);
+
+    control.start(model);
+  }
+
+}
+
+
+
+/** 
+	PROGRAM OUTPUT 
+ **/
+
+
+Welcome to Hunt the Wumpus. To start, set:
+Number of dungeon rows: 5
+Number of dungeon columns: 5
+Number of remaining walls in dungeon: 6
+Select between Room maze (1) or Wrapping room maze (2), please use the numbers: 1
+Number of pits in the dungeon: 4
+Number of super bats in the dungeon: 3
+Number of arrows player has: 12
+Welcome Player to the caves of destiny. Hunt the Wumpus, or be haunted!
+Where shall I place you?: [2, 3, 7, 8, 9, 10, 11, 12, 13, 16, 17, 18, 22, 23]2
+I have placed you in cave 2, happy hunting ^_^ 
+You feel a draft!
+(1) Move - (2) Shoot? 1
+You are in cave 2
+Tunnels lead to [South, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+You've been whisked away by a super bat!
+(1) Move - (2) Shoot? 1
+You are in cave 3
+Tunnels lead to [South, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 2
+You feel a draft!
+(1) Move - (2) Shoot? 1
+You are in cave 8
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 3
+
+(1) Move - (2) Shoot? 1
+You are in cave 9
+Tunnels lead to [South, North, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 1
+
+(1) Move - (2) Shoot? 1
+You are in cave 3
+Tunnels lead to [South, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 3
+
+(1) Move - (2) Shoot? 1
+You are in cave 9
+Tunnels lead to [South, North, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+You feel a draft!
+(1) Move - (2) Shoot? 1
+You are in cave 8
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 3
+
+(1) Move - (2) Shoot? 1
+You are in cave 9
+Tunnels lead to [South, North, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+You feel a draft!
+(1) Move - (2) Shoot? 1
+You are in cave 8
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+You've been whisked away by a super bat!
+(1) Move - (2) Shoot? 1
+You are in cave 8
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+Superbat carried you. Game over: 5250 FALL Damage!

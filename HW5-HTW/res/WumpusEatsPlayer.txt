@@ -1,0 +1,70 @@
+/**
+ * This class acts as the entry point into the program. 
+ *
+ */
+public class Driver {
+
+  public static void main(String[] args) throws IOException {
+    HTW model = new HTW();
+    Readable reader = new InputStreamReader(System.in);
+    Controller control = new Controller(reader, System.out);
+
+    control.start(model);
+  }
+
+}
+Welcome to Hunt the Wumpus. To start, set:
+Number of dungeon rows: 3
+Number of dungeon columns: 6
+Number of remaining walls in dungeon: 6
+Select between Room maze (1) or Wrapping room maze (2), please use the numbers: 1
+Number of pits in the dungeon: 1
+Number of super bats in the dungeon: 6
+Number of arrows player has: 12
+4
+Welcome Player to the caves of destiny. Hunt the Wumpus, or be haunted!
+Where shall I place you?: [0, 3, 4, 7, 8, 9, 10, 13, 14, 17]10
+I have placed you in cave 10, happy hunting ^_^ 
+You smell a Wumpus!
+(1) Move - (2) Shoot? 1
+You are in cave 10
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 2
+
+(1) Move - (2) Shoot? 1
+You are in cave 14
+Tunnels lead to [North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+
+(1) Move - (2) Shoot? 1
+You are in cave 13
+Tunnels lead to [North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+
+(1) Move - (2) Shoot? 1
+You are in cave 7
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 1
+You smell a Wumpus!
+(1) Move - (2) Shoot? 1
+You are in cave 3
+Tunnels lead to [South, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 4
+
+(1) Move - (2) Shoot? 1
+You are in cave 7
+Tunnels lead to [South, North, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 1
+You smell a Wumpus!
+(1) Move - (2) Shoot? 1
+You are in cave 3
+Tunnels lead to [South, East, West]
+Where to? 
+Please choose values in parenthesis for direction, (1) North, (2) South, (3) East, (4) West: 3
+You've been made meat by the Wumpus. Try again!
