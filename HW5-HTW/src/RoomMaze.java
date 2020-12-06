@@ -21,8 +21,7 @@ public class RoomMaze extends MazeImpl {
   private ArrayList<String> possibleMoves;
 
   private ArrayList<String> walls;
-  private Map<String, Integer> doors;
-  private Map<String, ArrayList<String>> neighbours;
+
 
   /**
    * RoomMaze constructor constructs a maze that has Caves, hallways and
@@ -50,8 +49,8 @@ public class RoomMaze extends MazeImpl {
 
     this.array = insertCaves(this.array, this.row, this.col);
     this.walls = makeWalls(this.row, this.col, this.walls);
-    this.doors = new HashMap<String, Integer>();
-    this.neighbours = new HashMap<String, ArrayList<String>>();
+    Map<String, Integer> doors = new HashMap<String, Integer>();
+    Map<String, ArrayList<String>> neighbours = new HashMap<String, ArrayList<String>>();
     sets = makeSets(this.row, this.col, sets, this.walls);
     int remainingWalls = remainingWallsarg;
 
@@ -62,10 +61,10 @@ public class RoomMaze extends MazeImpl {
     this.mazeType = "room";
     buildMaze(this.walls, removedWalls, sets, this.mazeType, this.row, this.col, remainingWalls);
 
-    this.doors = doorCount(this.array, row, col, this.walls);
-    this.neighbours = makeNeighbours(this.array, row, col, this.walls);
+    doors = doorCount(this.array, row, col, this.walls);
+    neighbours = makeNeighbours(this.array, row, col, this.walls);
 
-    buildTunnels(this.array, this.doors, this.neighbours);
+    buildTunnels(this.array, doors, neighbours);
 
   }
 

@@ -161,7 +161,7 @@ public class TestObjectsIn {
   public static void shootArrowTest() {
 
     Scanner in = new Scanner(System.in);
-    Dungeon home = new Dungeon(4, 4, 25, "room", 8, 0, 0);
+    Dungeon home = new Dungeon(4, 4, 25, "wrapping room", 8, 0, 0);
     Player player = new Player("John", 12);
     System.out.println("Please select a location to start from the list: " + home.locations());
     int location = in.nextInt();
@@ -187,7 +187,7 @@ public class TestObjectsIn {
 
       System.out.println("In what direction, (1) North, (2) South," + " (3) East, (4) West: ");
       int direction = in.nextInt();
-      if (distance != 1 && distance != 2 && distance != 3 && distance != 4) {
+      if ( direction != 1 &&  direction != 2 &&  direction != 3 && direction != 4) {
         throw new IllegalArgumentException("Please pick a valid direction next time.");
       }
       System.out.println(home.arrowAction(distance, direction));
@@ -301,6 +301,9 @@ public class TestObjectsIn {
     }
   }
 
+  /**
+   * main method for testing objects.
+   */
   public static void main(String[] args) {
     //wumpusWinTest();
     // fallTest();

@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Ugo Nwachuku
  *
  */
-public class HTW {
+public class HTW implements Model {
 
   private Dungeon home;
   private Character player;
@@ -16,10 +16,11 @@ public class HTW {
   /**
    * Constructs an entry point model object for dungeon and player class.
    */
-  public HTW() {
+  public HTW(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
 
     this.player = null;
     this.home = null;
+    setUp(rows, col, walls, mazeType, pits, bats, arrows);
   }
 
   /**
@@ -33,7 +34,7 @@ public class HTW {
    * @param bats number of super bats in dungeon
    * @param arrows number of arrows in dungeon
    */
-  public void setUp(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
+  private void setUp(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
     String mazeTypeStr = "";
 
     if (mazeType == 1) {
@@ -70,6 +71,13 @@ public class HTW {
    */
   public String playerLocation() {
     return this.home.playerLocation();
+  }
+  
+  /**
+   * Finds player position.
+   */
+  public String playerPosition() { 
+    return this.home.playerPosition();
   }
 
   /**

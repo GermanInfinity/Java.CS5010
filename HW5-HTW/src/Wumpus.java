@@ -4,19 +4,16 @@
  * @author ugoslight
  *
  */
-public class Wumpus implements Character{
+public class Wumpus implements Character {
 
   private String name;
-  private Boolean alive; 
  
   /**
    * Constructs a wumpus object.
    * @param name of the wumpus
-   * @param alive if the wumpus is alive
    */
-  public Wumpus(String name, Boolean alive) {
+  public Wumpus(String name) {
     this.name = name;
-    this.alive = alive;
   }
 
   

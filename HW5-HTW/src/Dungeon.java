@@ -14,7 +14,6 @@ public class Dungeon {
   private int col;
   private int pitNo;
   private int batNo;
-  private String mazeType;
   private int numArrows;
   private Cave[] caves;
 
@@ -29,11 +28,8 @@ public class Dungeon {
    * @param row row size of the dungeon
    * @param col column size of the dungeon
    * @param remainingWalls in dungeon
-   * @param startRow starting row position of player
-   * @param startCol starting column position of player
-   * 
    */
-  public Dungeon(int row, int col, int numArrows, String mazeType, int remainingWalls, int pitNo,
+  public Dungeon(int row, int col, int numArrows, String mazeTypeIn, int remainingWalls, int pitNo,
       int batNo) {
     // TODO Auto-generated constructor stub
 
@@ -52,7 +48,7 @@ public class Dungeon {
 
 
     // Determine maze
-    this.mazeType = mazeType;
+    String mazeType = mazeTypeIn;
     this.row = row;
     this.col = col;
     this.numArrows = numArrows;
@@ -61,18 +57,18 @@ public class Dungeon {
     this.batNo = batNo;
 
     
-    if (this.mazeType.equals("room")) {
+    if (mazeType.equals("room")) {
       this.maze = new RoomMaze(row, col, remainingWalls);
     }
 
-    if (this.mazeType.equals("wrapping room")) {
+    if (mazeType.equals("wrapping room")) {
       this.maze = new WrappingRoomMaze(row, col, remainingWalls);
     }
     this.caves = this.maze.getCaves();
 
     
     // Start with random position, after placing npc's place player last.
-    wumpus = new Wumpus("Gretchen", true);
+    wumpus = new Wumpus("Gretchen");
     placeWumpus();
     placePits();
     placeSuperBats();
@@ -80,6 +76,10 @@ public class Dungeon {
 
   }
 
+  /**
+   * startAt starts the player at the specified location.
+   * @param location to start player in
+   */
   public void startAt(int location) {
     for (int i = 0; i < this.caves.length; i++) {
       if (this.caves[i].getSecondaryName().equals("tunnel")) {
@@ -187,7 +187,7 @@ public class Dungeon {
     if (this.numArrows > 0) {
       this.numArrows--;
       response = this.maze.fire(distance, direction);
-      if (response == "Win") {
+      if (response.equals("Win")) {
         this.gameOn = false;
         return "Hooray, you killed the Wumpus!";
       }
@@ -215,7 +215,7 @@ public class Dungeon {
     int num = ran.nextInt(locations.size());
 
     Cave wumpusCave = this.maze.locateCave(this.caves, this.row, this.col, locations.get(num));
-    System.out.println(locations.get(num));
+
     wumpusCave.addNPC(this.wumpus);
 
   }
@@ -287,6 +287,13 @@ public class Dungeon {
    */
   public String playerLocation() {
     return this.maze.findPlayerPosition();
+  }
+  
+  /**
+   * getPosition returns players current position i.e 00, 10, 02.
+   */
+  public String playerPosition() {
+    return this.maze.findPlayer();
   }
 
   /**

@@ -87,7 +87,7 @@ public interface Maze {
    * Wrapper for fire arrow.
    */
   String fire(int dist, int direct);
-  
+
   /**
    * Shoots arrow in the maze.
    */
@@ -120,21 +120,24 @@ public interface Maze {
    * showWalls shows the walls in the maze.
    */
   ArrayList<String> showWalls(ArrayList<String> walls);
-  
+
   /**
    * doorCount counts the doors in the maze.
    */
   Map<String, Integer> doorCount(Cave[] array, int row, int col, ArrayList<String> walls);
-  
+
   /**
    * makeNeighbours finds the neighbours in the maze.
    */
-  Map<String, ArrayList<String>> makeNeighbours(Cave[] array, int row, int col, ArrayList<String> walls);
-  
-  /** 
-   * builTunnels builds tunnels in the maze. 
+  Map<String, ArrayList<String>> makeNeighbours(Cave[] array, int row, int col,
+      ArrayList<String> walls);
+
+  /**
+   * builTunnels builds tunnels in the maze.
    */
-  void buildTunnels(Cave[] array, Map<String, Integer> doors, Map<String, ArrayList<String>> neighbours);
+  void buildTunnels(Cave[] array, Map<String, Integer> doors,
+      Map<String, ArrayList<String>> neighbours);
+
   /**
    * makeSets makes the initial sets in the maze. Sets represent Caves that are
    * linked by a hallway.

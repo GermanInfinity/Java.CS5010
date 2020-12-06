@@ -21,8 +21,7 @@ public class WrappingRoomMaze extends MazeImpl {
   private ArrayList<String> possibleMoves;
 
   private ArrayList<String> walls;
-  private Map<String, Integer> doors;
-  private Map<String, ArrayList<String>> neighbours;
+
 
   /**
    * WrappingRoomMaze constructor constructs a maze that has caves, tunnels and hallways,
@@ -52,8 +51,8 @@ public class WrappingRoomMaze extends MazeImpl {
 
     this.array = insertCaves(this.array, this.row, this.col);
     this.walls = makeWalls(this.row, this.col, this.walls);
-    this.doors = new HashMap<String, Integer>();
-    this.neighbours = new HashMap<String, ArrayList<String>>();
+    Map<String, Integer>  doors = new HashMap<String, Integer>();
+    Map<String, ArrayList<String>> neighbours = new HashMap<String, ArrayList<String>>();
     sets = makeSets(this.row, this.col, sets, this.walls);
     int remainingWalls = remainingWallsarg;
 
@@ -65,11 +64,10 @@ public class WrappingRoomMaze extends MazeImpl {
     String primaryMazeType = "wrapping room";
     buildMaze(this.walls, removedWalls, sets, primaryMazeType, this.row, this.col, remainingWalls);
 
-    this.doors = doorCount(this.array, row, col, this.walls);
-    this.neighbours = makeNeighbours(this.array, row, col, this.walls);
+    doors = doorCount(this.array, row, col, this.walls);
+    neighbours = makeNeighbours(this.array, row, col, this.walls);
 
-    buildTunnels(this.array, this.doors, this.neighbours);
-    System.out.println(this.neighbours);
+    buildTunnels(this.array, doors, neighbours);
 
   }
   

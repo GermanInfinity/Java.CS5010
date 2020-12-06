@@ -3,7 +3,7 @@ The problem this progrram solves is creating a Model Controller application
 that gives a user the ability to play the hunt the wumpus game. On the
 technical aspect of the problem, the challege was to design a model controller
 relationship with limited information and connections shared between the 
-model and controller, but still with the capability of havign a user play 
+model and controller, but still with the capability of having a user play 
 hunt the wumpus with no issues. 
 
 LIST OF FEATURES
@@ -66,4 +66,7 @@ LIMITATIONS
 The main limitation was that testing was not done with a random seed that ensures 
 the same radom numbers were generated during testing. Instead testing was done 
 on multiple mazes, and by the developer playing the game and checking for 
-expected behaviours.
+expected behaviours. I was also limited in one of the functions in my controller 
+test did not successfully pass a test. The function is movePlayer, and works
+with two single controller functions, those two functions pass their test, but 
+together in this function, they do not pass a Junit test. 

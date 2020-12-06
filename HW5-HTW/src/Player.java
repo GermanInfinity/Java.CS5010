@@ -13,7 +13,8 @@ public class Player implements Character {
   /**
    * Player constructor. Constructs a character object of type player class.
    * 
-   * @param name is the type of player
+   * @param type is the name of player
+   * @param arrows number of arrows player has
    */
   public Player(String type, int arrows) {
 
@@ -23,7 +24,7 @@ public class Player implements Character {
   }
 
   /**
-   * Returns name of player;
+   * Returns name of player.
    */
   public String getType() {
     return this.name;
