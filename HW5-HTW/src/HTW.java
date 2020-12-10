@@ -22,7 +22,40 @@ public class HTW implements Model {
     this.home = null;
     setUp(rows, col, walls, mazeType, pits, bats, arrows);
   }
+  
+  /**
+   * Constructs entry point into model with no inputs.
+   */
+  public HTW() { 
+    
+  }
+  
+  /**
+   * developMaze builds maze on the backend.
+   */
+  public void developMaze(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
+    String mazeTypeStr = "";
+    System.out.println("EEE");
+    if (mazeType == 1) {
+      mazeTypeStr = "room";
+    } else if (mazeType == 2) {
+      mazeTypeStr = "wrapping room";
+    } else if (mazeType > 2 || mazeType < 1) {
+      throw new IllegalArgumentException("Invalid maze type.");
+    }
 
+    this.home = new Dungeon(rows, col, arrows, mazeTypeStr, walls, pits, bats);
+    this.player = new Player("Player", arrows);
+ 
+  }
+  
+  /**
+   * getStructure returns structure of model.
+   */
+  public Cave[] getStructure() { 
+    return this.home.getCaves();
+  }
+  
   /**
    * Sets up the dungeon per specified game configurations.
    * 

@@ -35,8 +35,28 @@ public class ConfigView extends JFrame implements IView {
     setLocation(100,100);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    image = new JLabel(new ImageIcon("/Users/ugoslight/Downloads/res/wumpus.png"));
-    image2 = new JLabel(new ImageIcon("/Users/ugoslight/Downloads/res/wumpus.png"));
+    submit = new JButton("Play");
+    submit.setActionCommand("Play");
+    pack();
+    
+  }
+
+  @Override
+  public void setDisp(String s) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setListener(ActionListener clicks, KeyListener keys) {
+    // TODO Auto-generated method stub
+    submit.addActionListener(clicks);
+  }
+
+  @Override
+  public void display() {
+    image = new JLabel(new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/wumpus.png"));
+    image2 = new JLabel(new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/wumpus.png"));
 
     this.add(image);
     this.add(image2);
@@ -78,55 +98,14 @@ public class ConfigView extends JFrame implements IView {
     inputSB = new JTextField(10);
     this.add(inputSB);
     
-    submit = new JButton("Submit");
-    submit.setActionCommand("Set Difficulty");
     this.add(submit);
 
 
     this.setLayout(new GridLayout(10,2));
-    //this.setSize(300,300);
+    this.setSize(550, 300);
     this.setVisible(true);
-    pack();
-    
   }
 
-  @Override
-  public void setDisp(String s) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void setListener(ActionListener clicks, KeyListener keys) {
-    // TODO Auto-generated method stub
-    if (inputCol == null) { 
-      throw new IllegalArgumentException("Please insert a value.");
-    }
-    if (inputRow == null) { 
-      throw new IllegalArgumentException("Please insert a value.");
-    }
-    if (inputRem == null) { 
-      throw new IllegalArgumentException("Please insert a value.");
-    }
-    if (inputType == null) { 
-      throw new IllegalArgumentException("Please insert a value.");
-    }
-    if (inputPits == null) { 
-      throw new IllegalArgumentException("Please insert a value.");
-    }
-    if (inputSB == null) { 
-      throw new IllegalArgumentException("Please insert a value.");
-    }
-
-    submit.addActionListener(clicks);
-  }
-
-  @Override
-  public void display() {
-    // TODO Auto-generated method stub
-  }
-
-  @Override
   public void revealPic() {
     this.getContentPane().removeAll();
     this.repaint();

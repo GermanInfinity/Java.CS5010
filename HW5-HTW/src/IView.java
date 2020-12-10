@@ -31,7 +31,9 @@ public interface IView {
    */
   void close();
   
-  void revealPic();
   
-  //void show();
+  /**
+   * Returns current game settings. 
+   */
+  ArrayList<Integer> getGameConfig();
 }

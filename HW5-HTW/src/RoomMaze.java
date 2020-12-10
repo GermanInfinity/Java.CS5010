@@ -63,7 +63,7 @@ public class RoomMaze extends MazeImpl {
 
     doors = doorCount(this.array, row, col, this.walls);
     neighbours = makeNeighbours(this.array, row, col, this.walls);
-
+    
     buildTunnels(this.array, doors, neighbours);
 
   }

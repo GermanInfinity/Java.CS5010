@@ -274,6 +274,12 @@ public class Dungeon {
     }
   }
 
+  /**
+   * getCaves returns caves in the dungeon.
+   */
+  public Cave[] getCaves() {
+    return this.caves;
+  }
   
   /**
    * Checks the maze to see if the game is ongoing.

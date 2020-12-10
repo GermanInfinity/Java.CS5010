@@ -7,6 +7,12 @@ import java.util.ArrayList;
  *
  */
 public interface Model {
+  
+  /**
+   * developMaze creates the maze in the backend of the model.
+   */
+  public void developMaze(int rows, int col, int walls, int mazeType, 
+                          int pits, int bats, int arrows);
 
   /**
    * Finds the desired action to take based on players location.
@@ -29,6 +35,11 @@ public interface Model {
    * Finds the position of a player.
    */
   public String playerPosition();
+  
+  /**
+   * getStructure returns structure of maze.
+   */
+  public Cave[] getStructure();
 
   /**
    * Finds the possible moves the player can make from their location.
