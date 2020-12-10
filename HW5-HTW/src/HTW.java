@@ -35,7 +35,7 @@ public class HTW implements Model {
    */
   public void developMaze(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
     String mazeTypeStr = "";
-    System.out.println("EEE");
+
     if (mazeType == 1) {
       mazeTypeStr = "room";
     } else if (mazeType == 2) {

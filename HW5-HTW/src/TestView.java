@@ -1,11 +1,13 @@
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import javax.swing.*;
 
@@ -19,10 +21,10 @@ public class TestView extends JFrame implements IView {
   private static final long serialVersionUID = -7083924619099998893L;
 
   private JLabel display;
-  JButton submit;
+  private JButton submit, clickedButton;
   private JPanel panel;
   private ArrayList<GridPosition> gridPositions;
-  private int row, col, actualRow, actualCol;
+  private int row, col;
   private JTextField inputRow, inputCol, inputRem, inputType, inputPits, inputSB;
 
   /**
@@ -93,28 +95,29 @@ public class TestView extends JFrame implements IView {
   
   @Override
   public void setListener(ActionListener clicks, KeyListener keys) {
-    for (int i = 0; i < this.row * this.col; i++) {
-      this.gridPositions.get(i).getButton().addActionListener(clicks);
-    }
+//    for (int i = 0; i < this.row * this.col; i++) {
+//      this.gridPositions.get(i).getButton().addActionListener(clicks);
+//    }
     this.submit.addActionListener(clicks);
   }
 
   @Override
   public void display() {
+
    Icon cave = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cave.jpg");
    Icon player = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/player.png");
-   
-   
+
    JButton button = new JButton(cave);
    JLabel label = new JLabel(player);
-   
    button.setLayout(new GridBagLayout());
    button.add(label, new GridBagConstraints());
    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
    panel.setLayout(new BorderLayout());
    this.panel.add(button, BorderLayout.CENTER);
    this.panel.setVisible(true);
+   this.panel.setBackground(Color.CYAN);
    
+  
 
    this.setSize(300,300);
    this.setVisible(true);
@@ -134,7 +137,6 @@ public class TestView extends JFrame implements IView {
    */
   public void buildMaze(int mazeRow, int mazeCol, Cave[] allCaves) {
 
-
     Icon cave = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cave.jpg");
     Icon hallway = new ImageIcon(
         "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cavePath.png");
@@ -142,7 +144,15 @@ public class TestView extends JFrame implements IView {
     Icon bat = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/superbat.png");
     Icon pit = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/slime-pit.png");
     Icon player = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/player.png");
-    
+    ActionListener actionListener = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+          setClickedButton(actionEvent.getSource());
+      }
+    };
+    this.row = mazeRow; 
+    this.col = mazeCol;
+   
     for (Cave caves : allCaves) { 
       if (caves.getSecondaryName().equals("tunnel")) { 
         JButton gridPlace = new JButton(hallway);
@@ -150,6 +160,7 @@ public class TestView extends JFrame implements IView {
         gridPlace.setBackground(Color.CYAN);
         gridPlace.setOpaque(true);
         gridPlace.setVisible(true);
+        gridPlace.addActionListener(actionListener);
         gridPlace.setActionCommand("Move");
         
         String row = caves.getName().substring(0,1);
@@ -160,6 +171,8 @@ public class TestView extends JFrame implements IView {
       }
       else { 
         JButton gridPlace = new JButton(cave);
+        gridPlace.setActionCommand("Move");
+        gridPlace.addActionListener(actionListener);
         gridPlace.setPreferredSize(new Dimension(120, 80));
         
         if (caves.getWumpus()) {
@@ -202,14 +215,12 @@ public class TestView extends JFrame implements IView {
         gridPlace.setBackground(Color.CYAN);
         gridPlace.setOpaque(true);
         gridPlace.setVisible(true);
-        gridPlace.setActionCommand("Move");
         
         String row = caves.getName().substring(0,1);
         String col = caves.getName().substring(1,2);
         GridPosition elementGrid = new GridPosition(Integer.parseInt(row), Integer.parseInt(col), gridPlace, null);
         this.panel.add(gridPlace);
         this.gridPositions.add(elementGrid);
-        
 
         this.panel.setVisible(true);
       }
@@ -225,93 +236,44 @@ public class TestView extends JFrame implements IView {
     
   }
 
-  /**
-   * setupGame uses the information from the controller to create a maze view
-   * for the game.
-   * 
-   * @param settings arraylist of configurations
-   */
-  public void setupGame(ArrayList<Integer> settings, ArrayList<String> mazeInfo)
-      throws IOException {
-    this.row = settings.get(0);
-    this.col = settings.get(1);
-    this.actualRow = this.row + this.row - 1;
-    this.actualCol = this.col + this.col - 1;
+  public void setClickedButton(Object clicked) { 
 
-    Icon cave = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cave.jpg");
-    Icon hallway = new ImageIcon(
-        "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cavePath.png");
-    String imSwitch = "Cave";
-    // place caves, hallways, walls.tunnels, wumpus, superbats
-
-    // PLACE CAVE
-    for (int i = 0; i < actualRow; i++) {
-      for (int y = 0; y < actualCol; y++) {
-         
-        JButton gridPlace = new JButton(cave);
-        gridPlace.setPreferredSize(new Dimension(120, 80));
-        gridPlace.setBackground(Color.CYAN);
-        gridPlace.setOpaque(true);
-        gridPlace.setVisible(true);
-        gridPlace.setActionCommand("Move");
-
-        GridPosition elementGrid = new GridPosition(i, y, gridPlace, null);
-        this.panel.add(gridPlace);
-        this.gridPositions.add(elementGrid);
-
-      }
-    }
-
-    // PLACE HALLWAYS
-    int count = 0;
-    for (int i = 0; i < actualRow; i++) {
-      for (int y = 0; y < actualCol; y++) {
-        if (imSwitch.equals("Cave")) {
-          this.gridPositions.get(count).getButton().setIcon(cave);
-          imSwitch = "Hallway";
-          count++;
-          continue;
-        }
-        if (imSwitch.equals("Hallway")) {
-          this.gridPositions.get(count).getButton().setIcon(hallway);
-          imSwitch = "Cave";
-          count++;
-          continue;
-        }
-      }
-
-    }
-    
-    this.panel.setLayout(new GridLayout(actualRow, actualCol));
-    this.panel.setVisible(true);
-    
-
-    this.setSize(actualCol * 100, actualRow * 100);
-    this.setVisible(true);
-  }
-
+//    this.clickedButton = (JButton) clicked; 
+//    this.clickedButton.
+//    ActionEvent event = new ActionEvent(this.clickedButton, ActionEvent.ACTION_PERFORMED, "Move");
+//    for (ActionListener listener : this.clickedButton.getActionListeners()) {
+//      listener.actionPerformed(event);
+//    }
+//    System.out.println(this.clickedButton);
+//    
+  
+ }
+  
   public void movePlayer(String playerPos, ArrayList<String> possibleMoves) {
-    // loops through data streucture of rooms, based on the
-    // checks if its current room is a valid room to reveal.
-    // actual names. from primary names
-    // with that determine north south east wwest coordinatres
-    // use players location
-    // label.setVisisble(true);
-    // if you can
-    int idx = 0;
-    for (int i = 0; i < this.row; i++) {
-      for (int y = 0; y < this.col; y++) {
-        if (this.gridPositions.get(idx).getRow() == i
-            && this.gridPositions.get(idx).getCol() == y) {
+    
+    System.out.println(this.clickedButton);
+    return;
 
-          if (playerPos.equals(Integer.toString(i) + Integer.toString(y))) {
-            this.gridPositions.get(idx).getButton().setVisible(false);
-          }
-        }
-
-        idx++;
-      }
-    }
+  }
+  
+  public void movePlayer2(String playerPos, ArrayList<String> possibleMoves) {
+ 
+    //System.out.println("In Move ");
+    //System.out.println(this.clickedButton);
+//    int idx = 0;
+//    for (int i = 0; i < this.row; i++) {
+//      for (int y = 0; y < this.col; y++) {
+//        if (this.gridPositions.get(idx).getRow() == i
+//            && this.gridPositions.get(idx).getCol() == y) {
+//
+//          if (playerPos.equals(Integer.toString(i) + Integer.toString(y))) {
+//            this.gridPositions.get(idx).getButton().setVisible(false);
+//          }
+//        }
+//
+//        idx++;
+//      }
+//    }
 
   }
 

@@ -1,11 +1,14 @@
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -21,28 +24,59 @@ public class GameView extends JFrame implements IView {
   private ArrayList<GridPosition> gridPositions;
   private int row, col, actualRow, actualCol;
 
+  private JPanel panel;
+
   /**
    * Constructor for view object.
    * 
    * @param caption of frame
    * @throws IOException
    */
-  public GameView(String caption) throws IOException {
+  public GameView(String caption, ControllerX controller) throws IOException {
     super(caption);
     this.gridPositions = new ArrayList<GridPosition>();
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.panel = new JPanel();
+    this.add(panel);
+    JScrollPane scrollPane = new JScrollPane(this.panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    this.add(scrollPane);
+    
+    this.setLocation(500, 500);
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+  
     pack();
 
+  }
+  
+  @Override
+  public void setFeatures(Features f) {
+   
   }
 
   @Override
   public void display() {
-    setVisible(true);
-  }
+    //Icon cave = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cave.jpg");
+    BufferedImage player, cave;
+    try {
+      player = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/player.png"));
+      cave = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cave.jpg"));
+      Graphics2D g = cave.createGraphics();
+      g.drawImage(cave, 0, 0, null);
+      g.drawImage(player, 50, 30, null);
+      JLabel label = new JLabel(new ImageIcon(cave));
+     
 
-  @Override
-  public void setDisp(String s) {
-    display.setText(s);
+      this.panel.add(label);
+      this.add(panel);
+      this.setVisible(true);
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    
+    
+    
   }
 
   @Override
@@ -50,82 +84,44 @@ public class GameView extends JFrame implements IView {
     for (int i = 0; i < this.row * this.col; i++) {
       this.gridPositions.get(i).getButton().addActionListener(clicks);
     }
-
   }
-
-
-  public void startGame() {
-    // this.add(comp)
-  }
-
-  /**
-   * setupGame uses the information from the controller to create a maze view
-   * for the game.
-   * 
-   * @param settings arraylist of configurations
-   */
-  public void setupGame(ArrayList<Integer> settings, ArrayList<String> mazeInfo)
-      throws IOException {
-    this.row = settings.get(0);
-    this.col = settings.get(1);
-    this.actualRow = this.row + this.row - 1;
-    this.actualCol = this.col + this.col - 1;
-
-    Icon cave = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/circle-cropped.png");
+  
+  public void buildMaze(int mazeRow, int mazeCol, Cave[] allCaves) {
+    Icon cave = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cave.jpg");
     Icon hallway = new ImageIcon(
         "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cavePath.png");
-    String imSwitch = "Cave";
-    // place caves, hallways, walls.tunnels, wumpus, superbats
+    Icon wumpus = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/wumpus.png");
+    Icon bat = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/superbat.png");
+    Icon pit = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/slime-pit.png");
+    Icon player = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/player.png");
 
-    // PLACE CAVE
-    for (int i = 0; i < actualRow; i++) {
-      for (int y = 0; y < actualCol; y++) {
-         
-        JButton gridPlace = new JButton(cave);
-        gridPlace.setVisible(true);
-        gridPlace.setActionCommand("Move");
-
-        GridPosition elementGrid = new GridPosition(i, y, gridPlace);
-        this.add(gridPlace);
-        this.gridPositions.add(elementGrid);
+    this.row = mazeRow; 
+    this.col = mazeCol;
+    this.panel.setLayout(new GridLayout(mazeRow, mazeCol));
+    
+   
+    for (Cave caves : allCaves) { 
+      if (caves.getSecondaryName().equals("tunnel")) { 
+        JLabel hall = new JLabel(hallway);
+        hall.setPreferredSize(new Dimension(120, 80));
+        this.panel.add(hall);
 
       }
-    }
-
-    // PLACE HALLWAYS
-    // for (int i = 1; i < this.actualRow * this.actualCol; i++) {
-    int count = 0;
-    for (int i = 0; i < actualRow; i++) {
-      for (int y = 0; y < actualCol; y++) {
-        if (imSwitch.equals("Cave")) {
-          this.gridPositions.get(count).getButton().setIcon(cave);
-          imSwitch = "Hallway";
-          count++;
-          continue;
-        }
-        if (imSwitch.equals("Hallway")) {
-          this.gridPositions.get(count).getButton().setIcon(hallway);
-          imSwitch = "Cave";
-          count++;
-          continue;
-        }
+      else { 
+        JLabel room = new JLabel(cave);
+        room.setPreferredSize(new Dimension(120, 80));
+        this.panel.add(room);
       }
-
+      
     }
 
-    this.setLayout(new GridLayout(actualRow, actualCol));
-    this.setSize(actualCol * 100, actualRow * 100);
+    this.panel.setVisible(true);
+    this.setSize(mazeCol * 130, mazeRow * 130);
     this.setVisible(true);
+    
   }
 
   public void movePlayer(String playerPos, ArrayList<String> possibleMoves) {
-    // loops through data streucture of rooms, based on the
-    // checks if its current room is a valid room to reveal.
-    // actual names. from primary names
-    // with that determine north south east wwest coordinatres
-    // use players location
-    // label.setVisisble(true);
-    // if you can
     int idx = 0;
     for (int i = 0; i < this.row; i++) {
       for (int y = 0; y < this.col; y++) {
@@ -149,15 +145,12 @@ public class GameView extends JFrame implements IView {
 
   }
 
-  public Boolean playable(int row, int col, ArrayList<String> direc) {
-    System.out.println("EHEE");
-    return true;
-  }
 
   @Override
   public ArrayList<Integer> getGameConfig() {
     // TODO Auto-generated method stub
     return null;
   }
+
 
 }

@@ -2,18 +2,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+
 /**
  * The interface for the view class. 
  */
 public interface IView {
   
   /**
-   * Set the label that is showing what the model stores.
+   * Get the set of feature callbacks that the view can use.
    * 
-   * @param s the value for the label
+   * @param f the set of feature callbacks as a Features object
    */
-  void setDisp(String s);
-
+  void setFeatures(Features f);
+  
   /**
    * Set the listener for any actions.
    * 

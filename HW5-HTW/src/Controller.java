@@ -55,12 +55,9 @@ public class Controller implements ActionListener, KeyListener {
     this.configView = configView;
     this.gameView = gameView;
 
-   
-
     this.introView.display();
     this.introView.setListener(this, this);
     this.howToPlayView.setListener(this, this);
-    this.testView.setListener(this, this);
   }
 
   @Override
@@ -80,9 +77,6 @@ public class Controller implements ActionListener, KeyListener {
       
     case "Setup":
       this.introView.close();
-      //this.configView.setListener(this, this);
-      //this.configView.display();
-      //ArrayList<Integer> gameConfig = ((ConfigView) this.configView).getGameConfig();
       ArrayList<Integer> gameConfig = new ArrayList<Integer>();
       gameConfig.add(5);
       gameConfig.add(5);
@@ -93,43 +87,46 @@ public class Controller implements ActionListener, KeyListener {
       gameConfig.add(1); 
       this.model.developMaze(gameConfig.get(0), gameConfig.get(1), gameConfig.get(2),
                              gameConfig.get(3), gameConfig.get(4), gameConfig.get(5), gameConfig.get(6));
+      
       ArrayList<String> possibleStarts = htwLocations();
       Random ran = new Random();
       int loc = ran.nextInt(possibleStarts.size());
       String chosen = possibleStarts.get(loc);
       setLocation(Integer.parseInt(chosen));
       ((TestView) this.testView).buildMaze(5, 5, this.model.getStructure());
+      this.testView.setListener(this, this);
       
       break;
 
       
-    case "Play":
-      //ArrayList<Integer> config = ((ConfigView) this.configView).getGameConfig();
-      ArrayList<String> viewDetails = new ArrayList<String>();
-      //this.configView.close();
-      ArrayList<Integer> config = new ArrayList<Integer>();
-      config.add(5);
-      config.add(5);
-      config.add(5);
-      config.add(5);
-      config.add(5);
-      config.add(5);
-      System.out.println("EE");
-      try {
-        ((TestView) this.testView).setupGame(config, viewDetails);
-        this.testView.setListener(this, this);
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
-
-      break;
+//    case "Play":
+//      //ArrayList<Integer> config = ((ConfigView) this.configView).getGameConfig();
+//      ArrayList<String> viewDetails = new ArrayList<String>();
+//      //this.configView.close();
+//      ArrayList<Integer> config = new ArrayList<Integer>();
+//      config.add(5);
+//      config.add(5);
+//      config.add(5);
+//      config.add(5);
+//      config.add(5);
+//      config.add(5);
+//      System.out.println("EE");
+//      try {
+//        ((TestView) this.testView).setupGame(config, viewDetails);
+//        this.testView.setListener(this, this);
+//      } catch (IOException e1) {
+//        e1.printStackTrace();
+//      }
+//
+//      break;
 
     case "Move":
-      ArrayList<String> possibleMoves = new ArrayList<String>();// this.model.playerMoves();
-      String playerPosition = null; // this.model.playerPosition();
+      String playerPosition = this.model.playerPosition();
+      ArrayList<String> possibleMoves = this.model.playerMoves();
       
-      playerPosition = poss.get(i);
-      this.i++;
+      System.out.println(possibleMoves);
+      System.out.println(playerPosition);
+
       ((TestView) this.testView).movePlayer(playerPosition, possibleMoves);
       /** Axctual **/
       // ArrayList<Integer> config = view.getGameConfig();
@@ -137,20 +134,20 @@ public class Controller implements ActionListener, KeyListener {
       break;
  
 
-    case "Restart":
-      // pass everything to model
-      // model returns details
-      // pass to view to create
-      ArrayList<Integer> settings = this.testView.getGameConfig();
-      ArrayList<String> viewDs = new ArrayList<String>();
-      this.testView.close();
-      try {
-        ((TestView) this.testView).setupGame(settings, viewDs);
-        this.testView.setListener(this, this);
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
-      break;
+//    case "Restart":
+//      // pass everything to model
+//      // model returns details
+//      // pass to view to create
+//      ArrayList<Integer> settings = this.testView.getGameConfig();
+//      ArrayList<String> viewDs = new ArrayList<String>();
+//      this.testView.close();
+//      try {
+//        ((TestView) this.testView).setupGame(settings, viewDs);
+//        this.testView.setListener(this, this);
+//      } catch (IOException e1) {
+//        e1.printStackTrace();
+//      }
+//      break;
 
     default:
       throw new IllegalStateException("Error: unknown button");

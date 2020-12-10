@@ -39,18 +39,26 @@ public class Driver {
 
     //StringBuilder log = new StringBuilder();
     //Model mockModel = new MockModel(log, "Hello");
-    IView iView = new IntroView("Welcome to Hunt the Wumpus.");
-    IView hView = new HowToPlayView("How to play: Hunt the Wumpus.");
-    IView cView = new ConfigView("Hunt The Wumpus-Setup");
-    IView gView = new GameView("Hunt The Wumpus-Game");
+    
+    
+    
+    
 
     // View for config
     // Controller for config, create new model object
     // everything in one controller, takes in two views
 
-    Controller control = new Controller(reader, System.out, model, iView, hView, cView, gView);
+    ControllerX control = new ControllerX(reader, System.out, model);
+    
+    IView iView = new IntroView("Welcome to Hunt the Wumpus.", control);
+    IView hView = new HowToPlayView("How to play: Hunt the Wumpus.", control);
+    IView cView = new ConfigView("Hunt The Wumpus-Setup", control);
+    IView gView = new GameView("Hunt The Wumpus-Game", control);
 
-    //control.start();
+    control.setIntroView(iView);
+    control.setHTPView(hView);
+    control.setConfigView(cView);
+    control.setGameView(gView);
   }
 
 }
