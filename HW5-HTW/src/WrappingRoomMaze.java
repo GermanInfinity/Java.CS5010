@@ -123,5 +123,9 @@ public class WrappingRoomMaze extends MazeImpl {
     return this.array;
   }
 
+  @Override 
+  public ArrayList<String> getWalls() { 
+    return this.walls;
+  }
 
 }

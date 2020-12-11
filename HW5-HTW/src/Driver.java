@@ -54,11 +54,15 @@ public class Driver {
     IView hView = new HowToPlayView("How to play: Hunt the Wumpus.", control);
     IView cView = new ConfigView("Hunt The Wumpus-Setup", control);
     IView gView = new GameView("Hunt The Wumpus-Game", control);
+    IView mView = new MenuView("Hunt The Wumpus-Menu", control);
+    IView fmView = new FullMenuView("Hunt The Wumpus-Full Menu", control);
 
     control.setIntroView(iView);
     control.setHTPView(hView);
     control.setConfigView(cView);
     control.setGameView(gView);
+    control.setMenuView(mView);
+    control.setFullMenuView(fmView);
   }
 
 }

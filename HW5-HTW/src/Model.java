@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Model interface represents all the signature methods of this maze game.
@@ -39,7 +40,7 @@ public interface Model {
   /**
    * getStructure returns structure of maze.
    */
-  public Cave[] getStructure();
+  public Map<String, Object> getStructure();
 
   /**
    * Finds the possible moves the player can make from their location.

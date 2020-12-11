@@ -33,6 +33,26 @@ public interface Features {
   void openConfig();
   
   /**
+   * Opens game menu.
+   */
+  void openMenu(String difficulty);
+  
+  /**
+   * Opens full game menu.
+   */
+  void openFullMenu();
+  
+  /** 
+   * closeMenu closes the menu.
+   */
+  void closeMenu();
+  
+  /**
+   * closeFullMenu closes full menu.
+   */
+  void closeFullMenu();
+  
+  /**
    * Goes back to intro from config screen.  
    */
   void backToIntro();
@@ -40,7 +60,7 @@ public interface Features {
   /**
    * startGame starts the hunt the wumpus game.
    */
-  void startGame(String difficulty);
+  void startGame(String difficulty, Boolean gameOn);
   
   /**
    * running determines if the game is running.
@@ -107,6 +127,11 @@ public interface Features {
    * Exit the program.
    */
   void exitProgram();
+
+
+  
+
+  
 
 }
 

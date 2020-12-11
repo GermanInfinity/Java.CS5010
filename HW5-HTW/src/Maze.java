@@ -20,6 +20,11 @@ public interface Maze {
    * getCaves returns all the caves in the maze.
    */
   Cave[] getCaves();
+  
+  /**
+   * getWalls returns all the walls in the maze.
+   */
+  ArrayList<String> getWalls();
 
   /**
    * updatePlayerPosition updates Cave to reflect position of player.

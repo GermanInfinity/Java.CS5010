@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HTW class is the entry point model for the dungeon and player class. This
@@ -50,11 +52,16 @@ public class HTW implements Model {
   }
   
   /**
-   * getStructure returns structure of model.
+   * getStructure returns structure of caves and walls.
    */
-  public Cave[] getStructure() { 
-    return this.home.getCaves();
+  public Map<String, Object> getStructure() { 
+    Map<String, Object> info = new HashMap<String, Object>();
+    info.put("caves", this.home.getCaves());
+    info.put("walls", this.home.getWalls());
+    System.out.println(info);
+    return info;
   }
+  
   
   /**
    * Sets up the dungeon per specified game configurations.

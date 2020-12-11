@@ -16,6 +16,7 @@ public class Dungeon {
   private int batNo;
   private int numArrows;
   private Cave[] caves;
+  private ArrayList<String> walls;
 
   private Maze maze;
   private Wumpus wumpus;
@@ -65,6 +66,7 @@ public class Dungeon {
       this.maze = new WrappingRoomMaze(row, col, remainingWalls);
     }
     this.caves = this.maze.getCaves();
+    this.walls = this.maze.getWalls();
 
     
     // Start with random position, after placing npc's place player last.
@@ -196,7 +198,6 @@ public class Dungeon {
     return response;
   }
 
-  
 
   /**
    * All possible locations characters could inhabit in maze.
@@ -279,6 +280,13 @@ public class Dungeon {
    */
   public Cave[] getCaves() {
     return this.caves;
+  }
+  
+  /**
+   * getWalls returns walls in maze.
+   */
+  public ArrayList<String> getWalls() { 
+    return this.walls;
   }
   
   /**

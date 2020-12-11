@@ -117,5 +117,10 @@ public class RoomMaze extends MazeImpl {
   public Cave[] getCaves() {
     return this.array;
   }
+  
+  @Override 
+  public ArrayList<String> getWalls() { 
+    return this.walls;
+  }
 
 }

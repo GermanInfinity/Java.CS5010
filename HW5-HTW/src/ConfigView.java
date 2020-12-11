@@ -65,7 +65,7 @@ public class ConfigView extends JFrame implements IView {
     easy.addActionListener(easyListener);
     
     medium = new JButton("Medium");
-    medium.setBackground(Color.BLUE);
+    medium.setBackground(Color.CYAN);
     medium.setOpaque(true);
     ActionListener mediumListener = new ActionListener() {
       @Override
@@ -97,7 +97,7 @@ public class ConfigView extends JFrame implements IView {
 
   @Override
   public void setFeatures(Features f) {
-    this.start.addActionListener(l -> f.startGame(this.difficulty)); 
+    this.start.addActionListener(l -> f.startGame(this.difficulty, false)); 
     this.goBack.addActionListener(l -> f.backToIntro()); 
   }
   
@@ -138,6 +138,7 @@ public class ConfigView extends JFrame implements IView {
     this.panel.add(start, gbc);
     gbc.gridx = 4;
     gbc.gridy = 7;
+    
     this.panel.add(goBack, gbc);
     this.panel.setOpaque(true);
     this.panel.setVisible(true);
