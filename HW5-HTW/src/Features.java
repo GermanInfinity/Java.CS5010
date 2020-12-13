@@ -35,7 +35,7 @@ public interface Features {
   /**
    * Opens game menu.
    */
-  void openMenu(String difficulty);
+  void openMenu(ArrayList<Integer> inf);
   
   /**
    * Opens full game menu.
@@ -46,6 +46,11 @@ public interface Features {
    * closeMenu closes the menu.
    */
   void closeMenu();
+  
+  /**
+   * vloses game and opens intro screen. 
+   */
+  void closeGame();
   
   /**
    * closeFullMenu closes full menu.
@@ -60,7 +65,7 @@ public interface Features {
   /**
    * startGame starts the hunt the wumpus game.
    */
-  void startGame(String difficulty, Boolean gameOn);
+  void startGame(ArrayList<Integer> info, Boolean gameOn, Boolean s);
   
   /**
    * running determines if the game is running.
@@ -75,7 +80,7 @@ public interface Features {
   /**
    * playerLocations returns location of players.
    */
-  String playerLocation();
+  String playerLocation(int p);
    
 
   /**
@@ -105,12 +110,12 @@ public interface Features {
   /**
    * playerMoves returns player possible moves.
    */
-  ArrayList<String> playerMoves();
+  ArrayList<String> playerMoves(int p);
 
   /**
    * movePlayer moves player in maze.
    */
-  String movePlayer(int posMove, ArrayList<String> moves);
+  String movePlayer(int posMove, ArrayList<String> moves, int p);
   
   /**
    * shoot function controls the player in the maze to shoot an arrow.
@@ -127,6 +132,8 @@ public interface Features {
    * Exit the program.
    */
   void exitProgram();
+  
+  
 
 
   

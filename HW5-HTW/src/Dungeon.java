@@ -31,7 +31,7 @@ public class Dungeon {
    * @param remainingWalls in dungeon
    */
   public Dungeon(int row, int col, int numArrows, String mazeTypeIn, int remainingWalls, int pitNo,
-      int batNo) {
+      int batNo, Boolean seed) {
     // TODO Auto-generated constructor stub
 
     if (pitNo > row * col || pitNo < 0) {
@@ -59,11 +59,11 @@ public class Dungeon {
 
     
     if (mazeType.equals("room")) {
-      this.maze = new RoomMaze(row, col, remainingWalls);
+      this.maze = new RoomMaze(row, col, seed, remainingWalls);
     }
 
     if (mazeType.equals("wrapping room")) {
-      this.maze = new WrappingRoomMaze(row, col, remainingWalls);
+      this.maze = new WrappingRoomMaze(row, col, seed, remainingWalls);
     }
     this.caves = this.maze.getCaves();
     this.walls = this.maze.getWalls();
@@ -71,9 +71,9 @@ public class Dungeon {
     
     // Start with random position, after placing npc's place player last.
     wumpus = new Wumpus("Gretchen");
-    placeWumpus();
-    placePits();
-    placeSuperBats();
+    //placeWumpus();
+    //placePits();
+    //placeSuperBats();
     
 
   }
@@ -93,10 +93,47 @@ public class Dungeon {
         char playerCol = name.charAt(1);
         int playerRowNum = java.lang.Character.getNumericValue(playerRow);
         int playerColNum = java.lang.Character.getNumericValue(playerCol);
+        
         this.maze.updatePlayerPosition(this.maze.getCaves(), this.row, this.col, playerRowNum,
             playerColNum);
       }
     }
+  }
+  
+  /**
+   * startAt starts the player at the specified location.
+   * @param location to start player in
+   */
+  public void startAt2(int location, int locationB) {
+    int playerRowNum = 0; 
+    int playerRowNum2 = 0;
+    int playerColNum = 0;
+    int playerColNum2 = 0;
+    for (int i = 0; i < this.caves.length; i++) {
+      if (this.caves[i].getSecondaryName().equals("tunnel")) {
+        continue;
+      }
+      if (Integer.parseInt(this.caves[i].getSecondaryName()) == location) {
+        String name = this.caves[i].getName();
+        char playerRow = name.charAt(0);
+        char playerCol = name.charAt(1);
+        playerRowNum = java.lang.Character.getNumericValue(playerRow);
+        playerColNum = java.lang.Character.getNumericValue(playerCol);  
+      }
+      if (Integer.parseInt(this.caves[i].getSecondaryName()) == locationB) {
+        String name = this.caves[i].getName();
+        char playerRow = name.charAt(0);
+        char playerCol = name.charAt(1);
+        playerRowNum2 = java.lang.Character.getNumericValue(playerRow);
+        playerColNum2 = java.lang.Character.getNumericValue(playerCol);  
+      }
+    }
+    System.out.println("SANITY CHECK:" + playerRowNum);
+    System.out.println("SANITY CHECK:" + playerColNum);
+    System.out.println("SANITY CHECK:" + playerRowNum2);
+    System.out.println("SANITY CHECK:" + playerColNum2);
+    this.maze.updatePlayerPosition2(this.maze.getCaves(), this.row, this.col, playerRowNum,
+        playerColNum, playerRowNum2, playerColNum2);
   }
 
   /**
@@ -299,22 +336,31 @@ public class Dungeon {
   /**
    * getLocation returns players current location.
    */
-  public String playerLocation() {
-    return this.maze.findPlayerPosition();
+  public String playerLocation(int p) {
+    return this.maze.findPlayerPosition(p);
   }
   
   /**
    * getPosition returns players current position i.e 00, 10, 02.
    */
-  public String playerPosition() {
-    return this.maze.findPlayer();
+  public String playerPosition(int p) {
+    return this.maze.findPlayer(p);
   }
+  
+  /**
+   * Two player mode
+   * getPosition returns players current position i.e 00, 10, 02.
+   */
+//  public String playerPosition2(int p) {
+//    return this.maze.findPlayer(p);
+//  }
+//  
 
   /**
    * getMoves determines moves for player.
    */
-  public ArrayList<String> getMoves() {
-    return this.maze.getMoves();
+  public ArrayList<String> getMoves(int p) {
+    return this.maze.getMoves(p);
   }
 
   /**
@@ -323,8 +369,8 @@ public class Dungeon {
    * @param move move the pkayer made.
    * @param moves moves available to make.
    */
-  public void makeMove(String move, ArrayList<String> moves) {
-    this.caves = this.maze.makeMove(move, moves, caves);
+  public void makeMove(String move, ArrayList<String> moves, int pTurn) {
+    this.caves = this.maze.makeMove(move, moves, caves, pTurn);
   }
 
   @Override

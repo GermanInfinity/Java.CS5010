@@ -31,7 +31,7 @@ public class RoomMaze extends MazeImpl {
    * @param col size of columns in maze
    * @param remainingWallsarg specifies the walls to remain in the maze
    */
-  public RoomMaze(int row, int col, int remainingWallsarg) {
+  public RoomMaze(int row, int col, Boolean seed, int remainingWallsarg) {
     if (row < 0 || col < 0) {
       throw new IllegalArgumentException("No negative values.");
     }
@@ -59,7 +59,7 @@ public class RoomMaze extends MazeImpl {
     }
 
     this.mazeType = "room";
-    buildMaze(this.walls, removedWalls, sets, this.mazeType, this.row, this.col, remainingWalls);
+    buildMaze(this.walls, removedWalls, sets, this.mazeType, this.row, this.col, remainingWalls, seed);
 
     doors = doorCount(this.array, row, col, this.walls);
     neighbours = makeNeighbours(this.array, row, col, this.walls);
@@ -69,13 +69,13 @@ public class RoomMaze extends MazeImpl {
   }
 
   @Override
-  public String findPlayerPosition() {
-    return playerPosition(this.array, this.row, this.col);
+  public String findPlayerPosition(int pNum) {
+    return playerPosition(pNum, this.array, this.row, this.col);
   }
 
   @Override
-  public String findPlayer() {
-    return playerLocation(this.array, this.row, this.col);
+  public String findPlayer(int pNum) {
+    return playerLocation(pNum, this.array, this.row, this.col);
   }
 
   @Override
@@ -84,17 +84,17 @@ public class RoomMaze extends MazeImpl {
   }
 
   @Override
-  public Cave[] makeMove(String move, ArrayList<String> moves, Cave[] array2) {
+  public Cave[] makeMove(String move, ArrayList<String> moves, Cave[] array2, int p) {
     if (!moves.contains(move)) {
       throw new IllegalArgumentException("Please play a possible move next time.");
     }
-    return playerMove(this.row, this.col, this.mazeType, array2, move);
+    return playerMove(this.row, this.col, this.mazeType, array2, move, p);
   }
 
   @Override
-  public ArrayList<String> getMoves() {
+  public ArrayList<String> getMoves(int p) {
     ArrayList<String> moves = possibleMoves(this.mazeType, this.array, this.walls,
-        this.possibleMoves, this.row, this.col);
+        this.possibleMoves, this.row, this.col, p);
     this.possibleMoves = new ArrayList<String>();
     return moves;
   }
@@ -122,5 +122,7 @@ public class RoomMaze extends MazeImpl {
   public ArrayList<String> getWalls() { 
     return this.walls;
   }
+
+
 
 }

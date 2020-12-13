@@ -32,7 +32,7 @@ public class WrappingRoomMaze extends MazeImpl {
    * @param col size of columns in maze
    * @param remainingWallsarg specifies the walls to remain in the maze
    */
-  public WrappingRoomMaze(int row, int col, int remainingWallsarg) {
+  public WrappingRoomMaze(int row, int col, Boolean s, int remainingWallsarg) {
     if (row < 0 || col < 0) {
       throw new IllegalArgumentException("No negative values.");
     }
@@ -62,7 +62,7 @@ public class WrappingRoomMaze extends MazeImpl {
 
     this.mazeType = "Wrapping room";
     String primaryMazeType = "wrapping room";
-    buildMaze(this.walls, removedWalls, sets, primaryMazeType, this.row, this.col, remainingWalls);
+    buildMaze(this.walls, removedWalls, sets, primaryMazeType, this.row, this.col, remainingWalls, s);
 
     doors = doorCount(this.array, row, col, this.walls);
     neighbours = makeNeighbours(this.array, row, col, this.walls);

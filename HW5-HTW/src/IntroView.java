@@ -32,7 +32,7 @@ public class IntroView extends JFrame implements IView {
    * @param caption of frame
    * @throws IOException
    */
-  public IntroView(String caption, ControllerX controller) throws IOException {
+  public IntroView(String caption, ControllerX controller) {
     super(caption);
     this.panel = new JPanel();
     

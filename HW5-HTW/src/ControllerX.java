@@ -78,8 +78,8 @@ public class ControllerX implements Features {
   /**
    * openMenu opens the menu.
    */
-  public void openMenu(String difficulty) {
-    ((MenuView) this.menuView).getInput(difficulty);
+  public void openMenu(ArrayList<Integer> info) {
+    ((MenuView) this.menuView).getInput(info);
     this.menuView.display();
   }
   
@@ -96,6 +96,14 @@ public class ControllerX implements Features {
    */
   public void closeMenu() {
     this.menuView.close();
+  }
+  
+  /**
+   * closeGame closes the game.
+   */
+  public void closeGame() {
+    this.gameView.close();
+    this.introView.display();
   }
   
   /**
@@ -153,38 +161,78 @@ public class ControllerX implements Features {
     this.fullMenuView.setFeatures(this);
   }
 
+  public void restartGame() { 
+    
+  }
   /**
    * startGame starts hun the wumpus game.
    */
-  public void startGame(String difficulty, Boolean gameOn) {
-   //this.gameView.display();
+  public void startGame(ArrayList<Integer> info, Boolean gameOn, Boolean seed) {
+    
+    int playerNum = info.get(0);
+    int rows = info.get(1);
+    int col =  info.get(2);
+    int walls =  info.get(3);
+    int type = info.get(4);
+    int pits =  info.get(5);
+    int bats = info.get(6);
+    int arrows = info.get(7);
+
+    
+    // First game
     if (!gameOn) {
       this.configView.close();
-      // this.gameView.display();
-      if (difficulty.equals("Easy")) {
-        this.model.developMaze(4, 4, 6, 1, 1, 1, 1);
-      }
+
+      this.model.developMaze(playerNum, rows, col, walls, type, pits, bats, arrows, false);
       ArrayList<String> possibleStarts = htwLocations();
 
-      Random ran = new Random();
-      int loc = ran.nextInt(possibleStarts.size());
-      String chosen = possibleStarts.get(loc);
-      setLocation(Integer.parseInt(chosen));
+      Random ran = new Random(7);
+      if (playerNum == 1) {
+        int loc = ran.nextInt(possibleStarts.size());
+        System.out.println("1 player mode.");
+        String chosen = possibleStarts.get(loc);
+        System.out.println(chosen);
+        setLocation(Integer.parseInt(chosen));
+        System.out.println(this.model.playerPosition(1));
+
+      }
+      if (playerNum == 2) {
+        System.out.println("2 player mode.");
+        
+        int loc = ran.nextInt(possibleStarts.size());
+        String chosen = possibleStarts.get(loc);
+        System.out.println("Chosen location " + chosen);
+
+           
+        int loc2 = ran.nextInt(possibleStarts.size());
+        String chosen1 = possibleStarts.get(loc2);
+        System.out.println("Chosen location " + chosen1);
+
+        
+        setLocation2(Integer.parseInt(chosen), Integer.parseInt(chosen1));
+        System.out.println("Player 1 location: " + playerLocation(0));
+        System.out.println("Player 1 position: " + playerRowCol(0));
+        
+        System.out.println("Player 2 location: " + playerLocation(1));
+        System.out.println("Player 2 position: " + playerRowCol(1));
+
+      }
+      
 
       try {
-        ((GameView) this.gameView).receiveConfig("Easy");
-        ((GameView) this.gameView).buildMaze(4, 4, "room", this.model.getStructure());
+        ((GameView) this.gameView).receiveConfig(info);
+        ((GameView) this.gameView).buildMaze(this.model.getStructure());
       } catch (IOException e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
       }
     }
+    
+    // Game already on.
     else { 
       this.gameView.close();
       this.menuView.close();
       
-      if (difficulty.equals("Easy")) {
-        this.model.developMaze(4, 4, 6, 1, 1, 1, 1);
-      }
+      this.model.developMaze(playerNum, rows, col, walls, type, pits, bats, arrows, seed);
       ArrayList<String> possibleStarts = htwLocations();
 
       Random ran = new Random();
@@ -193,8 +241,9 @@ public class ControllerX implements Features {
       setLocation(Integer.parseInt(chosen));
 
       try {
-        ((GameView) this.gameView).receiveConfig("Easy");
-        ((GameView) this.gameView).buildMaze(4, 4, "room", this.model.getStructure());
+
+        ((GameView) this.gameView).receiveConfig(info);
+        ((GameView) this.gameView).buildMaze(this.model.getStructure());
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -219,15 +268,15 @@ public class ControllerX implements Features {
   /**
    * playerLocations returns location of players.
    */
-  public String playerLocation() {
-    return this.model.playerLocation();
+  public String playerLocation(int p) {
+    return this.model.playerLocation(p);
   }
 
   /**
    * returns position of player.
    */
-  public String playerRowCol() { 
-    return this.model.playerPosition();
+  public String playerRowCol(int p) { 
+    return this.model.playerPosition(p);
   }
   /**
    * action performs operation depending on players maze position.
@@ -238,12 +287,21 @@ public class ControllerX implements Features {
   }
 
   /**
-   * setLocation sets location in maze of player.
+   * setLocation places player in location of maze.
    * 
    * @param location for player to be placed
    */
   public void setLocation(int location) {
     this.model.placePlayer(location);
+  }
+  
+  /**
+   * setLocation2 places 2 players in location of maze.
+   * 
+   * @param location for player to be placed
+   */
+  public void setLocation2(int locationA, int locationB) {
+    this.model.placePlayer2(locationA, locationB);
   }
 
   /**
@@ -259,7 +317,7 @@ public class ControllerX implements Features {
   public void move() throws IOException {
     Scanner scan = new Scanner(this.in);
 
-    ArrayList<String> moves = playerMoves();
+    ArrayList<String> moves = playerMoves(3);
     this.out.append("Tunnels lead to " + moves + "\n");
 
     this.out.append("Where to? \n");
@@ -267,7 +325,7 @@ public class ControllerX implements Features {
         + " (3) East, (4) West: ");
 
     int posMove = scan.nextInt();
-    this.out.append(movePlayer(posMove, moves));
+    this.out.append(movePlayer(posMove, moves, 3));
     this.out.append("\n");
 
   }
@@ -275,15 +333,15 @@ public class ControllerX implements Features {
   /**
    * playerMoves returns player possible moves.
    */
-  public ArrayList<String> playerMoves() {
-    return this.model.playerMoves();
+  public ArrayList<String> playerMoves(int p) {
+    return this.model.playerMoves(p);
   }
 
   /**
    * movePlayer moves player in maze.
    */
-  public String movePlayer(int posMove, ArrayList<String> moves) {
-    return this.model.movePlayer(posMove, moves);
+  public String movePlayer(int posMove, ArrayList<String> moves, int p) {
+    return this.model.movePlayer(posMove, moves, p);
   }
 
   /**
@@ -312,5 +370,7 @@ public class ControllerX implements Features {
     // TODO Auto-generated method stub
 
   }
+
+
 
 }

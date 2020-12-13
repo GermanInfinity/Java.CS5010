@@ -26,15 +26,9 @@ public class HowToPlayView extends JFrame implements IView {
    * @param caption of frame
    * @throws IOException 
    */
-  public HowToPlayView(String caption, ControllerX control) throws IOException {
+  public HowToPlayView(String caption, ControllerX control) {
     super(caption);
-    this.panel = new JPanel();
     
-    this.setLocation(500, 500);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
-    BoxLayout box = new BoxLayout(this.panel, BoxLayout.Y_AXIS);
-    this.panel.setLayout(box);
     
     this.exitButton = new JButton("Exit");
    
@@ -54,7 +48,13 @@ public class HowToPlayView extends JFrame implements IView {
 
   @Override
   public void display() {
+    this.panel = new JPanel();
     
+    this.setLocation(500, 500);
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+    BoxLayout box = new BoxLayout(this.panel, BoxLayout.Y_AXIS);
+    this.panel.setLayout(box);
     image = new JLabel(
         new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/HTWgif2.gif"));
 
@@ -130,8 +130,11 @@ public class HowToPlayView extends JFrame implements IView {
 
   @Override
   public void close() {
-    this.dispose();
+    //this.dispose();
     
+    this.getContentPane().removeAll();
+    this.repaint();
+    this.dispose();
   }
 
   

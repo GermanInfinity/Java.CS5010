@@ -3,33 +3,29 @@ import java.awt.Color;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 public class ConfigView extends JFrame implements IView {
   private static final long serialVersionUID = -7083924619099998893L;
 
-  private JLabel display, image, image2, label;
+  private JLabel display, players, image;
   private String difficulty;
+  private int playerNum;
   private GridBagConstraints gbc;
   private JPanel panel;
-  private JButton start, easy, medium, realistic, goBack;
-  private JTextField inputRow, inputCol, inputRem, inputType, inputPits, inputSB;
+  private JButton start, easy, medium, realistic, goBack, one, two;
+  private ArrayList<Integer> info;
   
   /**
    * Constructor for view object. 
@@ -43,19 +39,25 @@ public class ConfigView extends JFrame implements IView {
     
     this.setLocation(500, 500);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.info = new ArrayList<Integer>();
 
     GridBagLayout layout = new GridBagLayout();
     this.panel.setLayout(layout);
     this.gbc = new GridBagConstraints(); 
+    
+    // Default settings
     this.difficulty = "Easy";
+    this.playerNum = 1;
     
     // Buttons
     start = new JButton("START!");
- 
+    start.setForeground(Color.PINK);
+    
     goBack = new JButton("Go Back");
     easy = new JButton("Easy");
-    easy.setBackground(Color.GREEN);
-    easy.setOpaque(true);
+    easy.setForeground(Color.GREEN);
+    //easy.setOpaque(true);
+    
     ActionListener easyListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
@@ -65,8 +67,8 @@ public class ConfigView extends JFrame implements IView {
     easy.addActionListener(easyListener);
     
     medium = new JButton("Medium");
-    medium.setBackground(Color.CYAN);
-    medium.setOpaque(true);
+    medium.setForeground(Color.CYAN);
+    //medium.setOpaque(true);
     ActionListener mediumListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
@@ -76,15 +78,33 @@ public class ConfigView extends JFrame implements IView {
     medium.addActionListener(mediumListener);
     
     realistic = new JButton("Realistic");
-    realistic.setBackground(Color.RED);
-    realistic.setOpaque(true);
+    realistic.setForeground(Color.RED);
+    //realistic.setOpaque(true);
     ActionListener realListener = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent actionEvent) {
-          setDifficulty("Medium");
+          setDifficulty("Hard");
       }
     };
     realistic.addActionListener(realListener);
+   
+    one = new JButton("1 player");
+    ActionListener oneListener = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+          setNoPlayers(1);
+      }
+    };
+    one.addActionListener(oneListener);
+    
+    two = new JButton("2 players");
+    ActionListener twoListener = new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+          setNoPlayers(2);
+      }
+    };
+    two.addActionListener(twoListener);
     
     
     pack();
@@ -94,10 +114,52 @@ public class ConfigView extends JFrame implements IView {
   public void setDifficulty(String difficulty){
     this.difficulty = difficulty;
   }
+  
+  public void setNoPlayers(int playerNo){
+    this.playerNum = playerNo;
+  }
+  
+  public ArrayList<Integer> mazeInfo() { 
+    if (this.difficulty.equals("Easy")) { 
+      info.add(this.playerNum);
+      info.add(4);
+      info.add(4);
+      info.add(2);
+      info.add(1);
+      info.add(2);
+      info.add(2);
+      info.add(12);
+      info.add(1);
+    }
+    if (this.difficulty.equals("Medium")) { 
+      info.add(this.playerNum);
+      info.add(7);
+      info.add(7);
+      info.add(6);
+      info.add(1);
+      info.add(6);
+      info.add(5);
+      info.add(10);
+      info.add(2);
+    }
+    if (this.difficulty.equals("Hard")) { 
+      info.add(this.playerNum);
+      info.add(9);
+      info.add(9);
+      info.add(10);
+      info.add(2);
+      info.add(10);
+      info.add(8);
+      info.add(10);
+      info.add(3);
+    }
+    
+    return this.info;
+  }
 
   @Override
   public void setFeatures(Features f) {
-    this.start.addActionListener(l -> f.startGame(this.difficulty, false)); 
+    this.start.addActionListener(l -> f.startGame(mazeInfo(), false, false)); 
     this.goBack.addActionListener(l -> f.backToIntro()); 
   }
   
@@ -131,15 +193,25 @@ public class ConfigView extends JFrame implements IView {
     gbc.fill = GridBagConstraints.HORIZONTAL;
     this.panel.add(realistic, gbc);
     
-    
-    this.panel.setBackground(Color.ORANGE);
+    players = new JLabel("Set number of players");
     gbc.gridx = 3;
-    gbc.gridy = 7;
+    gbc.gridy = 4;
+    this.panel.add(players, gbc);
+    gbc.gridx = 2;
+    gbc.gridy = 5;
+    this.panel.add(one, gbc);
+    gbc.gridx = 3;
+    gbc.gridy = 5;
+    this.panel.add(two, gbc);
+    
+    gbc.gridx = 3;
+    gbc.gridy = 8;
     this.panel.add(start, gbc);
     gbc.gridx = 4;
-    gbc.gridy = 7;
-    
+    gbc.gridy = 8; 
     this.panel.add(goBack, gbc);
+    
+    this.panel.setBackground(Color.ORANGE);
     this.panel.setOpaque(true);
     this.panel.setVisible(true);
     this.add(panel);

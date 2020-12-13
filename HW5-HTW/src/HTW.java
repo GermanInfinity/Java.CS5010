@@ -13,16 +13,18 @@ import java.util.Map;
 public class HTW implements Model {
 
   private Dungeon home;
-  private Character player;
+  private Character player, player2;
+
 
   /**
    * Constructs an entry point model object for dungeon and player class.
    */
-  public HTW(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
+  public HTW(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows, Boolean seed) {
 
     this.player = null;
+    this.player2 = null;
     this.home = null;
-    setUp(rows, col, walls, mazeType, pits, bats, arrows);
+    setUp(rows, col, walls, mazeType, pits, bats, arrows, seed);
   }
   
   /**
@@ -35,7 +37,7 @@ public class HTW implements Model {
   /**
    * developMaze builds maze on the backend.
    */
-  public void developMaze(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
+  public void developMaze(int numPlayer, int rows, int col, int walls, int mazeType, int pits, int bats, int arrows, Boolean seed) {
     String mazeTypeStr = "";
 
     if (mazeType == 1) {
@@ -43,11 +45,19 @@ public class HTW implements Model {
     } else if (mazeType == 2) {
       mazeTypeStr = "wrapping room";
     } else if (mazeType > 2 || mazeType < 1) {
-      throw new IllegalArgumentException("Invalid maze type.");
+      throw new IllegalArgumentException("Please enter a valid maze type.");
     }
 
-    this.home = new Dungeon(rows, col, arrows, mazeTypeStr, walls, pits, bats);
-    this.player = new Player("Player", arrows);
+
+    this.home = new Dungeon(rows, col, arrows, mazeTypeStr, walls, pits, bats, seed);
+    if (numPlayer == 1) {
+      this.player = new Player("Player", arrows);
+    }
+    if (numPlayer == 2) {
+      this.player = new Player("Player1", arrows);
+      this.player2 = new Player("Player2", arrows);
+    }
+    
  
   }
   
@@ -74,7 +84,7 @@ public class HTW implements Model {
    * @param bats number of super bats in dungeon
    * @param arrows number of arrows in dungeon
    */
-  private void setUp(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows) {
+  private void setUp(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows, Boolean seed) {
     String mazeTypeStr = "";
 
     if (mazeType == 1) {
@@ -85,7 +95,7 @@ public class HTW implements Model {
       throw new IllegalArgumentException("Invalid maze type.");
     }
 
-    this.home = new Dungeon(rows, col, arrows, mazeTypeStr, walls, pits, bats);
+    this.home = new Dungeon(rows, col, arrows, mazeTypeStr, walls, pits, bats, seed);
     this.player = new Player("Player", arrows);
 
   }
@@ -109,22 +119,22 @@ public class HTW implements Model {
   /**
    * Finds the location of the player.
    */
-  public String playerLocation() {
-    return this.home.playerLocation();
+  public String playerLocation(int player) {
+    return this.home.playerLocation(player);
   }
   
   /**
    * Finds player position.
    */
-  public String playerPosition() { 
-    return this.home.playerPosition();
+  public String playerPosition(int player) { 
+    return this.home.playerPosition(player);
   }
-
+  
   /**
    * Finds the possible moves the player can make from their location.
    */
-  public ArrayList<String> playerMoves() {
-    return this.home.getMoves();
+  public ArrayList<String> playerMoves(int p) {
+    return this.home.getMoves(p);
   }
 
   /**
@@ -142,6 +152,15 @@ public class HTW implements Model {
   public void placePlayer(int location) {
     this.home.startAt(location);
   }
+  
+  /**
+   * placePlayer places player at specified location in dungeon.
+   * 
+   * @param location to place player
+   */
+  public void placePlayer2(int locationA, int locationB) {
+    this.home.startAt2(locationA, locationB);
+  }
 
   /**
    * Informs controller if the game is still running or not.
@@ -156,10 +175,11 @@ public class HTW implements Model {
    * @param playersMove players choice of move.
    * @param moves possible moves player can make.
    */
-  public String movePlayer(int playersMove, ArrayList<String> moves) {
+  public String movePlayer(int playersMove, ArrayList<String> moves, int p) {
     String move = ((Player) this.player).pickMove(playersMove);
-    this.home.makeMove(move, moves);
-    return this.home.action();
+    this.home.makeMove(move, moves, p);
+
+    return "Done";//this.home.action();
   }
 
   /**

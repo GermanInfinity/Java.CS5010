@@ -29,6 +29,8 @@ public class MenuView extends JFrame implements IView {
   private JPanel panel;
   private GridBagConstraints gbc;
   private String difficulty;
+  private int playerNum;
+  private ArrayList<Integer> gameInfo;
 
   /**
    * Constructor for view object.
@@ -36,12 +38,13 @@ public class MenuView extends JFrame implements IView {
    * @param caption of frame
    * @throws IOException
    */
-  public MenuView(String caption, ControllerX controller) throws IOException {
+  public MenuView(String caption, ControllerX controller) {
     super(caption);
     this.panel = new JPanel();
+    this.gameInfo = new ArrayList<Integer>();
     
     this.setLocation(500, 500);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
     GridBagLayout layout = new GridBagLayout();
     this.panel.setLayout(layout);
@@ -60,7 +63,8 @@ public class MenuView extends JFrame implements IView {
   public void setFeatures(Features f) {
     this.keepPlaying.addActionListener(l -> f.closeMenu()); 
     this.fullConfig.addActionListener(l -> f.openFullMenu());
-    this.restartNew.addActionListener(l -> f.startGame(this.difficulty, true));
+    this.restartNew.addActionListener(l -> f.startGame(this.gameInfo, true, false));
+    this.restartSame.addActionListener(l -> f.startGame(this.gameInfo, true, true));
   }
   
   @Override
@@ -112,8 +116,19 @@ public class MenuView extends JFrame implements IView {
     this.setVisible(true);
   }
 
-  public void getInput(String diff) { 
-    this.difficulty = diff; 
+  public void getInput(ArrayList<Integer> info) { 
+    if (info.get(8) == 1) {
+      this.difficulty = "Easy";
+    }
+    if (info.get(8) == 2) {
+      this.difficulty = "Medium";
+    }
+    if (info.get(8) == 3) {
+      this.difficulty = "Realistic";
+    }
+    this.playerNum = info.get(0);
+    this.gameInfo = info;
+
   }
 
   /**

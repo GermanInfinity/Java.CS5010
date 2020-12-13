@@ -30,6 +30,8 @@ public interface Maze {
    * updatePlayerPosition updates Cave to reflect position of player.
    */
   void updatePlayerPosition(Cave[] array, int mazeRow, int mazeCol, int newPlayRow, int newPlayCol);
+  
+  void updatePlayerPosition2(Cave[] array, int row, int col, int newPosRow, int newPosCol, int newPosRow2, int newPosCol2);
 
   /**
    * wrapper to find current cave player is in.
@@ -44,24 +46,24 @@ public interface Maze {
   /**
    * findPlayerPosition wrapper for playerPosition function.
    */
-  String findPlayerPosition();
+  String findPlayerPosition(int pNum);
 
   /**
    * findPlayer wrapper for playerLocation function.
    */
-  String findPlayer();
+  String findPlayer(int pNum);
 
   /**
    * Returns player position in a different format.
    */
-  String playerPosition(Cave[] array, int row, int col);
+  String playerPosition(int p, Cave[] array, int row, int col);
 
   /**
    * playerLocation returns the players location in the maze.
    * 
    * @return string location of player
    */
-  String playerLocation(Cave[] array, int mazeRow, int mazeCol);
+  String playerLocation(int p, Cave[] array, int mazeRow, int mazeCol);
 
   /**
    * findCave finds cave by name in maze.
@@ -81,12 +83,12 @@ public interface Maze {
   /**
    * Wrapper function for playerMove.
    */
-  Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav);
+  Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav, int p);
 
   /**
    * playerMoves moves a player in the cell.
    */
-  Cave[] playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move);
+  Cave[] playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move, int p);
 
   /**
    * Wrapper for fire arrow.
@@ -108,13 +110,13 @@ public interface Maze {
   /**
    * Wrapper function for possibleMoves.
    */
-  ArrayList<String> getMoves();
+  ArrayList<String> getMoves(int p);
 
   /**
    * possibleMoves returns the possible moves a player can make.
    */
   ArrayList<String> possibleMoves(String mazeType, Cave[] array, ArrayList<String> walls,
-      ArrayList<String> possibleMoves, int mazeRow, int mazeCol);
+      ArrayList<String> possibleMoves, int mazeRow, int mazeCol, int p);
 
   /**
    * makeWalls makes the walls in the maze.
@@ -177,6 +179,6 @@ public interface Maze {
    * buildMaze builds the specified maze.
    */
   void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
-      Map<String, Set<String>> sets, String mazeType, int row, int col, int goal);
+      Map<String, Set<String>> sets, String mazeType, int row, int col, int goal, Boolean s);
 
 }

@@ -12,8 +12,8 @@ public interface Model {
   /**
    * developMaze creates the maze in the backend of the model.
    */
-  public void developMaze(int rows, int col, int walls, int mazeType, 
-                          int pits, int bats, int arrows);
+  public void developMaze(int pNum, int rows, int col, int walls, int mazeType, 
+                          int pits, int bats, int arrows, Boolean s);
 
   /**
    * Finds the desired action to take based on players location.
@@ -30,12 +30,12 @@ public interface Model {
   /**
    * Finds the location of the player.
    */
-  public String playerLocation();
+  public String playerLocation(int pNum);
   
   /**
    * Finds the position of a player.
    */
-  public String playerPosition();
+  public String playerPosition(int pNum);
   
   /**
    * getStructure returns structure of maze.
@@ -45,7 +45,7 @@ public interface Model {
   /**
    * Finds the possible moves the player can make from their location.
    */
-  public ArrayList<String> playerMoves();
+  public ArrayList<String> playerMoves(int p);
 
   /**
    * Finds the possible locations the player can go to in the dungeon.
@@ -58,6 +58,8 @@ public interface Model {
    * @param location to place player
    */
   public void placePlayer(int location);
+  
+  public void placePlayer2(int location, int loc2);
 
   /**
    * Informs controller if the game is still running or not.
@@ -70,7 +72,7 @@ public interface Model {
    * @param playersMove players choice of move.
    * @param moves possible moves player can make.
    */
-  public String movePlayer(int playersMove, ArrayList<String> moves);
+  public String movePlayer(int playersMove, ArrayList<String> moves, int p);
 
   /**
    * shootArrow instructs the dungeon object to shoot an arrow for the player.
@@ -79,6 +81,8 @@ public interface Model {
    * @param direction to shoot
    */
   public String shootArrow(int distance, int direction);
+
+
 
   
 }

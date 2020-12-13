@@ -35,9 +35,9 @@ public abstract class MazeImpl implements Maze {
     return array;
   }
 
-  public abstract String findPlayerPosition();
+  public abstract String findPlayerPosition(int p);
 
-  public abstract String findPlayer();
+  public abstract String findPlayer(int p);
 
   public abstract Cave currentCave();
 
@@ -64,11 +64,19 @@ public abstract class MazeImpl implements Maze {
    * @param row number of rows in maze
    * @param col number of columns in maze
    */
-  public String playerPosition(Cave[] array, int row, int col) {
+  public String playerPosition(int p, Cave[] array, int row, int col) {
+    ArrayList<String> players = new ArrayList<String>(); 
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayerIn()) {
-        return array[i].getSecondaryName();
+        players.add(array[i].getSecondaryName());
       }
+    }
+    if (p == 0) { 
+      return players.get(0);
+    }
+    
+    if (p == 1) { 
+      return players.get(1);
     }
     return "No player in maze.";
   }
@@ -80,11 +88,20 @@ public abstract class MazeImpl implements Maze {
    * @param row number of rows in maze
    * @param col number of columns in maze
    */
-  public String playerLocation(Cave[] array, int row, int col) {
+  public String playerLocation(int p, Cave[] array, int row, int col) {
+    ArrayList<String> players = new ArrayList<String>(); 
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayerIn()) {
-        return array[i].getName();
+        players.add(array[i].getName());
       }
+    }
+
+    if (p == 0) { 
+      return players.get(0);
+    }
+    
+    if (p == 1) { 
+      return players.get(1);
     }
     return "No player in maze.";
   }
@@ -151,6 +168,53 @@ public abstract class MazeImpl implements Maze {
     }
 
   }
+  
+  /**
+   * updatePlayerPosition updates player position after moving.
+   * 
+   * @param array rooms in maze
+   * @param row number of rows in maze
+   * @param col number of columns in maze
+   * @param newPosRow new position row in maze. location of player 1
+   * @param newPosCol new position column in maze. location of player 1
+   * @param newPosRow2 new position row in maze. location of player 2
+   * @param newPosCol2 new position column in maze. location of player 2
+   */
+  public void updatePlayerPosition2(Cave[] array, int row, int col, int newPosRow, int newPosCol, int newPosRow2, int newPosCol2) {
+    // Set Location of player 1.
+    for (int i = 0; i < row * col; i++) {
+
+      String name = Integer.toString(newPosRow) + Integer.toString(newPosCol);
+      name = name.substring(0, 1) + name.substring(name.length() - 1, name.length());
+
+      if (array[i].getName().equals(name)) {
+        array[i].setPlayerIn(true);
+        continue;
+      }
+
+      array[i].setPlayerIn(false);
+    }
+    
+    // Set location of player 2.
+    for (int i = 0; i < row * col; i++) {
+      String name1 = Integer.toString(newPosRow) + Integer.toString(newPosCol);
+        if (array[i].getName().equals(name1)) {
+          continue;
+        }
+      String name = Integer.toString(newPosRow2) + Integer.toString(newPosCol2);
+      name = name.substring(0, 1) + name.substring(name.length() - 1, name.length());
+
+      if (array[i].getName().equals(name)) {
+        array[i].setPlayerIn(true);
+        continue;
+      }
+
+      array[i].setPlayerIn(false);
+    }
+
+  }
+  
+ 
 
   /**
    * ifTunnel check if a cave is a tunnel.
@@ -172,7 +236,7 @@ public abstract class MazeImpl implements Maze {
     return false;
   }
 
-  public abstract Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav);
+  public abstract Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav, int p);
 
   /**
    * playerMove moves player in maze.
@@ -183,9 +247,10 @@ public abstract class MazeImpl implements Maze {
    * @param array rooms in maze
    * @param move direction to move
    */
-  public Cave[] playerMove(int row, int col, String mazeType, Cave[] array, String move) {
-    char playerRow = playerLocation(array, row, col).charAt(0);
-    char playerCol = playerLocation(array, row, col).charAt(1);
+  public Cave[] playerMove(int row, int col, String mazeType, Cave[] array, String move, int pTurn) {
+    char playerRow = playerLocation(pTurn, array, row, col).charAt(0);
+    char playerCol = playerLocation(pTurn, array, row, col).charAt(1);
+    
 
     int playerRowNum = java.lang.Character.getNumericValue(playerRow);
     int playerColNum = java.lang.Character.getNumericValue(playerCol);
@@ -201,7 +266,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, playRow, playCol);
@@ -214,7 +279,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
@@ -232,7 +297,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, playRow, playCol);
@@ -245,7 +310,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
@@ -262,7 +327,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, playRow, playCol);
@@ -275,7 +340,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
@@ -292,7 +357,7 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
 
@@ -306,13 +371,14 @@ public abstract class MazeImpl implements Maze {
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
           updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection);
+          playerMove(row, col, mazeType, array, correctDirection, pTurn);
           return array;
         }
         updatePlayerPosition(array, row, col, positions[0], positions[1]);
       }
     }
 
+    
     return array;
 
   }
@@ -657,7 +723,7 @@ public abstract class MazeImpl implements Maze {
     return positions;
   }
 
-  public abstract ArrayList<String> getMoves();
+  public abstract ArrayList<String> getMoves(int p);
 
   /**
    * possibleMoves returns the possible moves a player can make.
@@ -670,12 +736,12 @@ public abstract class MazeImpl implements Maze {
    * @param mazeCol size of maze column
    */
   public ArrayList<String> possibleMoves(String mazeType, Cave[] array, ArrayList<String> walls,
-      ArrayList<String> possibleMoves, int mazeRow, int mazeCol) {
+      ArrayList<String> possibleMoves, int mazeRow, int mazeCol, int pTurn) {
 
     int[][] boundaryArray = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 
-    char playerRow = playerLocation(array, mazeRow, mazeCol).charAt(0);
-    char playerCol = playerLocation(array, mazeRow, mazeCol).charAt(1);
+    char playerRow = playerLocation(pTurn, array, mazeRow, mazeCol).charAt(0);
+    char playerCol = playerLocation(pTurn, array, mazeRow, mazeCol).charAt(1);
 
     int playerRowNum = java.lang.Character.getNumericValue(playerRow);
     int playerColNum = java.lang.Character.getNumericValue(playerCol);
@@ -712,12 +778,12 @@ public abstract class MazeImpl implements Maze {
       String neighbour = Integer.toString(currRow) + Integer.toString(currCol);
       neighbour = neighbour.substring(0, 1) + neighbour.substring(1, 2);
 
-      String possibleWall1 = playerLocation(array, mazeRow, mazeCol) + "." + neighbour;
+      String possibleWall1 = playerLocation(pTurn, array, mazeRow, mazeCol) + "." + neighbour;
       if (walls.contains(possibleWall1)) {
         continue;
       }
 
-      String possibleWall2 = neighbour + "." + playerLocation(array, mazeRow, mazeCol);
+      String possibleWall2 = neighbour + "." + playerLocation(pTurn, array, mazeRow, mazeCol);
       if (walls.contains(possibleWall2)) {
         continue;
       }
@@ -1042,8 +1108,12 @@ public abstract class MazeImpl implements Maze {
    * @param col column size of maze
    */
   public void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
-      Map<String, Set<String>> sets, String mazeType, int row, int col, int goal) {
-    Random ran = new Random();
+      Map<String, Set<String>> sets, String mazeType, int row, int col, int goal, Boolean seed) {
+    Random ran = new Random(6); 
+    if (seed) {
+      ran = new Random(5);
+    }
+ 
     Boolean madeCycle = false;
 
     while (walls.size() > goal) {
@@ -1058,7 +1128,12 @@ public abstract class MazeImpl implements Maze {
 
       else if (mazeType.equals("room")) {
         if (!madeCycle) {
-          makeCycle(walls, removedWalls, sets, row, col);
+          if (seed) { 
+            makeCycle(walls, removedWalls, sets, row, col, true);
+          }
+          if (!seed) {
+            makeCycle(walls, removedWalls, sets, row, col, false);
+          }
           madeCycle = true;
           continue;
         }
@@ -1071,7 +1146,6 @@ public abstract class MazeImpl implements Maze {
         walls = breakWall(walls.get(wallToBreak), walls, removedWalls);
         sets = updateSets(row, col, sets, removedWalls);
       }
-
     }
   }
 
@@ -1079,8 +1153,11 @@ public abstract class MazeImpl implements Maze {
    * makeCycle makes a cycle of rooms in a room maze.
    */
   public void makeCycle(ArrayList<String> walls, ArrayList<String> removedWalls,
-      Map<String, Set<String>> sets, int row, int col) {
-    Random ran = new Random();
+      Map<String, Set<String>> sets, int row, int col, Boolean seed) {
+    Random ran = new Random(6);
+    if (seed) {
+      ran = new Random(5);
+    }
     int ranRow = ran.nextInt(row);
     int ranCol = ran.nextInt(col);
     int diagRow = ranRow + 1;
@@ -1106,7 +1183,7 @@ public abstract class MazeImpl implements Maze {
       walls = breakWall(wall4, walls, removedWalls);
       sets = updateSets(row, col, sets, removedWalls);
     } else {
-      makeCycle(walls, removedWalls, sets, row, col);
+      makeCycle(walls, removedWalls, sets, row, col, seed);
     }
   }
 
