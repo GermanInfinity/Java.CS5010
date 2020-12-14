@@ -65,19 +65,26 @@ public abstract class MazeImpl implements Maze {
    * @param col number of columns in maze
    */
   public String playerPosition(int p, Cave[] array, int row, int col) {
-    ArrayList<String> players = new ArrayList<String>(); 
+    ArrayList<String> players = new ArrayList<String>();
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayerIn()) {
         players.add(array[i].getSecondaryName());
       }
     }
-    if (p == 0) { 
+
+    if (players.size() > 1) {
+      if (p == 0) {
+        return players.get(0);
+      }
+
+      if (p == 1) {
+        return players.get(1);
+      }
+    }
+    if (players.size() == 1) {
       return players.get(0);
     }
-    
-    if (p == 1) { 
-      return players.get(1);
-    }
+
     return "No player in maze.";
   }
 
@@ -89,19 +96,29 @@ public abstract class MazeImpl implements Maze {
    * @param col number of columns in maze
    */
   public String playerLocation(int p, Cave[] array, int row, int col) {
-    ArrayList<String> players = new ArrayList<String>(); 
+    ArrayList<String> players = new ArrayList<String>();
     for (int i = 0; i < row * col; i++) {
       if (array[i].hasPlayerIn()) {
         players.add(array[i].getName());
       }
+      if (array[i].getDouble()) {
+        if (p == 0 || p == 1) {
+          return array[i].getName();
+        }
+      }
     }
 
-    if (p == 0) { 
-      return players.get(0);
+    if (players.size() > 1) {
+      if (p == 0) {
+        return players.get(0);
+      }
+
+      if (p == 1) {
+        return players.get(1);
+      }
     }
-    
-    if (p == 1) { 
-      return players.get(1);
+    if (players.size() == 1) {
+      return players.get(0);
     }
     return "No player in maze.";
   }
@@ -168,7 +185,7 @@ public abstract class MazeImpl implements Maze {
     }
 
   }
-  
+
   /**
    * updatePlayerPosition updates player position after moving.
    * 
@@ -180,9 +197,34 @@ public abstract class MazeImpl implements Maze {
    * @param newPosRow2 new position row in maze. location of player 2
    * @param newPosCol2 new position column in maze. location of player 2
    */
-  public void updatePlayerPosition2(Cave[] array, int row, int col, int newPosRow, int newPosCol, int newPosRow2, int newPosCol2) {
+  public void updatePlayerPosition2(Cave[] array, int row, int col, int newPosRow, int newPosCol,
+      int newPosRow2, int newPosCol2) {
+
+    // If both in same room.
+    if (newPosRow == newPosRow2 && newPosCol == newPosCol2) {
+      for (int i = 0; i < row * col; i++) {
+
+        String name = Integer.toString(newPosRow) + Integer.toString(newPosCol);
+        name = name.substring(0, 1) + name.substring(name.length() - 1, name.length());
+
+        if (array[i].getName().equals(name)) {
+          array[i].setPlayerIn(true);
+          array[i].setDouble(true);
+          continue;
+        }
+
+        array[i].setPlayerIn(false);
+      }
+      return;
+    }
+
     // Set Location of player 1.
     for (int i = 0; i < row * col; i++) {
+      String name1 = Integer.toString(newPosRow2) + Integer.toString(newPosCol2);
+      if (array[i].getName().equals(name1)) {
+        array[i].setPlayerIn(true);
+        continue;
+      }
 
       String name = Integer.toString(newPosRow) + Integer.toString(newPosCol);
       name = name.substring(0, 1) + name.substring(name.length() - 1, name.length());
@@ -194,13 +236,14 @@ public abstract class MazeImpl implements Maze {
 
       array[i].setPlayerIn(false);
     }
-    
+
     // Set location of player 2.
     for (int i = 0; i < row * col; i++) {
       String name1 = Integer.toString(newPosRow) + Integer.toString(newPosCol);
-        if (array[i].getName().equals(name1)) {
-          continue;
-        }
+      if (array[i].getName().equals(name1)) {
+        array[i].setPlayerIn(true);
+        continue;
+      }
       String name = Integer.toString(newPosRow2) + Integer.toString(newPosCol2);
       name = name.substring(0, 1) + name.substring(name.length() - 1, name.length());
 
@@ -213,8 +256,6 @@ public abstract class MazeImpl implements Maze {
     }
 
   }
-  
- 
 
   /**
    * ifTunnel check if a cave is a tunnel.
@@ -236,7 +277,8 @@ public abstract class MazeImpl implements Maze {
     return false;
   }
 
-  public abstract Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav, int p);
+  public abstract Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav, int p,
+      int numP);
 
   /**
    * playerMove moves player in maze.
@@ -247,13 +289,35 @@ public abstract class MazeImpl implements Maze {
    * @param array rooms in maze
    * @param move direction to move
    */
-  public Cave[] playerMove(int row, int col, String mazeType, Cave[] array, String move, int pTurn) {
+  public Cave[] playerMove(int row, int col, String mazeType, Cave[] array, String move, int pTurn,
+      int numPlayers) {
     char playerRow = playerLocation(pTurn, array, row, col).charAt(0);
     char playerCol = playerLocation(pTurn, array, row, col).charAt(1);
-    
+    char playerRow2 = '0';
+    char playerCol2 = '0';
+
+    // Get location of other player
+    if (numPlayers == 2) {
+      if (pTurn == 0) {
+        playerRow2 = playerLocation(1, array, row, col).charAt(0);
+        playerCol2 = playerLocation(1, array, row, col).charAt(1);
+      }
+      if (pTurn == 1) {
+        playerRow2 = playerLocation(0, array, row, col).charAt(0);
+        playerCol2 = playerLocation(0, array, row, col).charAt(1);
+      }
+    }
+
+    int playerRowNum2 = -1;
+    int playerColNum2 = -1;
 
     int playerRowNum = java.lang.Character.getNumericValue(playerRow);
     int playerColNum = java.lang.Character.getNumericValue(playerCol);
+
+    if (numPlayers == 2) {
+      playerRowNum2 = java.lang.Character.getNumericValue(playerRow2);
+      playerColNum2 = java.lang.Character.getNumericValue(playerCol2);
+    }
 
     if (move.equals("East")) {
       int playRow = playerRowNum + 0;
@@ -265,11 +329,21 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, playRow, playCol);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, playRow, playCol, playerRowNum2, playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, playRow, playCol);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, playRow, playCol);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, playRow, playCol, playerRowNum2, playerColNum2);
+        }
 
         return array;
 
@@ -278,11 +352,23 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, positions[0], positions[1]);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+                playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+              playerColNum2);
+        }
       }
     }
 
@@ -296,11 +382,21 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, playRow, playCol);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, playRow, playCol, playerRowNum2, playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, playRow, playCol);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, playRow, playCol);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, playRow, playCol, playerRowNum2, playerColNum2);
+        }
 
         return array;
 
@@ -309,11 +405,23 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, positions[0], positions[1]);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+                playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+              playerColNum2);
+        }
       }
     }
     if (move.equals("North")) {
@@ -326,11 +434,21 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, playRow, playCol);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, playRow, playCol, playerRowNum2, playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, playRow, playCol);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, playRow, playCol);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, playRow, playCol, playerRowNum2, playerColNum2);
+        }
 
         return array;
 
@@ -339,11 +457,23 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, positions[0], positions[1]);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+                playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+              playerColNum2);
+        }
       }
     }
     if (move.equals("South")) {
@@ -356,12 +486,24 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, playRow, playCol);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, playRow, playCol);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, positions[0], positions[1]);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+                playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
 
-        updatePlayerPosition(array, row, col, playRow, playCol);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+              playerColNum2);
+        }
 
         return array;
 
@@ -370,15 +512,26 @@ public abstract class MazeImpl implements Maze {
           Cave tunnelCave = findCave(array, row, col, positions[0], positions[1]);
           String correctDirection = tunnelCave.findNext(playerRowNum, playerColNum);
 
-          updatePlayerPosition(array, row, col, positions[0], positions[1]);
-          playerMove(row, col, mazeType, array, correctDirection, pTurn);
+          if (numPlayers == 1) {
+            updatePlayerPosition(array, row, col, positions[0], positions[1]);
+          }
+          if (numPlayers == 2) {
+            updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+                playerColNum2);
+          }
+          playerMove(row, col, mazeType, array, correctDirection, pTurn, numPlayers);
           return array;
         }
-        updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        if (numPlayers == 1) {
+          updatePlayerPosition(array, row, col, positions[0], positions[1]);
+        }
+        if (numPlayers == 2) {
+          updatePlayerPosition2(array, row, col, positions[0], positions[1], playerRowNum2,
+              playerColNum2);
+        }
       }
     }
 
-    
     return array;
 
   }
@@ -387,7 +540,7 @@ public abstract class MazeImpl implements Maze {
    * Wrapper for shooting an arrow function.
    */
 
-  public abstract String fire(int distance, int direction);
+  public abstract String fire(int distance, int direction, int turn);
 
   /**
    * directionFinderHelper finds the next direction for arrows that go into a
@@ -420,8 +573,8 @@ public abstract class MazeImpl implements Maze {
    * shootArrow shoots an arrow from the player in the maze.
    */
   public String shootArrow(Cave[] array, ArrayList<String> walls, String mazeType, int row, int col,
-      int distance, int direction) {
-    String arrowPos = findPlayer();
+      int distance, int direction, int turn) {
+    String arrowPos = findPlayer(turn);
 
     while (distance > 0) {
       if (direction == 1) { // N
@@ -1109,11 +1262,11 @@ public abstract class MazeImpl implements Maze {
    */
   public void buildMaze(ArrayList<String> walls, ArrayList<String> removedWalls,
       Map<String, Set<String>> sets, String mazeType, int row, int col, int goal, Boolean seed) {
-    Random ran = new Random(6); 
+    Random ran = new Random();
     if (seed) {
       ran = new Random(5);
     }
- 
+
     Boolean madeCycle = false;
 
     while (walls.size() > goal) {
@@ -1128,7 +1281,7 @@ public abstract class MazeImpl implements Maze {
 
       else if (mazeType.equals("room")) {
         if (!madeCycle) {
-          if (seed) { 
+          if (seed) {
             makeCycle(walls, removedWalls, sets, row, col, true);
           }
           if (!seed) {
@@ -1154,7 +1307,7 @@ public abstract class MazeImpl implements Maze {
    */
   public void makeCycle(ArrayList<String> walls, ArrayList<String> removedWalls,
       Map<String, Set<String>> sets, int row, int col, Boolean seed) {
-    Random ran = new Random(6);
+    Random ran = new Random();
     if (seed) {
       ran = new Random(5);
     }

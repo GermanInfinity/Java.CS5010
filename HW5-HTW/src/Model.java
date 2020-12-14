@@ -8,17 +8,17 @@ import java.util.Map;
  *
  */
 public interface Model {
-  
+
   /**
    * developMaze creates the maze in the backend of the model.
    */
-  public void developMaze(int pNum, int rows, int col, int walls, int mazeType, 
-                          int pits, int bats, int arrows, Boolean s);
+  public void developMaze(int pNum, int rows, int col, int walls, int mazeType, int pits, int bats,
+      int arrows, Boolean s);
 
   /**
    * Finds the desired action to take based on players location.
    */
-  public String action();
+  public String action(int p);
 
   /**
    * Finds the name of the player.
@@ -31,12 +31,12 @@ public interface Model {
    * Finds the location of the player.
    */
   public String playerLocation(int pNum);
-  
+
   /**
    * Finds the position of a player.
    */
   public String playerPosition(int pNum);
-  
+
   /**
    * getStructure returns structure of maze.
    */
@@ -58,7 +58,7 @@ public interface Model {
    * @param location to place player
    */
   public void placePlayer(int location);
-  
+
   public void placePlayer2(int location, int loc2);
 
   /**
@@ -72,7 +72,7 @@ public interface Model {
    * @param playersMove players choice of move.
    * @param moves possible moves player can make.
    */
-  public String movePlayer(int playersMove, ArrayList<String> moves, int p);
+  public String movePlayer(int playersMove, ArrayList<String> moves, int p, int numP);
 
   /**
    * shootArrow instructs the dungeon object to shoot an arrow for the player.
@@ -80,9 +80,6 @@ public interface Model {
    * @param distance to shoot
    * @param direction to shoot
    */
-  public String shootArrow(int distance, int direction);
+  public String shootArrow(int distance, int direction, int turn);
 
-
-
-  
 }

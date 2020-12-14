@@ -20,7 +20,7 @@ public interface Maze {
    * getCaves returns all the caves in the maze.
    */
   Cave[] getCaves();
-  
+
   /**
    * getWalls returns all the walls in the maze.
    */
@@ -30,8 +30,13 @@ public interface Maze {
    * updatePlayerPosition updates Cave to reflect position of player.
    */
   void updatePlayerPosition(Cave[] array, int mazeRow, int mazeCol, int newPlayRow, int newPlayCol);
-  
-  void updatePlayerPosition2(Cave[] array, int row, int col, int newPosRow, int newPosCol, int newPosRow2, int newPosCol2);
+
+  /**
+   * updatePlayerPosition2 updates Cave to reflect position of player for two
+   * players.
+   */
+  void updatePlayerPosition2(Cave[] array, int row, int col, int newPosRow, int newPosCol,
+      int newPosRow2, int newPosCol2);
 
   /**
    * wrapper to find current cave player is in.
@@ -83,23 +88,24 @@ public interface Maze {
   /**
    * Wrapper function for playerMove.
    */
-  Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav, int p);
+  Cave[] makeMove(String move, ArrayList<String> moves, Cave[] cav, int p, int numP);
 
   /**
    * playerMoves moves a player in the cell.
    */
-  Cave[] playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move, int p);
+  Cave[] playerMove(int mazeRow, int mazeCol, String mazeType, Cave[] array, String move, int p,
+      int numP);
 
   /**
    * Wrapper for fire arrow.
    */
-  String fire(int dist, int direct);
+  String fire(int dist, int direct, int turn);
 
   /**
    * Shoots arrow in the maze.
    */
   String shootArrow(Cave[] array, ArrayList<String> walls, String mazeType, int row, int col,
-      int distance, int direction);
+      int distance, int direction, int turn);
 
   /**
    * BoundaryHelper, updates the row and columns of a wrapping Cave maze

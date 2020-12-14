@@ -22,7 +22,6 @@ public class RoomMaze extends MazeImpl {
 
   private ArrayList<String> walls;
 
-
   /**
    * RoomMaze constructor constructs a maze that has Caves, hallways and
    * tunnels, multiple paths exist to the wumpus in this maze.
@@ -59,11 +58,12 @@ public class RoomMaze extends MazeImpl {
     }
 
     this.mazeType = "room";
-    buildMaze(this.walls, removedWalls, sets, this.mazeType, this.row, this.col, remainingWalls, seed);
+    buildMaze(this.walls, removedWalls, sets, this.mazeType, this.row, this.col, remainingWalls,
+        seed);
 
     doors = doorCount(this.array, row, col, this.walls);
     neighbours = makeNeighbours(this.array, row, col, this.walls);
-    
+
     buildTunnels(this.array, doors, neighbours);
 
   }
@@ -84,11 +84,11 @@ public class RoomMaze extends MazeImpl {
   }
 
   @Override
-  public Cave[] makeMove(String move, ArrayList<String> moves, Cave[] array2, int p) {
+  public Cave[] makeMove(String move, ArrayList<String> moves, Cave[] array2, int p, int numP) {
     if (!moves.contains(move)) {
       throw new IllegalArgumentException("Please play a possible move next time.");
     }
-    return playerMove(this.row, this.col, this.mazeType, array2, move, p);
+    return playerMove(this.row, this.col, this.mazeType, array2, move, p, numP);
   }
 
   @Override
@@ -100,9 +100,9 @@ public class RoomMaze extends MazeImpl {
   }
 
   @Override
-  public String fire(int distance, int direction) {
+  public String fire(int distance, int direction, int turn) {
     return shootArrow(this.array, this.walls, this.mazeType, this.row, this.col, distance,
-        direction);
+        direction, turn);
   }
 
   @Override
@@ -117,12 +117,10 @@ public class RoomMaze extends MazeImpl {
   public Cave[] getCaves() {
     return this.array;
   }
-  
-  @Override 
-  public ArrayList<String> getWalls() { 
+
+  @Override
+  public ArrayList<String> getWalls() {
     return this.walls;
   }
-
-
 
 }

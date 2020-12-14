@@ -13,6 +13,7 @@ public class Cave {
   private Boolean playerIn;
   private ArrayList<Character> occupants;
   private Boolean pit;
+  private Boolean pDouble;
   private Boolean wumpus;
   private SuperBat superbat;
   private Boolean superbatIn;
@@ -30,6 +31,7 @@ public class Cave {
     this.pit = false;
     this.wumpus = false;
     this.neighbours = new ArrayList<String>();
+    this.pDouble = false;
 
   }
 
@@ -171,6 +173,17 @@ public class Cave {
    */
   public Boolean isSuperbatIn() {
     return this.superbatIn;
+  }
+
+  public void setDouble(Boolean a) {
+    this.pDouble = a;
+  }
+
+  /**
+   * Informs if two players in cave.
+   */
+  public Boolean getDouble() {
+    return this.pDouble;
   }
 
   /**

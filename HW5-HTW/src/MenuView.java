@@ -1,10 +1,5 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.Icon;
@@ -24,22 +19,26 @@ import javax.swing.JPanel;
 public class MenuView extends JFrame implements IView {
   private static final long serialVersionUID = -7083924619099998893L;
 
-  private Icon image;
   private JButton keepPlaying, restartSame, restartNew, fullConfig;
   private JPanel panel;
   private GridBagConstraints gbc;
   private String difficulty;
-  private int playerNum;
   private ArrayList<Integer> gameInfo;
 
   /**
-   * Constructor for view object.
+   * Constructor for menu view object.
    * 
-   * @param caption of frame
-   * @throws IOException
    */
   public MenuView(String caption, ControllerX controller) {
     super(caption);
+    
+    if (caption == null) {
+      caption = "Menu view";
+    }
+    if (controller == null) {
+      throw new IllegalArgumentException("Please provide this view a controller.");
+    }
+    
     this.panel = new JPanel();
     this.gameInfo = new ArrayList<Integer>();
     
@@ -67,14 +66,11 @@ public class MenuView extends JFrame implements IView {
     this.restartSame.addActionListener(l -> f.startGame(this.gameInfo, true, true));
   }
   
-  @Override
-  public void setListener(ActionListener clicks, KeyListener keys) {
 
-  }
 
   @Override
   public void display() {
-    image = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/ggrem.png");
+    Icon image = new ImageIcon("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/ggrem.png");
 
     gbc.gridx = 0;
     gbc.gridy = 0;
@@ -116,6 +112,9 @@ public class MenuView extends JFrame implements IView {
     this.setVisible(true);
   }
 
+  /**
+   * getInput gets the input for the game configuration.
+   */
   public void getInput(ArrayList<Integer> info) { 
     if (info.get(8) == 1) {
       this.difficulty = "Easy";
@@ -126,7 +125,7 @@ public class MenuView extends JFrame implements IView {
     if (info.get(8) == 3) {
       this.difficulty = "Realistic";
     }
-    this.playerNum = info.get(0);
+ 
     this.gameInfo = info;
 
   }

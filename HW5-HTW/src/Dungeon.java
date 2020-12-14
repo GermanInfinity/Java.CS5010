@@ -43,10 +43,9 @@ public class Dungeon {
     if (numArrows < 0) {
       throw new IllegalArgumentException("Invalid value for arrows.");
     }
-    if (remainingWalls < 0) { 
+    if (remainingWalls < 0) {
       throw new IllegalArgumentException("Invalid value number of remaining walls.");
     }
-
 
     // Determine maze
     String mazeType = mazeTypeIn;
@@ -57,29 +56,24 @@ public class Dungeon {
     this.pitNo = pitNo;
     this.batNo = batNo;
 
-    
     if (mazeType.equals("room")) {
       this.maze = new RoomMaze(row, col, seed, remainingWalls);
     }
 
-    if (mazeType.equals("wrapping room")) {
-      this.maze = new WrappingRoomMaze(row, col, seed, remainingWalls);
-    }
     this.caves = this.maze.getCaves();
     this.walls = this.maze.getWalls();
 
-    
     // Start with random position, after placing npc's place player last.
     wumpus = new Wumpus("Gretchen");
-    //placeWumpus();
-    //placePits();
-    //placeSuperBats();
-    
+    placeWumpus();
+    placePits();
+    placeSuperBats();
 
   }
 
   /**
    * startAt starts the player at the specified location.
+   * 
    * @param location to start player in
    */
   public void startAt(int location) {
@@ -93,19 +87,20 @@ public class Dungeon {
         char playerCol = name.charAt(1);
         int playerRowNum = java.lang.Character.getNumericValue(playerRow);
         int playerColNum = java.lang.Character.getNumericValue(playerCol);
-        
+
         this.maze.updatePlayerPosition(this.maze.getCaves(), this.row, this.col, playerRowNum,
             playerColNum);
       }
     }
   }
-  
+
   /**
    * startAt starts the player at the specified location.
+   * 
    * @param location to start player in
    */
   public void startAt2(int location, int locationB) {
-    int playerRowNum = 0; 
+    int playerRowNum = 0;
     int playerRowNum2 = 0;
     int playerColNum = 0;
     int playerColNum2 = 0;
@@ -118,20 +113,17 @@ public class Dungeon {
         char playerRow = name.charAt(0);
         char playerCol = name.charAt(1);
         playerRowNum = java.lang.Character.getNumericValue(playerRow);
-        playerColNum = java.lang.Character.getNumericValue(playerCol);  
+        playerColNum = java.lang.Character.getNumericValue(playerCol);
       }
       if (Integer.parseInt(this.caves[i].getSecondaryName()) == locationB) {
         String name = this.caves[i].getName();
         char playerRow = name.charAt(0);
         char playerCol = name.charAt(1);
         playerRowNum2 = java.lang.Character.getNumericValue(playerRow);
-        playerColNum2 = java.lang.Character.getNumericValue(playerCol);  
+        playerColNum2 = java.lang.Character.getNumericValue(playerCol);
       }
     }
-    System.out.println("SANITY CHECK:" + playerRowNum);
-    System.out.println("SANITY CHECK:" + playerColNum);
-    System.out.println("SANITY CHECK:" + playerRowNum2);
-    System.out.println("SANITY CHECK:" + playerColNum2);
+
     this.maze.updatePlayerPosition2(this.maze.getCaves(), this.row, this.col, playerRowNum,
         playerColNum, playerRowNum2, playerColNum2);
   }
@@ -139,12 +131,13 @@ public class Dungeon {
   /**
    * Action function determines what happens after the player makes move.
    */
-  public String action() {
-    int playerLocation = Integer.parseInt(this.maze.findPlayerPosition());
+  public String action(int pNum) {
+    int playerLocation = Integer.parseInt(this.maze.findPlayerPosition(pNum));
     String info = "";
 
     // Check if wumpus is current cave player is in.
     if (this.caves[playerLocation].getWumpus()) {
+      System.out.println("here");
       this.gameOn = false;
       return "You've been made meat by the Wumpus. Try again!";
     }
@@ -184,7 +177,7 @@ public class Dungeon {
       return info + "Game over: 5250 FALL Damage!";
     }
 
-    String playerPos = this.maze.findPlayer();
+    String playerPos = this.maze.findPlayer(pNum);
 
     int playerRow = java.lang.Character.getNumericValue(playerPos.charAt(0));
     int playerCol = java.lang.Character.getNumericValue(playerPos.charAt(1));
@@ -215,26 +208,25 @@ public class Dungeon {
    * @param direction navigation to send arrow.
    * @return
    */
-  public String arrowAction(int distance, int direction) {
+  public String arrowAction(int distance, int direction, int turn) {
     String response = "";
-   
-    if (this.numArrows == 0) { 
+
+    if (this.numArrows == 0) {
       this.gameOn = false;
       return "You ran out of ammo, thus, you cannot kill the Wumpus. Try again, next time.";
     }
-    
+
     if (this.numArrows > 0) {
       this.numArrows--;
-      response = this.maze.fire(distance, direction);
+      response = this.maze.fire(distance, direction, turn);
       if (response.equals("Win")) {
         this.gameOn = false;
         return "Hooray, you killed the Wumpus!";
       }
     }
-   
+
     return response;
   }
-
 
   /**
    * All possible locations characters could inhabit in maze.
@@ -251,10 +243,12 @@ public class Dungeon {
     ArrayList<String> locations = this.maze.printLocations(this.caves, this.row, this.col);
 
     int num = ran.nextInt(locations.size());
-
     Cave wumpusCave = this.maze.locateCave(this.caves, this.row, this.col, locations.get(num));
 
+    System.out.println(locations.get(num));
     wumpusCave.addNPC(this.wumpus);
+    System.out.println(wumpusCave.getWumpus());
+    System.out.println(wumpusCave.getName());
 
   }
 
@@ -268,7 +262,7 @@ public class Dungeon {
     if (locations.size() < this.pitNo) {
       throw new IllegalArgumentException("Cannot have that many pits in maze.");
     }
-    
+
     while (pitsIn < this.pitNo) {
       // grab random spot in maze
       Random ran = new Random();
@@ -295,7 +289,7 @@ public class Dungeon {
     if (locations.size() < this.batNo) {
       throw new IllegalArgumentException("Cannot have that many superbats in maze.");
     }
-    
+
     while (batsIn < this.batNo) {
       // grab random spot in maze
       Random ran = new Random();
@@ -318,14 +312,14 @@ public class Dungeon {
   public Cave[] getCaves() {
     return this.caves;
   }
-  
+
   /**
    * getWalls returns walls in maze.
    */
-  public ArrayList<String> getWalls() { 
+  public ArrayList<String> getWalls() {
     return this.walls;
   }
-  
+
   /**
    * Checks the maze to see if the game is ongoing.
    */
@@ -339,22 +333,13 @@ public class Dungeon {
   public String playerLocation(int p) {
     return this.maze.findPlayerPosition(p);
   }
-  
+
   /**
    * getPosition returns players current position i.e 00, 10, 02.
    */
   public String playerPosition(int p) {
     return this.maze.findPlayer(p);
   }
-  
-  /**
-   * Two player mode
-   * getPosition returns players current position i.e 00, 10, 02.
-   */
-//  public String playerPosition2(int p) {
-//    return this.maze.findPlayer(p);
-//  }
-//  
 
   /**
    * getMoves determines moves for player.
@@ -369,8 +354,8 @@ public class Dungeon {
    * @param move move the pkayer made.
    * @param moves moves available to make.
    */
-  public void makeMove(String move, ArrayList<String> moves, int pTurn) {
-    this.caves = this.maze.makeMove(move, moves, caves, pTurn);
+  public void makeMove(String move, ArrayList<String> moves, int pTurn, int numP) {
+    this.caves = this.maze.makeMove(move, moves, caves, pTurn, numP);
   }
 
   @Override

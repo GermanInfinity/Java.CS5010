@@ -13,31 +13,31 @@ import java.util.Map;
 public class HTW implements Model {
 
   private Dungeon home;
-  private Character player, player2;
-
+  private Character player;
 
   /**
    * Constructs an entry point model object for dungeon and player class.
    */
-  public HTW(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows, Boolean seed) {
+  public HTW(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows,
+      Boolean seed) {
 
     this.player = null;
-    this.player2 = null;
     this.home = null;
     setUp(rows, col, walls, mazeType, pits, bats, arrows, seed);
   }
-  
+
   /**
    * Constructs entry point into model with no inputs.
    */
-  public HTW() { 
-    
+  public HTW() {
+    // Empty constructor.
   }
-  
+
   /**
    * developMaze builds maze on the backend.
    */
-  public void developMaze(int numPlayer, int rows, int col, int walls, int mazeType, int pits, int bats, int arrows, Boolean seed) {
+  public void developMaze(int numPlayer, int rows, int col, int walls, int mazeType, int pits,
+      int bats, int arrows, Boolean seed) {
     String mazeTypeStr = "";
 
     if (mazeType == 1) {
@@ -48,31 +48,22 @@ public class HTW implements Model {
       throw new IllegalArgumentException("Please enter a valid maze type.");
     }
 
-
     this.home = new Dungeon(rows, col, arrows, mazeTypeStr, walls, pits, bats, seed);
-    if (numPlayer == 1) {
-      this.player = new Player("Player", arrows);
-    }
-    if (numPlayer == 2) {
-      this.player = new Player("Player1", arrows);
-      this.player2 = new Player("Player2", arrows);
-    }
-    
- 
+    this.player = new Player("Player", arrows);
+
   }
-  
+
   /**
    * getStructure returns structure of caves and walls.
    */
-  public Map<String, Object> getStructure() { 
+  public Map<String, Object> getStructure() {
     Map<String, Object> info = new HashMap<String, Object>();
     info.put("caves", this.home.getCaves());
     info.put("walls", this.home.getWalls());
     System.out.println(info);
     return info;
   }
-  
-  
+
   /**
    * Sets up the dungeon per specified game configurations.
    * 
@@ -84,7 +75,8 @@ public class HTW implements Model {
    * @param bats number of super bats in dungeon
    * @param arrows number of arrows in dungeon
    */
-  private void setUp(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows, Boolean seed) {
+  private void setUp(int rows, int col, int walls, int mazeType, int pits, int bats, int arrows,
+      Boolean seed) {
     String mazeTypeStr = "";
 
     if (mazeType == 1) {
@@ -103,8 +95,8 @@ public class HTW implements Model {
   /**
    * Finds the desired action to take based on players location.
    */
-  public String action() {
-    return this.home.action();
+  public String action(int pNum) {
+    return this.home.action(pNum);
   }
 
   /**
@@ -122,14 +114,14 @@ public class HTW implements Model {
   public String playerLocation(int player) {
     return this.home.playerLocation(player);
   }
-  
+
   /**
    * Finds player position.
    */
-  public String playerPosition(int player) { 
+  public String playerPosition(int player) {
     return this.home.playerPosition(player);
   }
-  
+
   /**
    * Finds the possible moves the player can make from their location.
    */
@@ -152,11 +144,10 @@ public class HTW implements Model {
   public void placePlayer(int location) {
     this.home.startAt(location);
   }
-  
+
   /**
    * placePlayer places player at specified location in dungeon.
    * 
-   * @param location to place player
    */
   public void placePlayer2(int locationA, int locationB) {
     this.home.startAt2(locationA, locationB);
@@ -175,11 +166,12 @@ public class HTW implements Model {
    * @param playersMove players choice of move.
    * @param moves possible moves player can make.
    */
-  public String movePlayer(int playersMove, ArrayList<String> moves, int p) {
+  public String movePlayer(int playersMove, ArrayList<String> moves, int p, int numP) {
     String move = ((Player) this.player).pickMove(playersMove);
-    this.home.makeMove(move, moves, p);
+    this.home.makeMove(move, moves, p, numP);
+    String resp = this.home.action(numP);
 
-    return "Done";//this.home.action();
+    return resp;
   }
 
   /**
@@ -188,14 +180,14 @@ public class HTW implements Model {
    * @param distance to shoot
    * @param direction to shoot
    */
-  public String shootArrow(int distance, int direction) {
+  public String shootArrow(int distance, int direction, int turn) {
     if (distance < 0) {
       throw new IllegalArgumentException("Arrows can't be shot at a negative distance.");
     }
     if (direction != 1 && direction != 2 && direction != 3 && direction != 4) {
       throw new IllegalArgumentException("Please pick a valid direction next time.");
     }
-    return this.home.arrowAction(distance, direction);
+    return this.home.arrowAction(distance, direction, turn);
   }
 
 }

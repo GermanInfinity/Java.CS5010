@@ -1,7 +1,3 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,7 +14,11 @@ public class ControllerX implements Features {
   private final Readable in;
   private final Appendable out;
   private Model model;
-  private IView introView, configView, gameView, menuView, fullMenuView;
+  private IView introView;
+  private IView configView;
+  private IView gameView;
+  private IView menuView;
+  private IView fullMenuView;
   private IView howToPlayView;
 
   /**
@@ -26,10 +26,19 @@ public class ControllerX implements Features {
    * 
    * @param in readable object
    * @param out appendable object
-   * @param view the view to use
+   * @param model to control game
    */
   public ControllerX(Readable in, Appendable out, Model model) {
 
+    if (in == null) {
+      throw new IllegalArgumentException("Please provide a readable object.");
+    }
+    if (out == null) {
+      throw new IllegalArgumentException("Please provide an appendable object.");
+    }
+    if (model == null) {
+      throw new IllegalArgumentException("Please provide a model object.");
+    }
     this.in = in;
     this.out = out;
     this.model = model;
@@ -49,6 +58,14 @@ public class ControllerX implements Features {
    */
   public void backToIntro() {
     this.configView.close();
+    this.introView.display();
+  }
+  
+  /**
+   * gameEnd closes game and opens intro screen. 
+   */
+  public void gameEnd() {
+    this.gameView.close();
     this.introView.display();
   }
 
@@ -82,7 +99,7 @@ public class ControllerX implements Features {
     ((MenuView) this.menuView).getInput(info);
     this.menuView.display();
   }
-  
+
   /**
    * openFullMenu opens the menu.
    */
@@ -97,7 +114,7 @@ public class ControllerX implements Features {
   public void closeMenu() {
     this.menuView.close();
   }
-  
+
   /**
    * closeGame closes the game.
    */
@@ -105,7 +122,7 @@ public class ControllerX implements Features {
     this.gameView.close();
     this.introView.display();
   }
-  
+
   /**
    * closeFullMenu closes the menu.
    */
@@ -152,7 +169,7 @@ public class ControllerX implements Features {
     this.menuView = view;
     this.menuView.setFeatures(this);
   }
-  
+
   /**
    * setFullMenuView gives control to the menuview class.
    */
@@ -161,24 +178,20 @@ public class ControllerX implements Features {
     this.fullMenuView.setFeatures(this);
   }
 
-  public void restartGame() { 
-    
-  }
   /**
-   * startGame starts hun the wumpus game.
+   * startGame starts hunt the wumpus game.
    */
   public void startGame(ArrayList<Integer> info, Boolean gameOn, Boolean seed) {
-    
+
     int playerNum = info.get(0);
     int rows = info.get(1);
-    int col =  info.get(2);
-    int walls =  info.get(3);
+    int col = info.get(2);
+    int walls = info.get(3);
     int type = info.get(4);
-    int pits =  info.get(5);
+    int pits = info.get(5);
     int bats = info.get(6);
     int arrows = info.get(7);
 
-    
     // First game
     if (!gameOn) {
       this.configView.close();
@@ -186,38 +199,27 @@ public class ControllerX implements Features {
       this.model.developMaze(playerNum, rows, col, walls, type, pits, bats, arrows, false);
       ArrayList<String> possibleStarts = htwLocations();
 
-      Random ran = new Random(7);
+      Random ran = new Random();
       if (playerNum == 1) {
         int loc = ran.nextInt(possibleStarts.size());
         System.out.println("1 player mode.");
         String chosen = possibleStarts.get(loc);
-        System.out.println(chosen);
+
         setLocation(Integer.parseInt(chosen));
-        System.out.println(this.model.playerPosition(1));
 
       }
       if (playerNum == 2) {
         System.out.println("2 player mode.");
-        
+
         int loc = ran.nextInt(possibleStarts.size());
         String chosen = possibleStarts.get(loc);
-        System.out.println("Chosen location " + chosen);
 
-           
         int loc2 = ran.nextInt(possibleStarts.size());
         String chosen1 = possibleStarts.get(loc2);
-        System.out.println("Chosen location " + chosen1);
 
-        
         setLocation2(Integer.parseInt(chosen), Integer.parseInt(chosen1));
-        System.out.println("Player 1 location: " + playerLocation(0));
-        System.out.println("Player 1 position: " + playerRowCol(0));
-        
-        System.out.println("Player 2 location: " + playerLocation(1));
-        System.out.println("Player 2 position: " + playerRowCol(1));
 
       }
-      
 
       try {
         ((GameView) this.gameView).receiveConfig(info);
@@ -226,12 +228,12 @@ public class ControllerX implements Features {
         System.out.println(e.getMessage());
       }
     }
-    
+
     // Game already on.
-    else { 
+    else {
       this.gameView.close();
       this.menuView.close();
-      
+
       this.model.developMaze(playerNum, rows, col, walls, type, pits, bats, arrows, seed);
       ArrayList<String> possibleStarts = htwLocations();
 
@@ -275,15 +277,15 @@ public class ControllerX implements Features {
   /**
    * returns position of player.
    */
-  public String playerRowCol(int p) { 
+  public String playerRowCol(int p) {
     return this.model.playerPosition(p);
   }
+
   /**
    * action performs operation depending on players maze position.
    */
-  public String action() throws IOException {
-    // this.out.append(this.model.action());
-    return this.model.action();
+  public String action(int p) throws IOException {
+    return this.model.action(p);
   }
 
   /**
@@ -294,11 +296,10 @@ public class ControllerX implements Features {
   public void setLocation(int location) {
     this.model.placePlayer(location);
   }
-  
+
   /**
    * setLocation2 places 2 players in location of maze.
    * 
-   * @param location for player to be placed
    */
   public void setLocation2(int locationA, int locationB) {
     this.model.placePlayer2(locationA, locationB);
@@ -325,7 +326,7 @@ public class ControllerX implements Features {
         + " (3) East, (4) West: ");
 
     int posMove = scan.nextInt();
-    this.out.append(movePlayer(posMove, moves, 3));
+    // this.out.append(movePlayer(posMove, moves, 3));
     this.out.append("\n");
 
   }
@@ -340,8 +341,8 @@ public class ControllerX implements Features {
   /**
    * movePlayer moves player in maze.
    */
-  public String movePlayer(int posMove, ArrayList<String> moves, int p) {
-    return this.model.movePlayer(posMove, moves, p);
+  public String movePlayer(int posMove, ArrayList<String> moves, int p, int numP) {
+    return this.model.movePlayer(posMove, moves, p, numP);
   }
 
   /**
@@ -355,22 +356,20 @@ public class ControllerX implements Features {
     this.out.append("In what direction, (1) North, (2) South," + " (3) East, (4) West: ");
     int direction = scan.nextInt();
 
-    this.out.append(shootArrow(distance, direction));
+    // this.out.append(shootArrow(distance, direction));
     this.out.append("\n");
   }
 
   /**
    * shootArrow shoots arrow for player in maze.
    */
-  public String shootArrow(int distance, int direction) {
-    return this.model.shootArrow(distance, direction);
+  public String shootArrow(int distance, int direction, int turn) {
+    return this.model.shootArrow(distance, direction, turn);
   }
 
   public void exitProgram() {
     // TODO Auto-generated method stub
 
   }
-
-
 
 }

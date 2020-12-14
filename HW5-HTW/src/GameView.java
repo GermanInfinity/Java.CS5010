@@ -48,6 +48,14 @@ public class GameView extends JFrame implements IView {
    */
   public GameView(String caption, ControllerX controller) throws IOException {
     super(caption);
+    
+    if (caption == null) {
+      caption = "Game View";
+    }
+    if (controller == null) {
+      throw new IllegalArgumentException("Please provide this view a controller.");
+    }
+    
     this.control = controller;
     this.canPlay = true;
     this.gridPositions = new ArrayList<GridPosition>();
@@ -57,7 +65,6 @@ public class GameView extends JFrame implements IView {
     this.gameInfo = new ArrayList<Integer>();
     this.turn = 0;
     this.playerPositions = new ArrayList<String>();
-    
 
     this.add(panel);
     JScrollPane scrollPane = new JScrollPane(this.panel,
@@ -104,34 +111,17 @@ public class GameView extends JFrame implements IView {
 
   @Override
   public void display() {
-    // Icon wumpus = new ImageIcon(
-    // "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/wumpus.png");
-    // JLabel label = new JLabel(wumpus);
-    // label.setPreferredSize(new Dimension(120, 80));
-    //
-    // label.addMouseListener(new MouseAdapter() {
-    // public void mouseClicked(MouseEvent e) {
-    // System.out.println(label.getX());
-    // System.out.println(label.getY());
-    // }
-    // });
-    // this.panel.add(label);
-    // this.panel.setVisible(true);
-    // this.setSize(300, 300);
-    // this.setVisible(true);
 
   }
 
-  @Override
-  public void setListener(ActionListener clicks, KeyListener keys) {
-    // for (int i = 0; i < this.row * this.col; i++) {
-    // this.gridPositions.get(i).getButton().addActionListener(clicks);
-    // }
-  }
 
+
+  /**
+   * Receive configuration from full menus.
+   */
   public void receiveConfig(ArrayList<Integer> info) {
     this.gameInfo = info;
- 
+
     if (info.get(8) == 1) {
       this.difficulty = "Easy";
     }
@@ -150,22 +140,17 @@ public class GameView extends JFrame implements IView {
     this.row = info.get(1);
     this.col = info.get(2);
     this.playerNum = info.get(0);
-    if (info.get(4) == 1) {
-      this.mazeType = "room";
-    }
-    if (info.get(4) == 2) {
-      this.mazeType = "Wrapping room";
-    }
+    this.mazeType = "room";
 
   }
 
+  /**
+   * buildMaze builds visual representation of the maze.
+   * 
+   * @param structural information of maze to be built
+   */
   public void buildMaze(Map<String, Object> structure) throws IOException {
-    BufferedImage wumpus = ImageIO
-        .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/wumpus.png"));
-    BufferedImage bat = ImageIO
-        .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/superbat.png"));
-    BufferedImage pit = ImageIO
-        .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/slime-pit.png"));
+
     BufferedImage player = ImageIO
         .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
 
@@ -173,11 +158,14 @@ public class GameView extends JFrame implements IView {
 
     ArrayList<String> walls = (ArrayList<String>) structure.get("walls");
     this.caves = (Cave[]) structure.get("caves");
-    int count = 0; 
-    
+    int count = 0;
+
     for (Cave caves : (Cave[]) structure.get("caves")) {
-      // System.out.println(caves.getNeighbours());
+      String rowHall = caves.getName().substring(0, 1);
+      String colHall = caves.getName().substring(1, 2);
       BufferedImage hallway;
+      ImageIcon iconH = new ImageIcon(
+          "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cavePath.png");
       hallway = ImageIO
           .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/cavePath.png"));
 
@@ -188,11 +176,15 @@ public class GameView extends JFrame implements IView {
 
         if (firstNeigh.substring(0, 1).equals(secNeigh.substring(0, 1))) {
           hallway = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallwayH2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallwayH2.jpg"));
+          iconH = new ImageIcon(
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallwayH2.jpg");
         }
         if (firstNeigh.substring(1, 2).equals(secNeigh.substring(1, 2))) {
           hallway = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallwayV2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallwayV2.jpg"));
+          iconH = new ImageIcon(
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallwayV2.jpg");
         }
 
         int firstNeighbourRow = Integer.parseInt(firstNeigh.substring(0, 1));
@@ -203,51 +195,63 @@ public class GameView extends JFrame implements IView {
         if (firstNeighbourRow - secondNeighbourRow == 1
             && firstNeighbourCol - secondNeighbourCol == 1) {
           hallway = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallLL2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallLL2.jpg"));
+          iconH = new ImageIcon(
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallLL2.jpg");
         }
 
         if (firstNeighbourRow - secondNeighbourRow == -1
             && firstNeighbourCol - secondNeighbourCol == -1) {
           hallway = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallRL2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallRL2.jpg"));
+          iconH = new ImageIcon(
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallRL2.jpg");
         }
         if (firstNeighbourRow - secondNeighbourRow == 1
             && firstNeighbourCol - secondNeighbourCol == -1) {
           hallway = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallRU2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallRU2.jpg"));
+          iconH = new ImageIcon(
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallRU2.jpg");
         }
         if (firstNeighbourRow - secondNeighbourRow == -1
             && firstNeighbourCol - secondNeighbourCol == 1) {
           hallway = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallLU2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallLU2.jpg"));
+          iconH = new ImageIcon(
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/hallLU2.jpg");
         }
 
+        /** Label management **/
+        JLabel dispLabel = new JLabel(new ImageIcon(hallway));
+        dispLabel.setPreferredSize(new Dimension(200, 200));
+        GridPosition labHall = new GridPosition(Integer.parseInt(rowHall),
+            Integer.parseInt(colHall), dispLabel);
+        labHall.addIcon(iconH);
+
         JLabel hall = new JLabel(new ImageIcon(hallway));
+        hall.setVisible(false);
         hall.setPreferredSize(new Dimension(200, 200));
         this.panel.addMouseListener(new MouseAdapter() {
           public void mouseClicked(MouseEvent e) {
             JPanel p = (JPanel) e.getSource();
             JLabel l = (JLabel) p.getComponentAt(e.getX(), e.getY());
-//            try {
-//              /** IMplement **/ 
-//              //showTunnel(l);
-//            } catch (IOException e1) {
-//              e1.printStackTrace();
-//              // create popup 
-//            }
+            showTunnel(l);
           }
         });
 
         String row = caves.getName().substring(0, 1);
         String col = caves.getName().substring(1, 2);
 
-        GridPosition pos = new GridPosition(Integer.parseInt(row), Integer.parseInt(col), hall);
+        GridPosition tPos = new GridPosition(Integer.parseInt(row), Integer.parseInt(col), hall);
         GridPosition lab = new GridPosition(Integer.parseInt(row), Integer.parseInt(col), hall);
-        pos.setTunnel(true);
-        
-        this.gridPositions.add(pos);
-        this.labelPositions.add(lab);
+        tPos.setTunnel(true);
+        tPos.setIsVisible(false);
+
+        this.gridPositions.add(tPos);
+        this.labelPositions.add(labHall);
         this.panel.add(hall);
+   
 
       } else {
         String currCave = caves.getName();
@@ -261,46 +265,47 @@ public class GameView extends JFrame implements IView {
         }
 
         BufferedImage cave = ImageIO
-            .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room2.png"));
+            .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room2.jpg"));
         ImageIcon iconL = new ImageIcon(
-            "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room2.png");
+            "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room2.jpg");
 
         if (choice.length() == 1) {
           cave = ImageIO.read(new File(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room" + choice + "2.png"));
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room" + choice + "2.jpg"));
           iconL = new ImageIcon(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room" + choice + "2.png");
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/room" + choice + "2.jpg");
         }
+
         if (choice.length() == 4) {
           cave = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roombase-42.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roombase-42.jpg"));
           iconL = new ImageIcon(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roombase-42.png");
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roombase-42.jpg");
         }
 
         if (choice.equals("NSE")) {
           cave = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSE2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSE2.jpg"));
           iconL = new ImageIcon(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSE2.png");
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSE2.jpg");
         }
         if (choice.equals("NSW")) {
           cave = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSW2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSW2.jpg"));
           iconL = new ImageIcon(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSW2.png");
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNSW2.jpg");
         }
         if (choice.equals("NEW")) {
           cave = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNEW2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNEW2.jpg"));
           iconL = new ImageIcon(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNEW2.png");
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomNEW2.jpg");
         }
         if (choice.equals("SEW")) {
           cave = ImageIO.read(
-              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomSEW2.png"));
+              new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomSEW2.jpg"));
           iconL = new ImageIcon(
-              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomSEW2.png");
+              "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/roomSEW2.jpg");
         }
 
         Graphics2D g = cave.createGraphics();
@@ -315,23 +320,27 @@ public class GameView extends JFrame implements IView {
         g.drawImage(cave, 0, 0, null);
         if (caves.hasPlayerIn()) {
           g.drawImage(player, 50, 50, null);
-          if (count < this.gameInfo.get(0)) { 
+
+          if (count < this.gameInfo.get(0)) {
             this.playerPositions.add(caves.getName());
           }
           count++;
         }
 
         JLabel label = new JLabel(new ImageIcon(cave));
+        label.setVisible(false);
+        if (caves.hasPlayerIn()) {
+          label.setVisible(true);
+        }
         label.setPreferredSize(new Dimension(200, 200));
         this.panel.addMouseListener(new MouseAdapter() {
-
+          @Override
           public void mouseClicked(MouseEvent e) {
             JPanel p = (JPanel) e.getSource();
             JLabel l = (JLabel) p.getComponentAt(e.getX(), e.getY());
             try {
-              System.out.println(e.getX());
-              System.out.println(e.getY());
               movePlayer(l);
+              return;
             } catch (IOException e1) {
               // TODO Auto-generated catch block
               e1.printStackTrace();
@@ -341,12 +350,12 @@ public class GameView extends JFrame implements IView {
         label.addKeyListener(new KeyListener() {
           @Override
           public void keyTyped(KeyEvent e) {
-            
+
           }
 
           @Override
           public void keyPressed(KeyEvent e) {
-            
+
           }
 
           @Override
@@ -369,9 +378,8 @@ public class GameView extends JFrame implements IView {
               break;
             case KeyEvent.VK_LEFT:
               try {
-                System.out.println("Pressed.");
                 keyMovePlayer("West");
-                
+
               } catch (IOException e1) {
                 System.out.println("You cannot move there.");
               }
@@ -393,7 +401,8 @@ public class GameView extends JFrame implements IView {
 
         GridPosition pos = new GridPosition(Integer.parseInt(row), Integer.parseInt(col), label);
         pos.setTunnel(false);
-        
+        pos.setIsVisible(false);
+
         this.gridPositions.add(pos);
         this.labelPositions.add(lab);
         this.panel.add(label);
@@ -402,88 +411,209 @@ public class GameView extends JFrame implements IView {
     }
 
     this.turn = 0;
-    this.turnStr = "1";
+
     this.panel.setVisible(true);
     this.setSize(this.col * 200, this.row * 200);
     this.setVisible(true);
 
+    if (this.turn == 0) {
+      playArrowPlayer1();
+    }
+    if (this.turn == 1) {
+      playArrowPlayer2();
+    }
+    
+    String actionResponse = this.control.action(this.turn);
+    if (actionResponse.equals("You've been whisked away by a super bat!")) {
+      for (int i = 0; i < this.labelPositions.size(); i++) {
+        ImageIcon newImage = this.labelPositions.get(i).getIcon();
+        this.gridPositions.get(i).getLabel().setIcon(newImage);
+
+      }
+
+      String newPos = this.control.playerRowCol(this.turn);
+      int newRow = Integer.parseInt(newPos.substring(0, 1));
+      int newCol = Integer.parseInt(newPos.substring(1, 2));
+
+      for (int i = 0; i < this.labelPositions.size(); i++) {
+        if (this.labelPositions.get(i).getRow() == newRow
+            && this.labelPositions.get(i).getCol() == newCol) {
+          JLabel newLabel = this.gridPositions.get(i).getLabel();
+          ImageIcon prevImage = (ImageIcon) newLabel.getIcon();
+          Image image = prevImage.getImage();
+          BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+          BufferedImage player2 = ImageIO
+              .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+          Graphics2D g2 = cave.createGraphics();
+          g2.drawImage(player2, 50, 30, null);
+          newLabel.setIcon(new ImageIcon(cave));
+        }
+      }
+      actionResponse = this.control.action(this.turn);
+    }
+
+    viewResponse(actionResponse);
+  }
+
+  /**
+   * Provide arrow shooting option for player 1.
+   */
+  public void playArrowPlayer1() {
+
+    JTextField direction = new JTextField();
+    JTextField distance = new JTextField();
+    Object[] input = { "Direction:", direction, "Distance:", distance };
+    int option = JOptionPane.showConfirmDialog(null, input, "Shoot An Arrow - PLAYER 1",
+        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+    if (direction.getText().equals("") || distance.getText().equals("")) {
+      return;
+    }
+    this.control.shootArrow(Integer.parseInt(direction.getText()),
+        Integer.parseInt(distance.getText()), this.turn);
 
   }
-  /** Only connected cells are clickable **/ 
-  
+
+  /**
+   * Provide arrow shooting option for player 2.
+   */
+  public void playArrowPlayer2() {
+    JTextField direction1 = new JTextField();
+    JTextField distance1 = new JTextField();
+    Object[] input1 = { "Direction:", direction1, "Distance:", distance1 };
+    int option1 = JOptionPane.showConfirmDialog(null, input1, "Shoot An Arrow - PLAYER 2",
+        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+    if (direction1.getText().equals("") || distance1.getText().equals("")) {
+
+      return;
+    }
+    this.control.shootArrow(Integer.parseInt(direction1.getText()),
+        Integer.parseInt(distance1.getText()), this.turn);
+
+  }
+
+  /**
+   * showTunnel reveals tunnel clicked by player.
+   * 
+   * @param l label clicked
+   */
+  public void showTunnel(JLabel l) {
+
+    String playerPos = this.control.playerRowCol(this.turn);
+
+    int playerMazeRow = Integer.parseInt(playerPos.substring(0, 1));
+    int playerMazeCol = Integer.parseInt(playerPos.substring(1, 2));
+
+    for (GridPosition cell : this.gridPositions) {
+      JLabel currentLabel = cell.getLabel();
+      if (currentLabel == l) {
+        // North
+        if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) {
+          currentLabel.setVisible(true);
+          cell.setIsVisible(true);
+        }
+        // South
+        if (cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol) {
+          currentLabel.setVisible(true);
+          cell.setIsVisible(true);
+        }
+        // East
+        if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1) {
+          currentLabel.setVisible(true);
+          cell.setIsVisible(true);
+        }
+        // West
+        if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1) {
+          currentLabel.setVisible(true);
+          cell.setIsVisible(true);
+        }
+
+      }
+    }
+
+  }
+
+  /**
+   * movePLayer moves player responds to mouse clicks on labels.
+   * 
+   * @param l label clicked
+   */
   public void movePlayer(JLabel l) throws IOException {
     String actionResponse = "";
     String playerPos = this.control.playerRowCol(this.turn);
+
     int playerMazeRow = Integer.parseInt(playerPos.substring(0, 1));
     int playerMazeCol = Integer.parseInt(playerPos.substring(1, 2));
 
     ArrayList<String> possMoves = this.control.playerMoves(this.turn);
+
     if (!this.canPlay) {
       return;
     }
-    
 
     for (GridPosition cell : this.gridPositions) {
       JLabel currentLabel = cell.getLabel(); // clicked label
       if (currentLabel == l) {
+        if (cell.isTunnel()) {
+          return;
+        }
         // North
-        if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) { // check if label is north
-//          System.out.println("Testing moving");
-//          System.out.println(cell.getRow());
-//          System.out.println(cell.getCol());
-//          System.out.println(Integer.parseInt(this.playerPositions.get(this.turn).substring(0,1)) - 1);
-//          System.out.println(Integer.parseInt(this.playerPositions.get(this.turn).substring(1,2)));
-          if (!(cell.getRow() == Integer.parseInt(this.playerPositions.get(this.turn).substring(0,1)) - 1
-              && cell.getCol() == Integer.parseInt(this.playerPositions.get(this.turn).substring(1,2)))) {
+        if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) { 
+
+          if (!(cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol)) {
             System.out.println("Bad turn");
             return;
           }
-          if (possMoves.contains("North")) { // check if we can go to the clicked label
-            ImageIcon prevImage = (ImageIcon) currentLabel.getIcon(); // get the clicked labels icon 
+          if (possMoves.contains("North")) {
 
-            Image image = prevImage.getImage(); // get the image
-            BufferedImage cave = (BufferedImage) convertToBufferedImage(image); // make new buffered image of icon
+            ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
+            cell.getLabel().setVisible(true);
+            cell.setIsVisible(true);
+            Image image = prevImage.getImage();
+            BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
             BufferedImage player = ImageIO.read(
-                new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png")); // make new buffered image of player
-            Graphics2D g = cave.createGraphics(); // graphics
-            g.drawImage(player, 50, 30, null); // draw player on cave image
-            currentLabel.setIcon(new ImageIcon(cave)); // set clicked image to new drawn image
+                new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+            Graphics2D g = cave.createGraphics();
+            g.drawImage(player, 50, 30, null);
+            currentLabel.setIcon(new ImageIcon(cave));
 
-            for (int i = 0; i < this.gridPositions.size(); i++) { // look through grid positions
+            for (int i = 0; i < this.gridPositions.size(); i++) {
               GridPosition cellPosition = this.gridPositions.get(i);
-              GridPosition labelPosition = this.labelPositions.get(i); // look through label positions 
+              GridPosition labelPosition = this.labelPositions.get(i);
 
               if (cellPosition.getRow() == playerMazeRow
-                  && cellPosition.getCol() == playerMazeCol) { // if current grid position == players old position
-                cellPosition.getLabel().setIcon(labelPosition.getIcon()); // change icon on current position
+                  && cellPosition.getCol() == playerMazeCol) {
+                cellPosition.getLabel().setIcon(labelPosition.getIcon());
 
               }
             }
 
-            actionResponse = this.control.movePlayer(1, possMoves, this.turn);
-             System.out.println(this.control.playerRowCol(this.turn));
-             System.out.println("Done moving");
+            actionResponse = this.control.movePlayer(1, possMoves, this.turn, this.playerNum);
             System.out.println(actionResponse);
-            if (this.turn == 1) {
-              this.turn = 2;
+            if (this.playerNum == 2) {
+              if (this.turn == 1) {
+                this.turn = 0;
+                break;
+              }
+              if (this.turn == 0) {
+                this.turn = 1;
+                break;
+              }
             }
-            if (this.turn == 2) {
-              this.turn = 1;
-            }
-            
-
-            break;
 
           }
         }
         // South
         if (cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol) {
-          if (!(cell.getRow() == Integer.parseInt(this.playerPositions.get(this.turn).substring(0,1)) + 1
-              && cell.getCol() == Integer.parseInt(this.playerPositions.get(this.turn).substring(1,2)))) {
+
+          if (!(cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol)) {
             System.out.println("Bad turn");
             return;
           }
           if (possMoves.contains("South")) {
+            cell.getLabel().setVisible(true);
+            cell.setIsVisible(true);
             ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
             Image image = prevImage.getImage();
             BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
@@ -504,28 +634,33 @@ public class GameView extends JFrame implements IView {
               }
             }
 
-            actionResponse = this.control.movePlayer(2, possMoves, this.turn);
-             System.out.println(this.control.playerRowCol(this.turn));
-             System.out.println("Done moving");
+            actionResponse = this.control.movePlayer(2, possMoves, this.turn, this.playerNum);
             System.out.println(actionResponse);
-            if (this.turn == 1) {
-              this.turn = 2;
+
+            if (this.playerNum == 2) {
+              if (this.turn == 1) {
+                this.turn = 0;
+                break;
+              }
+              if (this.turn == 0) {
+                this.turn = 1;
+                System.out.println("South just finished: " + this.turn);
+                break;
+              }
             }
-            if (this.turn == 2) {
-              this.turn = 1;
-            }
-            break;
           }
+
         }
 
         // East
         if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1) {
-          if (!(cell.getRow() == Integer.parseInt(this.playerPositions.get(this.turn).substring(0,1))
-              && cell.getCol() == Integer.parseInt(this.playerPositions.get(this.turn).substring(1,2)) + 1)) {
+          if (!(cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1)) {
             System.out.println("Bad turn");
             return;
           }
           if (possMoves.contains("East")) {
+            cell.getLabel().setVisible(true);
+            cell.setIsVisible(true);
             ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
             Image image = prevImage.getImage();
             BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
@@ -545,28 +680,31 @@ public class GameView extends JFrame implements IView {
               }
             }
 
-            actionResponse = this.control.movePlayer(3, possMoves, this.turn);
-             System.out.println(this.control.playerRowCol(this.turn));
-             System.out.println("Done moving");
+            actionResponse = this.control.movePlayer(3, possMoves, this.turn, this.playerNum);
             System.out.println(actionResponse);
-            if (this.turn == 1) {
-              this.turn = 2;
+            if (this.playerNum == 2) {
+              if (this.turn == 1) {
+                this.turn = 0;
+                break;
+              }
+              if (this.turn == 0) {
+                this.turn = 1;
+                break;
+              }
             }
-            if (this.turn == 2) {
-              this.turn = 1;
-            }
-            break;
           }
         }
 
         // West
         if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1) {
-          if (!(cell.getRow() == Integer.parseInt(this.playerPositions.get(this.turn).substring(0,1))
-              && cell.getCol() == Integer.parseInt(this.playerPositions.get(this.turn).substring(1,2)) - 1)) {
+
+          if (!(cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1)) {
             System.out.println("Bad turn");
             return;
           }
           if (possMoves.contains("West")) {
+            cell.getLabel().setVisible(true);
+            cell.setIsVisible(true);
             ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
             Image image = prevImage.getImage();
             BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
@@ -586,17 +724,19 @@ public class GameView extends JFrame implements IView {
               }
             }
 
-            actionResponse = this.control.movePlayer(4, possMoves, this.turn);
-             System.out.println(this.control.playerRowCol(this.turn));
-             System.out.println("Done moving");
+            actionResponse = this.control.movePlayer(4, possMoves, this.turn, this.playerNum);
             System.out.println(actionResponse);
-            if (this.turn == 1) {
-              this.turn = 2;
+            if (this.playerNum == 2) {
+              if (this.turn == 1) {
+                this.turn = 0;
+                break;
+              }
+              if (this.turn == 0) {
+                this.turn = 1;
+                break;
+              }
             }
-            if (this.turn == 2) {
-              this.turn = 1;
-            }
-            break;
+
           }
         }
 
@@ -604,362 +744,486 @@ public class GameView extends JFrame implements IView {
 
     }
 
-    if (actionResponse.equals("Game over: 5250 FALL Damage!")) {
+    if (actionResponse.equals("You've been whisked away by a super bat!")) {
+      for (int i = 0; i < this.labelPositions.size(); i++) {
+        ImageIcon newImage = this.labelPositions.get(i).getIcon();
+        this.gridPositions.get(i).getLabel().setIcon(newImage);
+
+      }
+
+      String newPos = this.control.playerRowCol(this.turn);
+      int newRow = Integer.parseInt(newPos.substring(0, 1));
+      int newCol = Integer.parseInt(newPos.substring(1, 2));
+
+      for (int i = 0; i < this.labelPositions.size(); i++) {
+        if (this.labelPositions.get(i).getRow() == newRow
+            && this.labelPositions.get(i).getCol() == newCol) {
+          JLabel newLabel = this.gridPositions.get(i).getLabel();
+          ImageIcon prevImage = (ImageIcon) newLabel.getIcon();
+          Image image = prevImage.getImage();
+          BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+          BufferedImage player2 = ImageIO
+              .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+          Graphics2D g2 = cave.createGraphics();
+          g2.drawImage(player2, 50, 30, null);
+          newLabel.setIcon(new ImageIcon(cave));
+        }
+      }
+      actionResponse = this.control.action(this.turn);
+    }
+
+    viewResponse(actionResponse);
+
+  }
+
+  /**
+   * keyMovePlayer moves player based on arrow key clicked.
+   * 
+   * @param direc direction of keyboard input
+   * @throws IOException
+   */
+  public void keyMovePlayer(String direc) throws IOException {
+    String actionResponse = "";
+    String playerPos = this.control.playerRowCol(this.turn);
+    int playerMazeRow = Integer.parseInt(playerPos.substring(0, 1));
+    int playerMazeCol = Integer.parseInt(playerPos.substring(1, 2));
+    JLabel currentLabel = new JLabel();
+    ArrayList<String> possMoves = this.control.playerMoves(this.turn);
+
+    // North
+    if (direc.equals("North")) {
+
+      if (possMoves.contains("North")) {
+
+        for (GridPosition cell : this.gridPositions) {
+
+          if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) {
+            currentLabel = cell.getLabel();
+            if (cell.isTunnel()) {
+
+              if (!cell.isVisible()) {
+                System.out.println(cell.isVisible());
+                return;
+              }
+            }
+            cell.setIsVisible(true);
+            currentLabel.setVisible(true);
+          }
+
+        } // get Label player is going to
+
+
+        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
+        Image image = prevImage.getImage();
+        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+        BufferedImage player = ImageIO
+            .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+        Graphics2D g = cave.createGraphics();
+        g.drawImage(player, 50, 30, null);
+
+        Boolean paint = true;
+        // if current label place is a tunnel
+        for (GridPosition cell : this.gridPositions) {
+          if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) {
+            if (cell.isTunnel()) {
+              paint = false;
+              break;
+            }
+          }
+        }
+        // dont paint
+        // find new location of player and paint
+
+        if (paint) {
+          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
+        }
+
+        // unpainting the old spot.
+        for (int i = 0; i < this.gridPositions.size(); i++) {
+          GridPosition cellPosition = this.gridPositions.get(i);
+          GridPosition labelPosition = this.labelPositions.get(i);
+
+          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
+            cellPosition.getLabel().setIcon(labelPosition.getIcon());
+          }
+        }
+
+        actionResponse = this.control.movePlayer(1, possMoves, this.turn, this.playerNum);
+
+        // If didn't paint, paint the current cell you are in.
+        if (!paint) {
+          JLabel newCell = new JLabel();
+          String playerPos2 = this.control.playerRowCol(this.turn);
+          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
+          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
+          for (GridPosition cell : this.gridPositions) {
+            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
+              newCell = cell.getLabel();
+              cell.setIsVisible(true);
+              newCell.setVisible(true);
+              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
+              Image image2 = prevImage2.getImage();
+              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
+              BufferedImage player2 = ImageIO.read(
+                  new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+              Graphics2D g2 = cave2.createGraphics();
+              g2.drawImage(player2, 50, 30, null);
+              newCell.setIcon(new ImageIcon(cave2));
+            }
+          }
+        }
+
+      }
+    }
+
+    // South
+    if (direc.equals("South")) {
+      if (possMoves.contains("South")) {
+
+        for (GridPosition cell : this.gridPositions) {
+
+          if (cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol) {
+            currentLabel = cell.getLabel();
+            if (cell.isTunnel()) {
+
+              if (!cell.isVisible()) {
+                System.out.println(cell.isVisible());
+                return;
+              }
+            }
+            cell.setIsVisible(true);
+            currentLabel.setVisible(true);
+          }
+
+        } // get Label player is going to
+
+
+        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
+        Image image = prevImage.getImage();
+        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+        BufferedImage player = ImageIO
+            .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+        Graphics2D g = cave.createGraphics();
+        g.drawImage(player, 50, 30, null);
+
+        Boolean paint = true;
+        // if current label place is a tunnel
+        for (GridPosition cell : this.gridPositions) {
+          if (cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol) {
+            if (cell.isTunnel()) {
+              paint = false;
+              break;
+            }
+          }
+        }
+        // dont paint
+        // find new location of player and paint
+
+        if (paint) {
+          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
+        }
+
+        // unpainting the old spot
+        for (int i = 0; i < this.gridPositions.size(); i++) {
+          GridPosition cellPosition = this.gridPositions.get(i);
+          GridPosition labelPosition = this.labelPositions.get(i);
+
+          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
+            cellPosition.getLabel().setIcon(labelPosition.getIcon());
+          }
+        }
+
+        actionResponse = this.control.movePlayer(2, possMoves, this.turn, this.playerNum);
+
+        // If didn't paint, paint the current cell you are in.
+        if (!paint) {
+          JLabel newCell = new JLabel();
+          String playerPos2 = this.control.playerRowCol(this.turn);
+          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
+          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
+          for (GridPosition cell : this.gridPositions) {
+            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
+              newCell = cell.getLabel();
+              cell.setIsVisible(true);
+              newCell.setVisible(true);
+              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
+              Image image2 = prevImage2.getImage();
+              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
+              BufferedImage player2 = ImageIO.read(
+                  new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+              Graphics2D g2 = cave2.createGraphics();
+              g2.drawImage(player2, 50, 30, null);
+              newCell.setIcon(new ImageIcon(cave2));
+            }
+          }
+        }
+
+      }
+    }
+
+    // East
+    if (direc.equals("East")) {
+      if (possMoves.contains("East")) {
+
+        for (GridPosition cell : this.gridPositions) {
+
+          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1) {
+            currentLabel = cell.getLabel();
+            if (cell.isTunnel()) {
+
+              if (!cell.isVisible()) {
+                System.out.println(cell.isVisible());
+                return;
+              }
+            }
+            cell.setIsVisible(true);
+            currentLabel.setVisible(true);
+          }
+
+        } // get Label player is going to
+
+        System.out.println("Before move");
+        System.out.println(playerMazeRow);
+        System.out.println(playerMazeCol + 1);
+
+        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
+        Image image = prevImage.getImage();
+        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+        BufferedImage player = ImageIO
+            .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+        Graphics2D g = cave.createGraphics();
+        g.drawImage(player, 50, 30, null);
+
+        Boolean paint = true;
+        // if current label place is a tunnel
+        for (GridPosition cell : this.gridPositions) {
+          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1) {
+            if (cell.isTunnel()) {
+              paint = false;
+              break;
+            }
+          }
+        }
+        // dont paint
+        // find new location of player and paint
+
+        if (paint) {
+          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
+        }
+
+        // unpainting the old spot
+        for (int i = 0; i < this.gridPositions.size(); i++) {
+          GridPosition cellPosition = this.gridPositions.get(i);
+          GridPosition labelPosition = this.labelPositions.get(i);
+
+          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
+            cellPosition.getLabel().setIcon(labelPosition.getIcon());
+          }
+        }
+
+        actionResponse = this.control.movePlayer(3, possMoves, this.turn, this.playerNum);
+        System.out.println("After move.");
+        System.out.println(this.control.playerRowCol(1));
+        // If didn't paint, paint the current cell you are in.
+        if (!paint) {
+          JLabel newCell = new JLabel();
+          String playerPos2 = this.control.playerRowCol(this.turn);
+          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
+          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
+          for (GridPosition cell : this.gridPositions) {
+            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
+              newCell = cell.getLabel();
+              cell.setIsVisible(true);
+              newCell.setVisible(true);
+              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
+              Image image2 = prevImage2.getImage();
+              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
+              BufferedImage player2 = ImageIO.read(
+                  new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+              Graphics2D g2 = cave2.createGraphics();
+              g2.drawImage(player2, 50, 30, null);
+              newCell.setIcon(new ImageIcon(cave2));
+            }
+          }
+        }
+      }
+    }
+
+    // West
+    if (direc.equals("West")) {
+      if (possMoves.contains("West")) {
+
+        for (GridPosition cell : this.gridPositions) {
+
+          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1) {
+            currentLabel = cell.getLabel();
+            if (cell.isTunnel()) {
+
+              if (!cell.isVisible()) {
+                System.out.println(cell.isVisible());
+                return;
+              }
+            }
+            cell.setIsVisible(true);
+            currentLabel.setVisible(true);
+          }
+
+        } // get Label player is going to
+
+        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
+        Image image = prevImage.getImage();
+        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+        BufferedImage player = ImageIO
+            .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+        Graphics2D g = cave.createGraphics();
+        g.drawImage(player, 50, 30, null);
+
+        Boolean paint = true;
+        // if current label place is a tunnel
+        for (GridPosition cell : this.gridPositions) {
+          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1) {
+            if (cell.isTunnel()) {
+              paint = false;
+              break;
+            }
+          }
+        }
+        // dont paint
+        // find new location of player and paint
+
+        if (paint) {
+          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
+        }
+
+        // unpainting the old spot
+        for (int i = 0; i < this.gridPositions.size(); i++) {
+          GridPosition cellPosition = this.gridPositions.get(i);
+          GridPosition labelPosition = this.labelPositions.get(i);
+
+          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
+            cellPosition.getLabel().setIcon(labelPosition.getIcon());
+          }
+        }
+
+        actionResponse = this.control.movePlayer(4, possMoves, this.turn, this.playerNum);
+        System.out.println("After move.");
+        System.out.println(this.control.playerRowCol(1));
+        // If didn't paint, paint the current cell you are in.
+        if (!paint) {
+          JLabel newCell = new JLabel();
+          String playerPos2 = this.control.playerRowCol(this.turn);
+          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
+          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
+          for (GridPosition cell : this.gridPositions) {
+            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
+              newCell = cell.getLabel();
+              cell.setIsVisible(true);
+              newCell.setVisible(true);
+              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
+              Image image2 = prevImage2.getImage();
+              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
+              BufferedImage player2 = ImageIO.read(
+                  new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+              Graphics2D g2 = cave2.createGraphics();
+              g2.drawImage(player2, 50, 30, null);
+              newCell.setIcon(new ImageIcon(cave2));
+            }
+          }
+        }
+      }
+    }
+    if (actionResponse.equals("You've been whisked away by a super bat!")) {
+      for (int i = 0; i < this.labelPositions.size(); i++) {
+        ImageIcon newImage = this.labelPositions.get(i).getIcon();
+        this.gridPositions.get(i).getLabel().setIcon(newImage);
+
+      }
+
+      String newPos = this.control.playerRowCol(this.turn);
+      int newRow = Integer.parseInt(newPos.substring(0, 1));
+      int newCol = Integer.parseInt(newPos.substring(1, 2));
+
+      for (int i = 0; i < this.labelPositions.size(); i++) {
+        if (this.labelPositions.get(i).getRow() == newRow
+            && this.labelPositions.get(i).getCol() == newCol) {
+          this.gridPositions.get(i).setIsVisible(true);
+          this.gridPositions.get(i).getLabel().setVisible(true);
+          JLabel newLabel = this.gridPositions.get(i).getLabel();
+          ImageIcon prevImage = (ImageIcon) newLabel.getIcon();
+          Image image = prevImage.getImage();
+          BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
+          BufferedImage player2 = ImageIO
+              .read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
+          Graphics2D g2 = cave.createGraphics();
+          g2.drawImage(player2, 50, 30, null);
+          newLabel.setIcon(new ImageIcon(cave));
+        }
+      }
+      actionResponse = this.control.action(this.turn);
+    }
+
+    viewResponse(actionResponse);
+
+  }
+
+  /**
+   * viewResponse produces a response based on maze event to the player.
+   * 
+   * @param details of events in the maze.
+   */
+  public void viewResponse(String details) {
+
+    if (details.equals("You've been whisked away by a super bat!")) {
+      ImageIcon image = new ImageIcon(
+          "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/bat2.gif");
+      JOptionPane.showMessageDialog(null,
+          new JLabel("You've been whisked away by a super bat!", image, JLabel.LEFT), "",
+          JOptionPane.PLAIN_MESSAGE);
+    }
+    if (details.equals("The bat whisked you away to a pit, better luck next time!")) {
+      ImageIcon image = new ImageIcon(
+          "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/ggrem.png");
+      JOptionPane.showMessageDialog(null,
+          new JLabel("The bat whisked you away to the Wumpus, better luck next time!", image,
+              JLabel.LEFT),
+          "", JOptionPane.PLAIN_MESSAGE);
+      this.control.gameEnd();
+    }
+   
+    if (details.equals("You smell a Wumpus!")) {
+      ImageIcon image = new ImageIcon(
+          "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/wumpus-nearby.png");
+      JOptionPane.showMessageDialog(null, new JLabel("You smell a wumpus!!!", image, JLabel.LEFT),
+          "", JOptionPane.PLAIN_MESSAGE);
+    }
+
+    if (details.equals("You feel a draft!")) {
+      ImageIcon image = new ImageIcon(
+          "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/slime-pit-nearby.png");
+      JOptionPane.showMessageDialog(null, new JLabel("You feel a draft!", image, JLabel.LEFT), "",
+          JOptionPane.PLAIN_MESSAGE);
+    }
+    if (details.equals("You've been made meat by the Wumpus. Try again!")) {
       canPlay = false;
       ImageIcon image = new ImageIcon(
           "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/ggrem.png");
       JOptionPane.showMessageDialog(null,
           new JLabel("Looks like I got the better of you this time. Get out of my dungeon!!!",
               image, JLabel.LEFT),
-          "", JOptionPane.INFORMATION_MESSAGE);
+          "", JOptionPane.PLAIN_MESSAGE);
+      this.control.gameEnd();
     }
-    if (actionResponse.equals("You've been made meat by the Wumpus. Try again!")) {
+    if (details.equals("Game over: 5250 FALL Damage!")) {
       canPlay = false;
       ImageIcon image = new ImageIcon(
           "/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/pit2.png");
       JOptionPane.showMessageDialog(null,
           new JLabel("Looks like you don't know your way around. You fell in a pit!!!", image,
               JLabel.LEFT),
-          "", JOptionPane.INFORMATION_MESSAGE);
+          "", JOptionPane.PLAIN_MESSAGE);
+      this.control.gameEnd();
     }
-
   }
-  
-  public void movePlayer2(JLabel clickedLabel) throws IOException { 
-    String actionResponse = "";
-    String playerPos = this.control.playerRowCol();
-    int playerMazeRow = Integer.parseInt(playerPos.substring(0, 1));
-    int playerMazeCol = Integer.parseInt(playerPos.substring(1, 2));
-    int oldRow = Integer.parseInt(playerPos.substring(0, 1));
-    int oldCol = Integer.parseInt(playerPos.substring(1, 2));
-    System.out.println("BEFORE");
-    System.out.println(playerMazeRow);
-    System.out.println(playerMazeCol);
-    System.out.println("BEFORE");
-    ArrayList<String> possMoves = this.control.playerMoves();
-    for (GridPosition cell : this.gridPositions) { 
-      JLabel currentLabel = cell.getLabel();
-      if (currentLabel == clickedLabel) {  // get clicked label
-        for (Cave caves : this.caves) { 
-          if (caves.getName().equals(Integer.toString(cell.getRow()) + Integer.toString(cell.getCol()))) {
-            if (caves.getSecondaryName().equals("tunnel")) {
-              return;
-            }
-            this.control.setLocation(Integer.parseInt(caves.getSecondaryName()));
-            ImageIcon prevImage = (ImageIcon) currentLabel.getIcon(); // get the clicked labels icon
-            Image image = prevImage.getImage(); // get the image
-            BufferedImage cave = (BufferedImage) convertToBufferedImage(image); // make new buffered image of icon
-            BufferedImage player = ImageIO.read(
-                new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png")); // make new buffered image of player
-            Graphics2D g = cave.createGraphics(); // graphics
-            g.drawImage(player, 50, 30, null); // draw player on cave image
-            currentLabel.setIcon(new ImageIcon(cave)); // set clicked image to new drawn image
-            System.out.println("HERE");
-            System.out.println(oldRow);
-            System.out.println(oldCol);
-            System.out.println("DONE");
-//            for (int i = 0; i < this.gridPositions.size(); i++) { // look through grid positions
-//              GridPosition cellPosition = this.gridPositions.get(i);
-//              GridPosition labelPosition = this.labelPositions.get(i); // look through label positions 
-//
-//              if (cellPosition.getRow() == playerMazeRow
-//                  && cellPosition.getCol() == playerMazeCol) { // if current grid position == players old position
-//                cellPosition.getLabel().setIcon(labelPosition.getIcon()); // change icon on current position
-//              }
-//            }
-          }
-            
-        }
-      }
-    }
-
-  }
-  
-  
-  public void keyMovePlayer(String direc) throws IOException {
-    String actionResponse = "";
-    String playerPos = this.control.playerRowCol();
-    int playerMazeRow = Integer.parseInt(playerPos.substring(0, 1));
-    int playerMazeCol = Integer.parseInt(playerPos.substring(1, 2));
-    JLabel currentLabel = new JLabel();
-    ArrayList<String> possMoves = this.control.playerMoves();
-
-    // North
-    if (direc.equals("North"))  { 
-      if (possMoves.contains("North")) {
-        
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) {
-            currentLabel = cell.getLabel();
-          }
-          
-        } // get Label player is going to
-        
-        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
-        Image image = prevImage.getImage();
-        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
-        BufferedImage player = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-        Graphics2D g = cave.createGraphics();
-        g.drawImage(player, 50, 30, null);
-        
-        Boolean paint = true;
-        // if current label place is a tunnel
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow - 1 && cell.getCol() == playerMazeCol) {
-            if (cell.isTunnel()) {
-              paint = false;
-              break;
-            }
-          }
-        }
-        // dont paint
-        // find new location of player and paint
-        
-        if (paint) { 
-          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
-        }
-  
-        // unpainting the old spot.
-        for (int i = 0; i < this.gridPositions.size(); i++) {
-          GridPosition cellPosition = this.gridPositions.get(i);
-          GridPosition labelPosition = this.labelPositions.get(i);
-  
-          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
-            cellPosition.getLabel().setIcon(labelPosition.getIcon());
-          }
-        }
-  
-        actionResponse = this.control.movePlayer(1, possMoves);
-        // If didn't paint, paint the current cell you are in. 
-        if (!paint) { 
-          JLabel newCell = new JLabel();
-          String playerPos2 = this.control.playerRowCol();
-          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
-          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
-          for (GridPosition cell : this.gridPositions) {
-            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
-              newCell = cell.getLabel();
-              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
-              Image image2 = prevImage2.getImage();
-              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
-              BufferedImage player2 = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-              Graphics2D g2 = cave2.createGraphics();
-              g2.drawImage(player2, 50, 30, null);
-              newCell.setIcon(new ImageIcon(cave2));
-            }
-          }
-        }
-
-      }
-   }
-
-    // South
-    if (direc.equals("South"))  { 
-      if (possMoves.contains("South")) {
-        
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol) {
-            currentLabel = cell.getLabel();
-          }
-          
-        } // get Label player is going to
-        
-        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
-        Image image = prevImage.getImage();
-        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
-        BufferedImage player = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-        Graphics2D g = cave.createGraphics();
-        g.drawImage(player, 50, 30, null);
-  
-        Boolean paint = true;
-        // if current label place is a tunnel
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow + 1 && cell.getCol() == playerMazeCol) {
-            if (cell.isTunnel()) {
-              paint = false;
-              break;
-            }
-          }
-        }
-        // dont paint
-        // find new location of player and paint
-        
-        if (paint) { 
-          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
-        }
-  
-        //unpainting the old spot
-        for (int i = 0; i < this.gridPositions.size(); i++) {
-          GridPosition cellPosition = this.gridPositions.get(i);
-          GridPosition labelPosition = this.labelPositions.get(i);
-  
-          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
-            cellPosition.getLabel().setIcon(labelPosition.getIcon());
-          }
-        }
-  
-        actionResponse = this.control.movePlayer(2, possMoves);
-        // If didn't paint, paint the current cell you are in. 
-        if (!paint) { 
-          JLabel newCell = new JLabel();
-          String playerPos2 = this.control.playerRowCol();
-          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
-          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
-          for (GridPosition cell : this.gridPositions) {
-            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
-              newCell = cell.getLabel();
-              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
-              Image image2 = prevImage2.getImage();
-              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
-              BufferedImage player2 = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-              Graphics2D g2 = cave2.createGraphics();
-              g2.drawImage(player2, 50, 30, null);
-              newCell.setIcon(new ImageIcon(cave2));
-            }
-          }
-        }
-
-      }
-    }
-    
-    // East
-    if (direc.equals("East"))  { 
-      if (possMoves.contains("East")) {
-        
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1) {
-            currentLabel = cell.getLabel();
-          }
-          
-        } // get Label player is going to
-        
-        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
-        Image image = prevImage.getImage();
-        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
-        BufferedImage player = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-        Graphics2D g = cave.createGraphics();
-        g.drawImage(player, 50, 30, null);
-        
-        Boolean paint = true;
-        // if current label place is a tunnel
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol + 1) {
-            if (cell.isTunnel()) {
-              paint = false;
-              break;
-            }
-          }
-        }
-        // dont paint
-        // find new location of player and paint
-        
-        if (paint) { 
-          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
-        }
-  
-        //unpainting the old spot
-        for (int i = 0; i < this.gridPositions.size(); i++) {
-          GridPosition cellPosition = this.gridPositions.get(i);
-          GridPosition labelPosition = this.labelPositions.get(i);
-  
-          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
-            cellPosition.getLabel().setIcon(labelPosition.getIcon());
-          }
-        }
-  
-        actionResponse = this.control.movePlayer(3, possMoves);
-        // If didn't paint, paint the current cell you are in. 
-        if (!paint) { 
-          JLabel newCell = new JLabel();
-          String playerPos2 = this.control.playerRowCol();
-          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
-          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
-          for (GridPosition cell : this.gridPositions) {
-            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
-              newCell = cell.getLabel();
-              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
-              Image image2 = prevImage2.getImage();
-              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
-              BufferedImage player2 = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-              Graphics2D g2 = cave2.createGraphics();
-              g2.drawImage(player2, 50, 30, null);
-              newCell.setIcon(new ImageIcon(cave2));
-            }
-          }
-        }
-      }
-    }
-    
-    // West
-    if (direc.equals("West"))  { 
-      if (possMoves.contains("West")) {
-        
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1) {
-            currentLabel = cell.getLabel();
-          }
-          
-        } // get Label player is going to
-        ImageIcon prevImage = (ImageIcon) currentLabel.getIcon();
-        Image image = prevImage.getImage();
-        BufferedImage cave = (BufferedImage) convertToBufferedImage(image);
-        BufferedImage player = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-        Graphics2D g = cave.createGraphics();
-        g.drawImage(player, 50, 30, null);
-        
-        Boolean paint = true;
-        // if current label place is a tunnel
-        for (GridPosition cell : this.gridPositions) {
-          if (cell.getRow() == playerMazeRow && cell.getCol() == playerMazeCol - 1) {
-            if (cell.isTunnel()) {
-              paint = false;
-              break;
-            }
-          }
-        }
-        // dont paint
-        // find new location of player and paint
-        
-        if (paint) { 
-          currentLabel.setIcon(new ImageIcon(cave)); // painting new place
-        }
-  
-        //unpainting the old spot
-        for (int i = 0; i < this.gridPositions.size(); i++) {
-          GridPosition cellPosition = this.gridPositions.get(i);
-          GridPosition labelPosition = this.labelPositions.get(i);
-  
-          if (cellPosition.getRow() == playerMazeRow && cellPosition.getCol() == playerMazeCol) {
-            cellPosition.getLabel().setIcon(labelPosition.getIcon());
-          }
-        }
-        
-        actionResponse = this.control.movePlayer(4, possMoves);
-        // If didn't paint, paint the current cell you are in. 
-        if (!paint) { 
-          JLabel newCell = new JLabel();
-          String playerPos2 = this.control.playerRowCol();
-          int playerMazeRow2 = Integer.parseInt(playerPos2.substring(0, 1));
-          int playerMazeCol2 = Integer.parseInt(playerPos2.substring(1, 2));
-          for (GridPosition cell : this.gridPositions) {
-            if (cell.getRow() == playerMazeRow2 && cell.getCol() == playerMazeCol2) {
-              newCell = cell.getLabel();
-              ImageIcon prevImage2 = (ImageIcon) newCell.getIcon();
-              Image image2 = prevImage2.getImage();
-              BufferedImage cave2 = (BufferedImage) convertToBufferedImage(image2);
-              BufferedImage player2 = ImageIO.read(new File("/Users/ugoslight/eclipse-workspace/cs5010/HW5-HTW/images/test.png"));
-              Graphics2D g2 = cave2.createGraphics();
-              g2.drawImage(player2, 50, 30, null);
-              newCell.setIcon(new ImageIcon(cave2));
-            }
-          }
-        }
-    }
-    }
-
-  }
-
-  
 
   /**
    * wayFinder is a method used to determine the possible channels caves in the
@@ -1047,6 +1311,11 @@ public class GameView extends JFrame implements IView {
     return ways;
   }
 
+  /**
+   * convertBufferedImage converts buffered image to an image icon.
+   * 
+   * @param image image to be converted
+   */
   public static BufferedImage convertToBufferedImage(Image image) {
     BufferedImage newImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
         BufferedImage.TYPE_INT_ARGB);
